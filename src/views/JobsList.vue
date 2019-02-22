@@ -13,6 +13,7 @@
     <div>
       <router-view></router-view>
     </div>
+    <!---->
     <div>
       <router-link to="/detail?jobId=11">跳转到详情页面</router-link>
       <button @click="jump">button-跳转到详情页面</button>

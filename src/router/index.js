@@ -8,11 +8,11 @@ import Usercenter from '../components/Usercenter'
 import Image from '../views/Image'
 import Detail from '../views/Detail'
 // 引入资源请求插件
-// import VueResource from 'vue-resource'
+import VueResource from 'vue-resource'
 // @是src
 Vue.use(Router)
-// 使用VueResource插件
-// Vue.use(VueResource)
+// 使用VueResource插件,ajax插件
+Vue.use(VueResource)
 
 export default new Router({
   mode: 'history',

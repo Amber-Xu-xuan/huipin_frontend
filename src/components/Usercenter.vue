@@ -17,11 +17,14 @@ export default {
 <style scoped>
 .red{
   background: red;
+  height: 100%;
 }
 .green{
   background: green;
+  height: 100%;
 }
   .yellow{
     background: yellow;
+    height: 100%;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <el-row type="flex" justify="center">
+  <el-row type="flex" justify="center" class="login-container">
     <el-col :span="12" :xs="24" :sm="12" :md="12">
-      <div class="">
+      <div class="login-content">
         <form>
           <label for="account">账号：</label><input type="text" v-model="account" id="account" placeholder="请输入您注册的账号（手机号码）"/>
           <div>
@@ -39,5 +39,22 @@ export default {
 </script>
 
 <style scoped>
+  .login-container {
+    /*transition: property duration timing-function delay;*/
+    /*transition-property: all;*/
+    /*transition-timing-function: linear;*/
+    /*transition-duration: 2s;*/
+    /*transition-delay: 1000ms;*/
+    background: #59a0ff;
+  }
+.login-content{
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto;
 
+  padding: 65px 55px 54px 55px;
+}
 </style>

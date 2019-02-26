@@ -6,9 +6,30 @@
 <template>
   <div>
     <nav-header></nav-header>
-    <header></header>
-    <div></div>
-    <div></div>
+    <div class="filter" id="filter">
+      <dl class="filter-salary"></dl>
+      <dt>薪资待遇：</dt>
+      <dd>        <a href="javascript:void(0)" v-bind:class="{'cur':salaryCheck == 'all'}">All</a>
+        </dd>
+      <dd v-for="salary in salaryFilter" :key="salary.startSalary" @click="salaryCheck=index">
+        <a href="javascript:void(0)" v-bind:class="{'cur':salaryCheck==index}">{{salary.startSalary}}-{{salary.endSalary}}</a>
+      </dd>
+    </div>
+    <div>
+      <ul>
+        <li v-for="job in jobsList" :key="job.jId">
+          哈哈哈
+          <p><span>职位：{{job.jName}}</span></p>
+          <p><span>薪资：{{job.salary}}</span></p>
+          <p><span>地区：{{job.jarea}}</span></p>
+
+        </li>
+
+      </ul>
+    </div>
+    <div>
+
+    </div>
     <footer></footer>
     <!--这是职位列表ID{{$route.params.jobsId}}-->
     <!--<div>-->
@@ -31,13 +52,34 @@
 <script>
 
 import './../assets/css/base.css'
-import axios from 'axios'
 import NavHeader from '@/components/Header'
 export default {
   name: 'JobsList',
   data () {
     return {
-      jobsList: []
+      jobsList: [],
+      salaryFilter: [
+        {
+          startSalary: '1000.00',
+          endSalary: '3000.00'
+        },
+        {
+          startSalary: '3000.00',
+          endSalary: '5000.00'
+        },
+        {
+          startSalary: '5000.00',
+          endSalary: '8000.00'
+        },
+        {
+          startSalary: '8000.00',
+          endSalary: '10000.00'
+        },
+        {
+          startSalary: '>10000.00'
+        }
+      ],
+      salaryCheck: 'all'
     }
   },
   methods: {
@@ -45,7 +87,7 @@ export default {
     //   this.$router.push('/detail?jobId=22')
     // }
     getJobsList () {
-      axios.get('/job').then((result) => {
+      this.axios.get('/job').then((result) => {
         var res = result.data
         this.jobsList = res.result
       })
@@ -59,7 +101,9 @@ export default {
   }
 }
 </script>
-
 <style scoped>
-
+a{
+  text-decoration: none;
+  color: #3c3c3c;
+}
 </style>

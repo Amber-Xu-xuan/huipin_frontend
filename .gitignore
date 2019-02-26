@@ -7,7 +7,7 @@ yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
 selenium-debug.log
-
+# 提交git要忽略的文件
 # Editor directories and files
 .idea
 .vscode

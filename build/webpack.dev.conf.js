@@ -14,7 +14,7 @@ const express = require('express')
 const app = express()
 var jobsData = require('../mock/job.json')//加载本地数据文件
 var apiRoutes = express.Router()
-apiRoutes.get('/job', function (req, res, next) {
+apiRoutes.get('/jobs', function (req, res, next) {
   res.json({
     error : 0,
     data : jobsData
@@ -57,7 +57,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
   //  添加mock配置
     before(app) {
-      app.get('/job', (req, res) => {
+      app.get('/jobs', (req, res) => {
         res.json({
           errno: 0,
           data: jobsData

@@ -14,6 +14,11 @@ import locale from 'element-ui/lib/locale/lang/en'
 import axios from 'axios'
 // QS是axios库中带的，不需要我们再npm安装一个
 import Qs from 'qs'
+// 懒加载
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad, {
+  loading: '/static/loading-svg/loading.svg'
+})
 Vue.prototype.axios = axios
 Vue.prototype.qs = Qs
 Vue.config.productionTip = false

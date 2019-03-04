@@ -36,3 +36,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 - vue-resource
 - element-ui
 - vuex
+
+### 版本
+Vue：2.9.6

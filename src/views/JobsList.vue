@@ -6,19 +6,32 @@
 <template>
   <div>
     <nav-header></nav-header>
-    <div class="filter" id="filter">
+
+    <div>
+      <span>
+        <a href="javascript:void(0)" class="fillterby stopPop" @click="showFilterPop">按钮</a>
+        <a href="javascript:void(0)" class="default cur"></a>
+        <a href="javascript:void(0)" class="salary">薪资</a>
+        <a href="javascript:void(0)" class="area">地区</a>
+      </span>
+    </div>
+    <div class="filter" id="filter" v-bind:class="{'filterBy-show':filterBy}">
       <dl class="filter-salary"></dl>
       <dt>薪资待遇：</dt>
       <dd>        <a href="javascript:void(0)" v-bind:class="{'cur':salaryCheck == 'all'}">All</a>
         </dd>
-      <dd v-for="salary in salaryFilter" :key="salary.startSalary" @click="salaryCheck=index">
-        <a href="javascript:void(0)" v-bind:class="{'cur':salaryCheck==index}">{{salary.startSalary}}-{{salary.endSalary}}</a>
+      <dd v-for="(salary,index) in salaryFilter" :key="salary.startSalary" >
+        <a href="javascript:void(0)" @click="setSalaryFilter(index)" v-bind:class="{'cur':salaryCheck==index}">{{salary.startSalary}}-{{salary.endSalary}}</a>
       </dd>
     </div>
     <div>
       <ul>
         <li v-for="job in jobsList" :key="job.jId">
-          哈哈哈
+          <!--公司-->
+          <div>
+            <a href="#"><img v-lazy="'/static/company1.jpg'"></a>
+          </div>
+          <!--公司-->
           <p><span>职位：{{job.jName}}</span></p>
           <p><span>薪资：{{job.salary}}</span></p>
           <p><span>地区：{{job.jarea}}</span></p>
@@ -79,7 +92,9 @@ export default {
           startSalary: '>10000.00'
         }
       ],
-      salaryCheck: 'all'
+      salaryCheck: 'all',
+      filterBy: false,
+      overLayFlag: false
     }
   },
   methods: {
@@ -87,10 +102,22 @@ export default {
     //   this.$router.push('/detail?jobId=22')
     // }
     getJobsList () {
-      this.axios.get('/job').then((result) => {
+      this.axios.get('/jobs').then((result) => {
         var res = result.data
         this.jobsList = res.result
       })
+    },
+    showFilterPop () {
+      this.filterBy = true
+      this.overLayFlag = true
+    },
+    closePop () {
+      this.filterBy = false
+      this.overLayFlag = false
+    },
+    setSalaryFilter (index) {
+      this.salaryCheck = index
+      this.closePop()
     }
   },
   components: {
@@ -105,5 +132,9 @@ export default {
 a{
   text-decoration: none;
   color: #3c3c3c;
+}
+.cur{
+  transform: rotate3d(1, 1, 1, 45deg);
+  color: #0d86ff;
 }
 </style>

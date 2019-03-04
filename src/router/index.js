@@ -33,7 +33,7 @@ export default new Router({
       component: Detail
     },
     {
-      path: '/jobs',
+      path: '/jobslist',
       name: 'JobsList',
       component: JobsList,
       children: [

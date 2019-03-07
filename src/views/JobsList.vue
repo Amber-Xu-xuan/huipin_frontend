@@ -65,7 +65,7 @@
 <script>
 
 import './../assets/css/base.css'
-import NavHeader from '@/components/Header'
+import NavHeader from '@/components/ZPHeader'
 export default {
   name: 'JobsList',
   data () {

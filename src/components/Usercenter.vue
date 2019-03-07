@@ -1,16 +1,26 @@
 <template>
-<el-container>
-  <el-header class="yellow">header</el-header>
-  <el-container>
-  <el-aside class="red">aside</el-aside>
-  <el-main class="green">main</el-main>
-  </el-container>
-</el-container>
+<!--<el-container>-->
+  <!--<el-header class="yellow">header</el-header>-->
+  <!--<el-container>-->
+  <!--<el-aside class="red">aside</el-aside>-->
+  <!--<el-main class="green">main</el-main>-->
+  <!--</el-container>-->
+<!--</el-container>-->
+  <div>
+    <ZPHeader></ZPHeader>
+    <div>
+      这是首页，嘻嘻嘻。
+    </div>
+    <ZPFooter></ZPFooter>
+  </div>
 </template>
 
 <script>
+import ZPHeader from './ZPHeader'
+import ZPFooter from './ZPFooter'
 export default {
-  name: 'usercenter'
+  name: 'usercenter',
+  components: {ZPHeader, ZPFooter}
 }
 </script>
 

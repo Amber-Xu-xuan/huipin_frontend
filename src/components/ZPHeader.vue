@@ -11,9 +11,6 @@ export default {
 </script>
 <style scoped>
 .header{
-  width: 100%;
   background-color: #5bb0ff;
-  height: 2.5rem;
-  margin-bottom: 100px;
 }
 </style>

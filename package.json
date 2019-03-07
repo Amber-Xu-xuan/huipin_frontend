@@ -15,7 +15,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "ejs": "^2.6.1",
     "element-ui": "^2.5.4",
+    "express": "^4.16.4",
+    "express-generator": "^4.16.0",
     "install": "^0.12.2",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.6",

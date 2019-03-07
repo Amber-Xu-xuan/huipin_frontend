@@ -1,14 +1,29 @@
 <template>
-  <div>
+  <div class="login-container">
     <ZPHeader></ZPHeader>
-    <form>
-      <label for="account">账号：</label><input type="text" v-model="loginInfoVo.phone" id="account" placeholder="请输入您注册的账号（手机号码）"/>
-      <div>
-        <label for="password">密码:</label><input type="password" v-model="loginInfoVo.password" id="password" value="" placeholder="请输入密码"/>
+    <div class="login-content">
+      <div class="login-title">登录</div>
+      <div class="login-form login-box-inner">
+        <form>
+            <p>Sign in to continue</p>
+            <div class="login-group">
+              <label for="account">账号：</label><input type="text" v-model="loginInfoVo.phone" id="account" placeholder="请输入您注册的账号（手机号码）" name="phone" class="login-input"/>
+            </div>
+            <div class="login-group password-group" style="height: 69px;">
+              <label>Password <a href="#" class="forgot-link">Forgot Password?</a></label>
+              <input type="password" v-model="loginInfoVo.password" id="password" value="" placeholder="请输入密码" name="password" autocomplete="current-password" class="login-input"/>
+            </div>
+            <button class="login-btn login-btn" @click="login">
+              Sign In
+            </button>
+            <div class="text-foot">
+              Don't have an account? <a href="" class="register-link">Register</a>
+            </div>
+          </form>
+
+        </form>
       </div>
-      <button @click="login">登录</button>
-      <button type="reset">取消</button>
-    </form>
+    </div>
     <ZPFooter></ZPFooter>
   <!--<el-row type="flex" justify="center" class="login-container">-->
     <!--<el-col :span="12" :xs="24" :sm="12" :md="12">-->
@@ -55,22 +70,56 @@ export default {
 </script>
 
 <style scoped>
-  .login-container {
-    /*transition: property duration timing-function delay;*/
-    /*transition-property: all;*/
-    /*transition-timing-function: linear;*/
-    /*transition-duration: 2s;*/
-    /*transition-delay: 1000ms;*/
-    background: #59a0ff;
+  .login-container{
+    height: 100%;
+    text-align: center;
+    font-family: 'Segoe UI';
+    font-size: 16px;
   }
-.login-content{
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border-radius: 10px;
+  .login-content{
+    height: 100%;
+    position: relative;
+    width: 360px;
+    margin: 0 auto;
+    background: aliceblue;
+  }
+.login-title{
   overflow: hidden;
-  margin: 0 auto;
-
-  padding: 65px 55px 54px 55px;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto -50px auto;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 4px 40px rgba(0, 0, 0, .07);
+  box-shadow: 0 4px 40px rgba(0, 0, 0, .07);
+  padding: 10px;
+  background-color: #fff;
+  z-index: 1;
+  position: relative;
 }
+  .login-form{
+    width: 100%;
+    position: absolute;
+    left: 0;
+  }
+
+  .login-form:after{
+    transform: translate(0, -92.6%) scale(.88);
+    border-radius: 3px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: -1;
+    content: ' ';
+  }
+  .login-box-inner{
+    background-color: #fff;
+    -webkit-box-shadow: 0 7px 25px rgba(0, 0, 0, .08);
+    box-shadow: 0 7px 25px rgba(0, 0, 0, .08);
+    padding: 60px 25px 25px 25px;
+    text-align: left;
+    border-radius: 3px;
+  }
 </style>

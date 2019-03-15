@@ -17,7 +17,6 @@ import locale from 'element-ui/lib/locale/lang/en'
 // import axios from 'axios'
 // 引用axios，并设置基础URL为后端服务api地址
 var axios = require('axios')
-axios.defaults.baseURL = 'https://localhost:8443/api'
 // 将API方法绑定到全局
 Vue.prototype.axios = axios
 // Vue.prototype.qs = Qs

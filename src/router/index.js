@@ -9,6 +9,8 @@ import Image from '../views/Image'
 import Detail from '../views/Detail'
 // 引入资源请求插件
 import VueResource from 'vue-resource'
+//注册组件
+import Register from '../components/Register'
 // @是src
 Vue.use(Router)
 // 使用VueResource插件,ajax插件
@@ -31,6 +33,11 @@ export default new Router({
       path: '/detail',
       name: 'detail',
       component: Detail
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path: '/jobslist',

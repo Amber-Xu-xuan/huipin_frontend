@@ -1,125 +1,139 @@
 <template>
-  <div class="login-container">
+  <div class="login-content">
     <ZPHeader></ZPHeader>
-    <div class="login-content">
-      <div class="login-title">登录</div>
-      <div class="login-form login-box-inner">
-        <form>
-            <p>Sign in to continue</p>
-            <div class="login-group">
-              <label for="account">账号：</label><input type="text" v-model="loginInfoVo.phone" id="account" placeholder="请输入您注册的账号（手机号码）" name="phone" class="login-input"/>
-            </div>
-            <div class="login-group password-group" style="height: 69px;">
-              <label>Password <a href="#" class="forgot-link">Forgot Password?</a></label>
-              <input type="password" v-model="loginInfoVo.password" id="password" value="" placeholder="请输入密码" name="password" autocomplete="current-password" class="login-input"/>
-            </div>
-            <button class="login-btn login-btn" @click="login">
-              Sign In
-            </button>
-            <div class="text-foot">
-              Don't have an account? <a href="" class="register-link">Register</a>
-            </div>
-          </form>
-
-        </form>
-      </div>
-    </div>
-    <ZPFooter></ZPFooter>
-  <!--<el-row type="flex" justify="center" class="login-container">-->
-    <!--<el-col :span="12" :xs="24" :sm="12" :md="12">-->
-      <!--<div class="login-content">-->
-       <!---->
-      <!--</div>-->
-    <!--</el-col>-->
-  <!--</el-row>-->
+    <el-row type="flex" justify="center">
+      <el-col :span="24" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+      <!--不显示必填输入框旁的星号=hide-required-asterisk-->
+      <el-form class="login-form" show-message status-icon :model="loginInfoVo" :rules="rules" ref="loginInfoVo"
+               hide-required-asterisk
+               >
+        <div class="font-style">登录</div>
+        <!-- prop="phone"绑定校验规则-->
+        <el-form-item label="账号：" prop="phone" lable-position="left" class="el-form-item">
+          <el-input maxlength="12" type="text" v-model="loginInfoVo.phone" prefix-icon="el-icon-mobile-phone"
+                    id="account"
+                    placeholder="请输入您注册的账号（手机号码）"/>
+        </el-form-item>
+        <el-form-item label="密码:" prop="password" lable-position="left">
+          <el-input type="password" prefix-icon="el-icon-edit-outline" v-model="loginInfoVo.password" id="password"
+                    value="" placeholder="请输入密码" show-password="true"/>
+        </el-form-item>
+        <el-form-item class="login-btn">
+          <el-button @click="login('loginInfoVo')" round type="primary">登录</el-button>
+          <el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>
+        </el-form-item>
+      </el-form>
+        </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import ZPHeader from './ZPHeader'
-import ZPFooter from './ZPFooter'
-export default {
-  name: 'login',
-  components: {ZPFooter, ZPHeader},
-  data () {
-    return {
-      loginInfoVo: {
-        phone: '',
-        password: ''
-      },
-      responseResult: []
-    }
-  },
-  methods: {
-    login () {
-      this.$axios.post('/candidate/login', {
-        phone: this.loginInfoVo.phone,
-        password: this.loginInfoVo.password
-      }).then(
-        successResponse => {
-          this.responseResult = JSON.stringify(successResponse.data)
-          if (successResponse.data.code === 200) {
-            // 当验证成功后跳转到用户中心
-            this.$router.replace({path: '/usercenter'})
+  // 引入接口
+import ZPHeader from '@/components/ZPHeader'
+  export default {
+    name: 'login',
+    components:{ZPHeader},
+    data () {
+      // 自定义的校验规则
+      var checkCount = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('账号不能为空'))
+        } else {
+          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+          console.log(reg.test(value))
+          if (reg.test(value)) {
+            callback()
+          } else {
+            return callback(new Error('请输入正确的手机号'))
           }
         }
-      )
+      }
+      return {
+        // model绑定的是表单数据对象
+        loginInfoVo: {
+          phone: '',
+          password: ''
+        },
+        responseResult: [],
+        //  表单校验规则
+        rules: {
+          phone: [
+            {required: true, message: '请输入账号', trigger: 'blur'},
+            {validator: checkCount, trigger: 'blur'},
+            {min: 8, max: 11, message: '长度在8到11个数字', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: '请输入密码', trigger: 'blur'}
+          ]
+        }
+      }
+    },
+    methods: {
+      login () {
+        this.$refs.loginInfoVo.validate((valid) => {
+          if (valid) {
+            // 验证成功后将数据转换成JSON格式传递到后端
+            // alert('正在提交...')
+            this.$message.info('正在加载中...')
+            this.$axios.post('/candidate/login', {
+              phone: this.loginInfoVo.phone,
+              password: this.loginInfoVo.password
+            }).then(
+              successResponse => {
+                this.responseResult = JSON.stringify(successResponse.data)
+                if (successResponse.data.code === 200) {
+                  // 当验证成功后跳转到用户中心
+                  this.$router.replace({path: '/usercenter'})
+                }
+              }
+            )
+            this.$router.push({
+              name: 'Home',
+              params: {
+                username: this.loginForm.username
+              }
+            })
+            // loginReq(this.loginInfoVo.phone, this.loginInfoVo.password)
+          } else {
+            //  验证失败
+            console.log('验证失败,用户名或密码错误')
+            this.$message.error('用户名或密码错误')
+            return false
+          }
+        })
+      },
+      reset (loginInfoVo) {
+        this.$refs[loginInfoVo].resetFields()
+      }
+      // register () {
+      //   this.$router.push({path: '/register'})
+      // }
     }
   }
-}
 </script>
 
 <style scoped>
-  .login-container{
-    height: 100%;
-    text-align: center;
-    font-family: 'Segoe UI';
-    font-size: 16px;
-  }
-  .login-content{
-    height: 100%;
-    position: relative;
-    width: 360px;
-    margin: 0 auto;
-    background: aliceblue;
-  }
-.login-title{
-  overflow: hidden;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto -50px auto;
-  border-radius: 50%;
-  -webkit-box-shadow: 0 4px 40px rgba(0, 0, 0, .07);
-  box-shadow: 0 4px 40px rgba(0, 0, 0, .07);
-  padding: 10px;
-  background-color: #fff;
-  z-index: 1;
-  position: relative;
-}
-  .login-form{
+
+  .login-content {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-content: center;
     width: 100%;
-    position: absolute;
-    left: 0;
+    margin: 0 auto;
+
   }
 
-  .login-form:after{
-    transform: translate(0, -92.6%) scale(.88);
-    border-radius: 3px;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    z-index: -1;
-    content: ' ';
+  .login-form {
+    /*display: block;*/
+    padding: 50px 20px;
+    border-top: 10px solid #66b1ff;
+    background: #FFF;
+    /*margin: 0 auto;*/
+    margin-top: 200px;
+    /*margin-right: 100px;*/
+    border-radius: 40px;
   }
-  .login-box-inner{
-    background-color: #fff;
-    -webkit-box-shadow: 0 7px 25px rgba(0, 0, 0, .08);
-    box-shadow: 0 7px 25px rgba(0, 0, 0, .08);
-    padding: 60px 25px 25px 25px;
-    text-align: left;
-    border-radius: 3px;
-  }
+
 </style>

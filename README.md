@@ -39,3 +39,19 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ### 版本
 Vue：2.9.6
+nodejs:v10.15.1
+
+[npm:6.4.1](registry.npmjs.org)
+
+
+### note
+#### computed与watch、methods的区别
+- computed是一个function，需要return一个值，结果会被缓存，除非依的响应式属性变化采用重新计算，主要**当作属性使用**
+- watch也是一个function，无需return一个值。computed和methods的结合体。键是要观察的表达式，值是对应回调函数
+- method方法表示一个具体的操作，主要编写业务逻辑
+
+### [webpack（前端项目构架工具）](webpack.js.org)
+
+1. 合并、压缩（精灵图、图片的base64编码）
+2. 使用requireJS或webpack（基于整个项目构建）
+3. 使用Gulp，基于task任务

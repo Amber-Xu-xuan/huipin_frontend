@@ -1,6 +1,6 @@
 'use strict'
 const utils = require('./utils')
-const webpack = require('webpack')
+const webpack = require('webpack') //启用热更新第二步
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
@@ -40,7 +40,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
       ],
     },
-    hot: true,
+    hot: true, //启用热更新第一步
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
     host: HOST || config.dev.host,
@@ -69,7 +69,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': require('../config/dev.env')
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(), // 启用热更新第三步，一个热更新的模块对象
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin

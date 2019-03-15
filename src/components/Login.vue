@@ -16,15 +16,19 @@
         </el-form-item>
         <el-form-item label="密码:" prop="password" lable-position="left">
           <el-input type="password" prefix-icon="el-icon-edit-outline" v-model="loginInfoVo.password" id="password"
-                    value="" placeholder="请输入密码" show-password="true"/>
+                    value="" placeholder="请输入密码" show-password="true" @keyup.enter.native="login()"/>
         </el-form-item>
         <el-form-item class="login-btn">
           <el-button @click="login('loginInfoVo')" round type="primary">登录</el-button>
           <el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>
         </el-form-item>
+        <router-link to="/register" class="register-link">如果您没有账号，请先注册</router-link>
       </el-form>
+
         </el-col>
+
     </el-row>
+
   </div>
 </template>
 
@@ -75,7 +79,7 @@ import ZPHeader from '@/components/ZPHeader'
           if (valid) {
             // 验证成功后将数据转换成JSON格式传递到后端
             // alert('正在提交...')
-            this.$message.info('正在加载中...')
+            this.$message.info('正在登录中...')
             this.$axios.post('/candidate/login', {
               phone: this.loginInfoVo.phone,
               password: this.loginInfoVo.password
@@ -85,6 +89,7 @@ import ZPHeader from '@/components/ZPHeader'
                 if (successResponse.data.code === 200) {
                   // 当验证成功后跳转到用户中心
                   this.$router.replace({path: '/usercenter'})
+                  this.$message.success('成功登录！！')
                 }
               }
             )
@@ -134,6 +139,15 @@ import ZPHeader from '@/components/ZPHeader'
     margin-top: 200px;
     /*margin-right: 100px;*/
     border-radius: 40px;
+  }
+  .register-link{
+    color: #999;
+    text-decoration: none;
+    text-align: center;
+    margin: 0 auto;
+  }
+  a:hover{
+    color: #66b1ff;
   }
 
 </style>

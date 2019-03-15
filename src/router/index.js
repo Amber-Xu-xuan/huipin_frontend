@@ -11,6 +11,9 @@ import Detail from '../views/Detail'
 import VueResource from 'vue-resource'
 //注册组件
 import Register from '../components/Register'
+// 主页
+import homePage from '../components/HomePage'
+import HomePage from '@/components/HomePage'
 // @是src
 Vue.use(Router)
 // 使用VueResource插件,ajax插件
@@ -21,8 +24,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'login',
-      component: Login
+      name: 'homePage',
+      component: HomePage
     },
     {
       path: '/usercenter',
@@ -38,6 +41,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '/jobslist',

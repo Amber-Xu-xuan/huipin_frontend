@@ -1,0 +1,36 @@
+{
+  "status": "0",
+  "msg": "成功加载",
+  "data": [
+    {
+      "jId": "001",
+      "jName": "前端工程师",
+      "salary": 8000,
+      "jarea": "泉州"
+    },
+    {
+      "jId": "002",
+      "jName": "Java开发",
+      "salary": 8000,
+      "jarea": "泉州"
+    },
+    {
+      "jId": "003",
+      "jName": "Java开发",
+      "salary": 8000,
+      "jarea": "泉州"
+    },
+    {
+      "jId": "004",
+      "jName": "Java开发",
+      "salary": 8000,
+      "jarea": "泉州"
+    },
+    {
+      "jId": "005",
+      "jName": "Java开发",
+      "salary": 8000,
+      "jarea": "泉州"
+    }
+  ]
+}

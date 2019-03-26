@@ -12,21 +12,26 @@ const portfinder = require('portfinder')
 // 配置mock数据
 const express = require('express')
 const app = express()
-var jobsData = require('../mock/job.json')//加载本地数据文件
+var jobsData = require('../src/mock/json/job.json')//加载本地数据文件
 var apiRoutes = express.Router()
 apiRoutes.get('/jobs', function (req, res, next) {
-  res.json({
-    error : 0,
-    data : jobsData
-  });
+  // res.json({
+  //   error : 0,
+  //   data : jobsData
+  // });
+  res.send({
+    jobsData
+  })
 })
-app.use(apiRoutes)
+app.use('api',apiRoutes)
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
+    // 配置所有第三方模块 加载器
+    // 从后往前调用，进行处理
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
   // cheap-module-eval-source-map is faster for development
@@ -73,9 +78,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
+    // 创建一个在内存中生成HTML页面的插件
+    // 不需要手动处理引用路径，自动创建一个合适的script
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
+      filename: 'index.html', // 指定生成的页面的名称
+      template: 'index.html', //指定 模板页面，将来会根据指定页面路径，去生成内存中的页面
       inject: true
     }),
     // copy custom static assets

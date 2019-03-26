@@ -2,7 +2,7 @@
   <div class="login-content">
     <ZPHeader></ZPHeader>
     <el-row type="flex" justify="center">
-      <el-col :span="24" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+      <el-col :span="24" :xs="16" :sm="12" :md="12" :lg="12" :xl="12">
       <!--不显示必填输入框旁的星号=hide-required-asterisk-->
       <el-form class="login-form" show-message status-icon :model="loginInfoVo" :rules="rules" ref="loginInfoVo"
                hide-required-asterisk
@@ -10,17 +10,38 @@
         <div class="font-style">登录</div>
         <!-- prop="phone"绑定校验规则-->
         <el-form-item label="账号：" prop="phone" lable-position="left" class="el-form-item">
-          <el-input maxlength="12" type="text" v-model="loginInfoVo.phone" prefix-icon="el-icon-mobile-phone"
+          <el-input maxlength="12"
+                    type="text"
+                    v-model="loginInfoVo.phone"
+                    prefix-icon="el-icon-mobile-phone"
+                    name="phone"
                     id="account"
+                    auto-complete="on"
                     placeholder="请输入您注册的账号（手机号码）"/>
         </el-form-item>
-        <el-form-item label="密码:" prop="password" lable-position="left">
-          <el-input type="password" prefix-icon="el-icon-edit-outline" v-model="loginInfoVo.password" id="password"
-                    value="" placeholder="请输入密码" show-password="true" @keyup.enter.native="login()"/>
-        </el-form-item>
+        <el-form-item
+          label="密码:"
+          prop="cpassword"
+          lable-position="left">
+          <el-input
+            :type="passwordType"
+            prefix-icon="el-icon-edit-outline"
+            v-model="loginInfoVo.cpassword"
+            id="cpassword"
+            name="cpassword"
+            show-password
+            auto-complete="on"
+            placeholder="请输入密码"
+            @keyup.enter.native="login"/>
+          <!--<span class="show-pwd" @click="showPwd">-->
+          <!--<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
+        <!--</span>-->
+         </el-form-item>
+
         <el-form-item class="login-btn">
-          <el-button @click="login('loginInfoVo')" round type="primary">登录</el-button>
-          <el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>
+          <el-button style="width:100%;margin-bottom:30px;" :loading="loading" type="primary" @click.native.prevent="login" round>登录</el-button>
+          <!--<el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>-->
+
         </el-form-item>
         <router-link to="/register" class="register-link">如果您没有账号，请先注册</router-link>
       </el-form>
@@ -54,11 +75,15 @@ import ZPHeader from '@/components/ZPHeader'
         }
       }
       return {
+        passwordType: 'password',
+        loading: false,
+        redirect: undefined,
         // model绑定的是表单数据对象
         loginInfoVo: {
           phone: '',
-          password: ''
+          cpassword: ''
         },
+        // 从后端返回的结果
         responseResult: [],
         //  表单校验规则
         rules: {
@@ -67,38 +92,74 @@ import ZPHeader from '@/components/ZPHeader'
             {validator: checkCount, trigger: 'blur'},
             {min: 8, max: 11, message: '长度在8到11个数字', trigger: 'blur'}
           ],
-          password: [
+          cpassword: [
             {required: true, message: '请输入密码', trigger: 'blur'}
           ]
         }
       }
     },
+    // 监听，当路由发生变化的时候执行
+    watch: {
+      $route: {
+        handler: function(route) {
+          this.redirect = route.query && route.query.redirect
+        },
+        immediate: true
+      }
+    },
+    created() {
+      // window.addEventListener('hashchange', this.afterQRScan)
+    },
+    destroyed() {
+      // window.removeEventListener('hashchange', this.afterQRScan)
+    },
     methods: {
+      // 是否显示密码
+      showPwd() {
+        if (this.passwordType === 'password') {
+          this.passwordType = ''
+        } else {
+          this.passwordType = 'password'
+        }
+      },
       login () {
         this.$refs.loginInfoVo.validate((valid) => {
           if (valid) {
             // 验证成功后将数据转换成JSON格式传递到后端
             // alert('正在提交...')
+            this.loading = true
             this.$message.info('正在登录中...')
-            this.$axios.post('/candidate/login', {
+            //  /candidate
+            this.$axios.post('/candidate/login',this.qs.stringify({
               phone: this.loginInfoVo.phone,
-              password: this.loginInfoVo.password
-            }).then(
+              password: this.loginInfoVo.cpassword
+            },{
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }) ).then(
               successResponse => {
                 this.responseResult = JSON.stringify(successResponse.data)
+                this.loading = false
+                console.log( this.responseResult)
                 if (successResponse.data.code === 200) {
                   // 当验证成功后跳转到用户中心
                   this.$router.replace({path: '/usercenter'})
                   this.$message.success('成功登录！！')
+                }else{
+                  this.$message.error(successResponse.data.message + '请重新输入')
                 }
               }
-            )
-            this.$router.push({
-              name: 'Home',
-              params: {
-                username: this.loginForm.username
-              }
+            ).catch(function (error) {
+              console.log(error)
+              // this.loading = false
             })
+            // this.$router.push({
+            //   name: 'Home',
+            //   params: {
+            //     phone: this.loginloginInfoVoForm.phone
+            //   }
+            // })
             // loginReq(this.loginInfoVo.phone, this.loginInfoVo.password)
           } else {
             //  验证失败
@@ -106,6 +167,7 @@ import ZPHeader from '@/components/ZPHeader'
             this.$message.error('用户名或密码错误')
             return false
           }
+          this.loading = false
         })
       },
       reset (loginInfoVo) {
@@ -136,7 +198,7 @@ import ZPHeader from '@/components/ZPHeader'
     border-top: 10px solid #66b1ff;
     background: #FFF;
     /*margin: 0 auto;*/
-    margin-top: 200px;
+    margin-top: 100px;
     /*margin-right: 100px;*/
     border-radius: 40px;
   }
@@ -150,4 +212,14 @@ import ZPHeader from '@/components/ZPHeader'
     color: #66b1ff;
   }
 
+  /*显示密码图标*/
+  .show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: gray;
+    cursor: pointer;
+    user-select: none;
+  }
 </style>

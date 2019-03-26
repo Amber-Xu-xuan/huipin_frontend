@@ -21,15 +21,15 @@ const createLintingRule = () => ({
   //   emitWarning: !config.dev.showEslintErrorsInOverlay
   // }
 })
-
+// 导出配置对象，根据这个对象打包构建
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
   },
-  output: {
-    path: config.build.assetsRoot,
-    filename: '[name].js',
+  output: { // 指定输出选项
+    path: config.build.assetsRoot, // 输出路径
+    filename: '[name].js',  // 输出文件名称
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
@@ -56,6 +56,7 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        // 处理图片路径的loader
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {

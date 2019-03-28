@@ -28,119 +28,50 @@
 
         <el-col :span="24" class="main">
           <aside>
-            <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed">
+            <!--unique-opened:之保持一个子菜单的展开
+            default-active="2"：默认打开-->
+            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">我的简历</span>
                 </template>
                 <el-menu-item-group>
-                  <span slot="title">我的简历</span>
-                  <el-menu-item index="1-1">上传简历</el-menu-item>
-                  <el-menu-item index="1-2">下载简历</el-menu-item>
+                  <!--<span slot="title">我的简历</span>-->
+                  <el-menu-item index="uploadResume"><router-link to="/usercenter/uploadResume">上传简历</router-link></el-menu-item>
+                  <el-menu-item index="downloadResume"><router-link to="/usercenter/downloadResume">下载简历</router-link></el-menu-item>
+                  <el-menu-item index="editResume"><router-link to="/usercenter/editResume">在线编辑简历</router-link></el-menu-item>
                 </el-menu-item-group>
-                <el-submenu index="1-4">
-                  <span slot="title">在线简历</span>
-                  <el-menu-item index="1-4-1">在线编辑</el-menu-item>
-                </el-submenu>
+                <!--<el-submenu index="1-4">-->
+                  <!--<span slot="title">在线简历</span>-->
+                  <!--<el-menu-item index="editResume">在线编辑</el-menu-item>-->
+                <!--</el-submenu>-->
               </el-submenu>
-              <el-menu-item index="2">
+              <el-menu-item index="usercenter/editResume">
                 <i class="el-icon-menu"></i>
-                <span slot="title">修改密码</span>
+                <span slot="title"><router-link to="/usercenter/editPassword">修改密码</router-link></span>
               </el-menu-item>
               <!--disabled-->
               <el-menu-item index="3">
                 <i class="el-icon-document"></i>
-                <span slot="title">修改手机号码</span>
+                <span slot="title"><router-link to="/usercenter/editResume">修改手机号码</router-link></span>
               </el-menu-item>
               <el-menu-item index="4">
                 <i class="el-icon-setting"></i>
                 <span slot="title">设置状态</span>
               </el-menu-item>
             </el-menu>
-
-            <!--<aside :class="collapsed?'menu-collapsed':'menu-expanded'">-->
-            <!--&lt;!&ndash;导航菜单&ndash;&gt;-->
-            <!--<el-menu :default-active="this.activeUrl" class="el-menu-vertical-demo" @open="handleopen"-->
-                     <!--@close="handleclose" @select="handleselect"-->
-                     <!--unique-opened router v-show="!collapsed">-->
-
-              <!--<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">-->
-              <!--&lt;!&ndash;<template slot="title">&ndash;&gt;-->
-                <!--&lt;!&ndash;<el-submenu :index="index+''" v-if="!item.leaf">&ndash;&gt;-->
-                <!--<el-submenu index="1">-->
-                  <!--<template slot="title">-->
-                    <!--<i class="el-icon-location"></i>手机号码-->
-                  <!--</template>-->
-                  <!--&lt;!&ndash;<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path"&ndash;&gt;-->
-                    <!--&lt;!&ndash;v-if="!child.hidden">{{child.name}}&ndash;&gt;-->
-                  <!--&lt;!&ndash;</el-menu-item>&ndash;&gt;-->
-                  <!--<el-menu-item-group>-->
-                    <!--<span slot="title">分组一</span>-->
-                    <!--<el-menu-item index="1-1">选项1</el-menu-item>-->
-                    <!--<el-menu-item index="1-2">选项2</el-menu-item>-->
-                  <!--</el-menu-item-group>-->
-                <!--</el-submenu>-->
-                <!--&lt;!&ndash;<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<i :class="item.iconCls"></i>&ndash;&gt;-->
-                  <!--&lt;!&ndash;{{item.children[0].name}}&ndash;&gt;-->
-                <!--&lt;!&ndash;</el-menu-item>&ndash;&gt;-->
-                <!--<el-menu-item index="2">-->
-                  <!--<i class="el-icon-menu"></i>-->
-                  <!--<span slot="title">导航二</span>-->
-                <!--</el-menu-item>-->
-                <!--<el-menu-item index="3" disabled>-->
-                  <!--<i class="el-icon-document"></i>-->
-                  <!--<span slot="title">导航三</span>-->
-                <!--</el-menu-item>-->
-                <!--<el-menu-item index="4">-->
-                  <!--<i class="el-icon-setting"></i>-->
-                  <!--<span slot="title">导航四</span>-->
-                <!--</el-menu-item>-->
-              <!--</template>-->
-            <!--</el-menu>-->
-            <!--导航菜单-折叠后-->
-            <!--<ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">-->
-              <!--<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">-->
-              <!--&lt;!&ndash;</li>&ndash;&gt;-->
-
-              <!--<template v-if="!item.leaf">-->
-                <!--<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)"-->
-                     <!--@mouseout="showMenu(index,false)"><i :class="item.iconCls"></i>-->
-                <!--</div>-->
-                <!--<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)"-->
-                    <!--@mouseout="showMenu(index,false)">-->
-                  <!--<li v-for="child in item.children" v-if="!child.hidden" :key="child.path"-->
-                      <!--class="el-menu-item" style="padding-left: 40px;"-->
-                      <!--:class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">-->
-                    <!--{{child.name}}-->
-                  <!--</li>-->
-                <!--</ul>-->
-              <!--</template>-->
-              <!--</li>-->
-
-              <!--<template v-else>-->
-              <!--<li class="el-submenu">-->
-                <!--<div class="el-submenu__title el-menu-item"-->
-                     <!--style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;"-->
-                     <!--:class="$route.path==item.children[0].path?'is-active':''"-->
-                     <!--@click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>-->
-              <!--</li>-->
-              <!--</template>-->
-            <!--</ul>-->
           </aside>
+          <!--侧边栏-结束-->
           <section class="content-container">
             <div class="grid-content bg-purple-light">
               <el-col :span="24" class="breadcrumb-container">
                 <strong class="title">我的简历</strong>
-                <el-breadcrumb separator="/" class="breadcrumb-inner">
-                  <!--面包屑-->
-                  <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-                  </el-breadcrumb-item>
-                </el-breadcrumb>
+                <!--面包屑-->
               </el-col>
               <el-col :span="24" class="content-wrapper">
                 <transition name="fade" mode="out-in">
+                  <!--显示对应路由下的页面-->
                   <router-view></router-view>
                 </transition>
               </el-col>
@@ -155,6 +86,7 @@
 <script>
 import ZPHeader from './ZPHeader'
 import ZPFooter from './ZPFooter'
+// import EditResume from '@/views/resume/EditResume'
 
 export default {
   name: 'usercenter',
@@ -182,8 +114,11 @@ export default {
     onSubmit () {
       console.log('submit!')
     },
-    handleopen () {
+    handleOpen () {
       //console.log('handleopen');
+    },
+    handleClose () {
+
     },
     handleclose () {
       //console.log('handleclose');
@@ -347,5 +282,11 @@ export default {
   }
   }
   }
+  }
+  /*超链接样式*/
+  a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #303133;
   }
 </style>

@@ -6,31 +6,61 @@
       "jId": "001",
       "jName": "前端工程师",
       "salary": 8000,
-      "jarea": "泉州"
+      "jarea": "泉州",
+      "emname": "厦门节点",
+      "emnum":"22-90",
+      "businessScope":"计算机软件",
+      "enterpriceStatus":"已上市",
+      "experienceDuration":"经验要求:应届生",
+      "education":"大专"
     },
     {
       "jId": "002",
       "jName": "Java开发",
       "salary": 8000,
-      "jarea": "泉州"
+      "jarea": "泉州",
+      "emname": "厦门节点",
+      "emnum":"22-90",
+      "businessScope":"计算机软件",
+      "enterpriceStatus":"已上市",
+      "experienceDuration":"经验要求:应届生",
+      "education":"大专"
     },
     {
       "jId": "003",
       "jName": "Java开发",
       "salary": 8000,
-      "jarea": "泉州"
+      "jarea": "泉州",
+      "emname": "厦门节点",
+      "emnum":"22-90",
+      "businessScope":"计算机软件",
+      "enterpriceStatus":"已上市",
+      "experienceDuration":"经验要求:应届生",
+      "education":"大专"
     },
     {
       "jId": "004",
       "jName": "Java开发",
       "salary": 8000,
-      "jarea": "泉州"
+      "jarea": "泉州",
+      "emname": "厦门节点",
+      "emnum":"22-90",
+      "businessScope":"计算机软件",
+      "enterpriceStatus":"已上市",
+      "experienceDuration":"经验要求:应届生",
+      "education":"大专"
     },
     {
       "jId": "005",
       "jName": "Java开发",
       "salary": 8000,
-      "jarea": "泉州"
+      "jarea": "泉州",
+      "emname": "厦门节点",
+      "emnum":"22-90",
+      "businessScope":"计算机软件",
+      "enterpriceStatus":"已上市",
+      "experienceDuration":"经验要求:应届生",
+      "education":"大专"
     }
   ]
 }

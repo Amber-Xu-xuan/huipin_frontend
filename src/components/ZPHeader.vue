@@ -44,7 +44,7 @@ export default {
   /*logo*/
 .logo {
   float: left;
-  margin: 0;
+  margin: 0 2rem;
 }
 /*头部的超链接*/
 .header-container a {

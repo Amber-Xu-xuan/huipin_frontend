@@ -24,14 +24,14 @@
         <el-input type="password" v-model="registerForm.checkPass" autocomplete="off"></el-input>
       </el-form-item>
 
-      <el-form-item label="户口所在地" prop="residenceAddress" required>
+      <el-form-item label="公司所在地" prop="residenceAddress" required>
         <el-select v-model="registerForm.residenceAddress" placeholder="请选择活动区域" value="">
           <el-option label="陕西" value="陕西"></el-option>
           <el-option label="山东" value="山东"></el-option>
           <el-option label="福建" value="福建"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="出生日期" required>
+      <el-form-item label="创办日期" required>
         <el-col :span="11">
           <el-form-item prop="birthday">
             <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.date"
@@ -46,8 +46,24 @@
           <!--</el-form-item>-->
         <!--</el-col>-->
       </el-form-item>
-      <el-form-item label="是否是学生" prop="isStudent">
-        <el-switch v-model="registerForm.isStudent"></el-switch>
+      <el-form-item label="融资情况">
+        <el-select v-model="filterFinancing" filterable placeholder="融资情况"  class="filter">
+          <el-option
+            v-for="(financing,index) in filterCondition.financingList"
+            :key="index"
+            :value="financing.financing">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="公司规模">
+        <el-select v-model="filterCompanyScale" filterable placeholder="公司规模"  class="filter">
+          <el-option
+            v-for="(companyScale,index) in filterCondition.companyScaleList"
+            :key="index"
+            :value="companyScale.companyScale">
+          </el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="性别" prop="gender" required>
@@ -67,7 +83,7 @@
 <script>
   import myHeader from '@/components/ZPHeader'
   export default {
-    name: 'Register',
+    name: 'EnterpriseRegister',
     components: {myHeader},
     data () {
       // 自定义的校验规则
@@ -99,9 +115,65 @@
           email: '',
           pass: '',
           checkPass:'',
-          isStudent: false,
           residenceAddress: '',
-          birthda: '',
+          filterCondition:
+            {
+              financingList : [
+                {
+                  financing: '不限'
+                },
+                {
+                  financing: '未融资'
+                },
+                {
+                  financing: '天使轮'
+                },
+                {
+                  financing: 'A轮'
+                },
+                {
+                  financing: 'A轮'
+                },
+                {
+                  financing: 'C轮'
+                },
+                {
+                  financing: 'D轮及以上'
+                },
+                {
+                  financing: '已上市'
+                },
+                {
+                  financing: '不需要融资'
+                }
+              ],
+              companyScaleList: [
+                {
+                  companyScale: '不限'
+                },
+                {
+                  companyScale: '0-20人'
+                },
+                {
+                  companyScale: '20-99人'
+                },
+                {
+                  companyScale: '100-499人'
+                },
+                {
+                  companyScale: '500-999人'
+                },
+                {
+                  companyScale: '500-999人'
+                },
+                {
+                  companyScale: '1000-9999人'
+                },
+                {
+                  companyScale: '10000人以上'
+                }
+              ]
+            },
         },
         rules: {
           cname: [

@@ -20,15 +20,18 @@
             <div class="sign-form sign-register" style="display:block;">
               <h3 class="title">一键注册</h3>
               <div class="tip-error"></div>
-              <!--<form action="/registe/save.json" method="post">-->
-              <el-form ref="form" :model="form" label-width="80px">
+              <!--<form action="/registe/save.json" method="post" label-width="80px">-->
+              <el-form ref="registerForm" :model="registerForm" >
                 <input type="hidden" name="pk" value="cpc_sem">
                 <input type="hidden" name="act" value="0">
                 <input type="hidden" name="purpose" value="0">
                 <!--手机登录输入框-->
-                <div>
-                  <el-input placeholder="请输入内容" v-model="phone" class="input-with-select">
-                    <el-select v-model="selectPhone" slot="prepend" placeholder="请选择" style="width: 100px">
+
+                <el-form-item
+                  prop="rphone"
+                  >
+                  <el-input placeholder="请输入手机号码" v-model="registerForm.rphone" class="input-with-select">
+                    <el-select v-model="registerForm.selectPhonePrefix" slot="prepend" placeholder="请选择" style="width: 100px">
                       <el-option label="+86" value="+86"></el-option>
                       <el-option label="+1" value="+1"></el-option>
                       <el-option label="+852" value="+852"></el-option>
@@ -38,31 +41,93 @@
                     </el-select>
                     <!--<el-button slot="append" icon="el-icon-search"></el-button>-->
                   </el-input>
-                </div>
+                </el-form-item>
+                  <!--密码输入框-->
+                  <el-form-item
+                    prop="rpassword"
+                    >
+                    <el-input
+                      :type="passwordType"
+                      prefix-icon="el-icon-edit-outline"
+                      v-model="registerForm.rpassword"
+                      id="rpassword"
+                      name="rpassword"
+                      show-password
+                      auto-complete="on"
+                      placeholder="请输入密码"
+                      @keyup.enter.native="register"/>
+
+                  </el-form-item>
                 <div class="landing-register-btn">
-                  <el-button type="primary" @click="onSubmit">注册</el-button>
+                  <el-button type="primary" @click="register()">注册</el-button>
                 </div>
 
 
                 <div class="agreement-tip">
                   <label>
-                    <el-checkbox v-model="checked">同意</el-checkbox>
+                    <el-checkbox v-model="registerForm.checked">同意</el-checkbox>
                     <router-link to="/protocol">用户协议及隐私政策</router-link>
+                    <div>
                     已有账号
                     <el-button type="text" @click="centerDialogVisible = true">直接登录</el-button>
+                    </div>
                   </label>
                 </div>
-
+                <!--登录-弹出框-->
                 <el-dialog
                   title="登录"
                   :visible.sync="centerDialogVisible"
                   width="40%"
                   center>
-                  <span>手机：</span>
-                  <el-input placeholder="请输入内容" v-model="phone" class="input-with-select"/>
+
+                  <el-row type="flex" justify="center">
+                    <el-col :span="20" :xs="20" :sm="20" :md="12" :lg="12" :xl="12">
+                      <!--不显示必填输入框旁的星号=hide-required-asterisk-->
+                      <el-form class="login-form" show-message status-icon :model="loginInfoVo" :rules="rules"
+                               ref="loginInfoVo"
+                               hide-required-asterisk
+                      >
+                        <!-- prop="phone"绑定校验规则-->
+                        <el-form-item prop="phone" class="el-form-item">
+                          <el-input maxlength="12"
+                                    type="text"
+                                    v-model="loginInfoVo.phone"
+                                    prefix-icon="el-icon-mobile-phone"
+                                    name="phone"
+                                    id="account"
+                                    auto-complete="on"
+                                    placeholder="请输入您注册的账号（手机号码）"/>
+                        </el-form-item>
+                        <el-form-item
+                          prop="cpassword"
+                          >
+                          <el-input
+                            :type="passwordType"
+                            prefix-icon="el-icon-edit-outline"
+                            v-model="loginInfoVo.cpassword"
+                            id="password"
+                            name="password"
+                            show-password
+                            auto-complete="on"
+                            placeholder="请输入密码"
+                            @keyup.enter.native="login"/>
+
+                        </el-form-item>
+
+                        <el-form-item class="login-btn">
+
+                        </el-form-item>
+                      </el-form>
+
+                    </el-col>
+
+                  </el-row>
+
+
                   <span slot="footer" class="dialog-footer">
     <el-button @click="centerDialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="centerDialogVisible = false">登录</el-button>
+    <el-button type="primary" @click.native.prevent="login">登录</el-button>
+                    <!--centerDialogVisible = false-->
   </span>
                 </el-dialog>
 
@@ -83,11 +148,124 @@ export default {
   name: 'LandingPage',
   components: {ZPHeader},
   data () {
+    // 自定义的校验规则
+    var checkCount = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('账号不能为空'))
+      } else {
+        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+        console.log(reg.test(value))
+        if (reg.test(value)) {
+          callback()
+        } else {
+          return callback(new Error('请输入正确的手机号'))
+        }
+      }
+    }
     return {
       phone: '',
-      selectPhone: '',
-      centerDialogVisible: false
+
+      centerDialogVisible: false,
+      passwordType: 'password',
+      loading: false,
+      redirect: undefined,
+      // model绑定的是表单数据对象
+      loginInfoVo: {
+        phone: '',
+        cpassword: ''
+      },
+      registerForm: {
+        rphone: '',
+        rpassword: '',
+        selectPhonePrefix: '',
+        checked: ''
+      },
+      // 从后端返回的结果
+      responseResult: [],
+      //  表单校验规则
+      rules: {
+        phone: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+          {validator: checkCount, trigger: 'blur'},
+          {min: 8, max: 11, message: '长度在8到11个数字', trigger: 'blur'}
+        ],
+        cpassword: [
+          {required: true, message: '请输入密码', trigger: 'blur'}
+        ]
+      }
     }
+  },
+  methods: {
+    // 是否显示密码
+    showPwd () {
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
+      } else {
+        this.passwordType = 'password'
+      }
+    },
+    login () {
+      this.$refs.loginInfoVo.validate((valid) => {
+        if (valid) {
+          // 验证成功后将数据转换成JSON格式传递到后端
+          // alert('正在提交...')
+          // this.loading = true
+          // this.$message.info('正在登录中...')
+          // //  /candidate
+          // this.$axios.post('/candidate/login', this.qs.stringify({
+          //   phone: this.loginInfoVo.phone,
+          //   password: this.loginInfoVo.cpassword
+          // }, {
+          //   headers: {
+          //     'Content-Type': 'application/x-www-form-urlencoded'
+          //   }
+          // })).then(
+          //   successResponse => {
+          //     this.responseResult = JSON.stringify(successResponse.data)
+          //     this.loading = false
+          //     console.log(this.responseResult)
+          //     if (successResponse.data.code === 200) {
+          //       // 当验证成功后跳转到用户中心
+          //       this.$router.replace({path: '/usercenter'})
+          //       this.$message.success('成功登录！！')
+          //     } else {
+          //       this.$message.error(successResponse.data.message + '请重新输入')
+          //     }
+          //   }
+          // ).catch(function (error) {
+          //   console.log(error)
+          //   // this.loading = false
+          // })
+          //前端测试
+          this.$router.push({
+            path: 'usercenter',
+            // params: {
+            //   phone: this.loginloginInfoVoForm.phone
+            // }
+          })
+          // loginReq(this.loginInfoVo.phone, this.loginInfoVo.password)
+        } else {
+          //  验证失败
+          console.log('验证失败,用户名或密码错误')
+          this.$message.error('用户名或密码错误')
+          return false
+        }
+        this.loading = false
+      })
+    },
+  //  注册
+    register(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!需迭代');
+        } else if(this.registerForm.checked){
+          this.$message.error('请先阅读')
+        } else {
+          this.$message.error('注册失败，请重新检查您输入的信息')
+          return false;
+        }
+      });
+    },
   }
 }
 </script>
@@ -229,7 +407,7 @@ export default {
 
   /*显示错误信息*/
   .tip-error {
-    margin-bottom: -25px;
+    margin-bottom: -35px;
   }
 
   .sign-form .tip-error {
@@ -268,13 +446,6 @@ export default {
     text-align: right;
   }
 
-  .dropdown-menu {
-    display: none;
-    position: relative;
-    height: 0;
-    margin-right: 2px;
-  }
-
   a {
     text-decoration: none;
   }
@@ -284,5 +455,14 @@ export default {
     text-align: center;
     margin: auto 0;
     margin-top: 20px;
+  }
+  /*同意协议checkbox*/
+  .el-checkbox{
+    margin: 0;
+  }
+  /*将注册框内的同意协议和直接登录文本设置居中*/
+  .agreement-tip{
+    text-align: center;
+    margin-top: 10px;
   }
 </style>

@@ -98,3 +98,6 @@ npm install font-awesome --save
 
 ### mock
 npm install mockjs --save-dev
+
+####  axios-mock-adapter
+安装：npm install axios-mock-adapter --save-dev

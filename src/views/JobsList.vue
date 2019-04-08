@@ -8,11 +8,16 @@
     <nav-header></nav-header>
     <div class="jobs-container">
       <!--头部幻灯片-->
-      <section></section>
+      <!--<section></section>   -->
       <div class="slide-container">
-        <el-carousel indicator-position="outside" :interval="5000" arrow="always">
-          <el-carousel-item v-for="item in 4" :key="item">
-            <h3>{{ item }}</h3>
+        <el-carousel autoplay indicator-position="outside" :interval="5000" arrow="hover" class="slide-content" :height="imgHeight">
+          <el-carousel-item v-for="(item,index) in itemImg" :key="index" name="index"  ref="imgHeight">
+            <el-row>
+              <el-col :span="24">
+                <img :src="item.img" class="banner"/>
+              </el-col>
+            </el-row>
+
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -26,7 +31,7 @@
         <!--<dd v-for="(salary,index) in filterCondition" :key="salary.startSalary">-->
         <!--<a href="javascript:void(0)" @click="setSalaryFilter(index)" v-bind:class="{'cur':salaryCheck==index}">{{salary.startSalary}}-{{salary.endSalary}}</a>-->
         <!--</dd>-->
-        <span>已选中:</span>
+        <span class="filter-select">已选中:</span>
         <span v-for='(item,index) in condition' class='active'>{{item.name}}|</span>
         <!--<div class='nav' v-for='(items,index) in category'>-->
           <!--<div class='mutil-query-title' v-if='items.name' :key="items.id">{{items.name}}-->
@@ -41,7 +46,7 @@
         <el-select v-model="filterSalary" filterable placeholder="薪资要求" class="filter">
           <el-option
             v-for="(salary,index) in filterCondition.salaryList"
-            :key="salary.salary"
+            :key="index"
             :label="salary.salary"
             :value="salary.salary">
           </el-option>
@@ -50,7 +55,7 @@
         <el-select v-model="filterExperience" filterable placeholder="工作经验"  class="filter">
           <el-option
             v-for="(experience,index) in filterCondition.experienceList"
-            :key="experience.experience"
+            :key="index"
             :value="experience.experience">
           </el-option>
         </el-select>
@@ -58,7 +63,7 @@
         <el-select v-model="filterEducation" filterable placeholder="学历要求"  class="filter">
           <el-option
             v-for="(education,index) in filterCondition.educationList"
-            :key="education.education"
+            :key="index"
             :value="education.education">
           </el-option>
         </el-select>
@@ -66,7 +71,7 @@
         <el-select v-model="filterFinancing" filterable placeholder="融资情况"  class="filter">
           <el-option
             v-for="(financing,index) in filterCondition.financingList"
-            :key="financing.financing"
+            :key="index"
             :value="financing.financing">
           </el-option>
         </el-select>
@@ -74,12 +79,13 @@
         <el-select v-model="filterCompanyScale" filterable placeholder="公司规模"  class="filter">
           <el-option
             v-for="(companyScale,index) in filterCondition.companyScaleList"
-            :key="companyScale.companyScale"
+            :key="index"
             :value="companyScale.companyScale">
           </el-option>
         </el-select>
 
-        <span>清空筛选条件</span>
+        <span><el-button type="primary" plain @click.prevent="removeFilter">搜索</el-button></span>
+        <span><el-button type="primary" plain @click.prevent="removeFilter">清空</el-button></span>
 
       </div>
       <!--筛选条件-结束-->
@@ -101,13 +107,19 @@
       <!--显示职位的卡片-->
       <div>
         <el-row class="jobs-content">
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6" v-for="item in jobsList" :key="jobsList.jId">
-            <div class="grid-content bg-purple">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="6" v-for="item in jobsList" :key="item.jId">
+            <div class="grid-content">
               <el-card class="box-card" shadow="hover" body-style="margin:'30px'">
                 <div slot="header" class="clearfix">
                   <span class="jName">{{item.jName}}</span>
                   <span class="salary">{{item.salary}}</span>
-                  <span class="card-text-margin">{{item.emname}}</span>
+                  <span class="card-text-margin">
+                    <a
+                      v-bind:href="href"
+                      v-bind:class="{ active: isActive }"
+                      v-on:click="go(item.emname)"
+                    > {{item.emname}}</a>
+                  </span>
                   <el-button style="float: right; padding: 3px 0" type="text">投递简历</el-button>
                 </div>
                 <div class="card-text item">
@@ -136,6 +148,22 @@ export default {
   data () {
     return {
       jobsList: [],
+      //幻灯片轮播图
+      imgHeight: '480px',
+      itemImg: [
+        {
+          img:"../static/slides/slide-1.jpg"
+        },
+        {
+          img:"../static/slides/slide-2.jpg"
+        },
+        {
+          img:"../static/slides/slide-3.jpg"
+        },
+        {
+          img:"../static/slides/slide-4.jpg"
+        }
+      ],
       filterCondition:
         {
           salaryList: [
@@ -266,12 +294,14 @@ export default {
       salaryCheck: 'all',
       filterBy: false,
       overLayFlag: false,
+      //是否激活对应路由
+      isActive: '',
+      href: '', //对应路由
       // 过滤条件
       filterSalary: '',
       filterExperience: '',
       filterEducation: '',
       filterFinancing: '', // 融资情况
-      filterEducation: '',
       filterCompanyScale: '', // 公司规模
       condition: [], //  已选中的条件
       category: [
@@ -291,7 +321,7 @@ export default {
       this.$router.push('/detail?jobId=22')
     },
     getJobsList () {
-      this.$axios.get('candidate/jobs').then((result) => {
+      this.$axios.get('candidate/enterprise_job').then((result) => {
         var res = result.data
         this.jobsList = res.data
         console.log(this.jobsList)
@@ -312,13 +342,27 @@ export default {
       this.salaryCheck = index
       this.closePop()
     },
+    go(emname) {
+      alert(emname)
+      // 跳转到对应的公司详情页面
+      this.$router.push({
+        path: '/enterprise/jobmessage',
+        params: {
+          enname: emname
+        }
+      })
+    },
     // 全选
     allIn(index){
 
     },
   //  清空
-    removeFilter(index) {
-
+    removeFilter() {
+      this.filterSalary = null
+      this.filterExperience = null
+      this.filterEducation = null
+      this.filterFinancing = null
+      this.filterCompanyScale = null
     }
   },
   components: {
@@ -340,31 +384,16 @@ export default {
     color: #3c3c3c;
   }
 
-  .cur {
-    transform: rotate3d(1, 1, 1, 45deg);
-    color: #0d86ff;
-  }
-
   /*幻灯片的样式*/
   .el-carousel__item {
     display: block;
   }
 
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 18px;
-    opacity: 0.75;
-    line-height: 300px;
-    margin: 0;
+  .slide-content img{
+    height-width: 100%;
+    width: 80%;
   }
 
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }
 
   .slide-container {
     margin: 20px 30px;
@@ -374,7 +403,11 @@ export default {
   /*筛选条件的样式*/
   .filter-container {
     background: #fff;
-    margin: 20px 0;
+    margin: 10px 0;
+    padding: 20px;
+  }
+  .filter-container .filter-select{
+    margin: 10px;
   }
   /*多选框*/
   .filter{
@@ -386,9 +419,13 @@ export default {
   .job-name {
     float: left;
   }
-
-  .jobs-content {
-
+  /*筛选条件之间的margin等格式的调整*/
+  .el-select{
+    margin-right: 10px;
+  }
+  /*筛选条件的content中的按钮的格式*/
+  .el-button--primary.is-plain {
+    margin-right: 5px;
   }
 
   /*职位信息和公司信息之间的margin*/
@@ -398,7 +435,7 @@ export default {
 
   .card-text {
     font-size: 10px;
-    color: #ccc;
+    color: #b7b3c3;
   }
 
   .salary {

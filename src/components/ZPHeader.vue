@@ -1,14 +1,28 @@
 <template>
-    <div class="header-container">
+    <div class="header-container header-font">
       <!--<div class="header-font">Zoom</div>-->
         <div class="inner">
-          <h1 class="logo"><a href="/login" ka="header-home-logo"><span>汇聘</span></a></h1>
+          <h1 class="logo"><span>汇聘</span></h1>
           <div class="nav">
-            <ul>
-              <li class="cur"><a ka="header-home" href="https://www.zhipin.com/">首页</a></li>
-              <li class=""><a ka="header-job" href="https://www.zhipin.com/job_detail/">求职</a></li>
-              <li class=""><a ka="header-article" href="https://news.zhipin.com/">新闻</a></li>
-            </ul>
+          <ul>
+            <li class="cur"><a href="/jobslist">首页</a></li>
+            <li class=""><a href="/jobslist">求职</a></li>
+            <!--https://www.zhipin.com/
+            https://www.zhipin.com/job_detail/
+            https://news.zhipin.com/-->
+          </ul>
+        </div>
+          <div class="user-nav">
+                <el-dropdown trigger="hover">
+                    <span class="el-dropdown-link header-login">
+                      <!--显示头像-->
+                      登录
+              </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><a  href="/login">招聘者登录</a></el-dropdown-item>
+                    <el-dropdown-item><a  href="/landing">求职者登录</a></el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
           </div>
         </div>
       <!--<span class="header-right">返回</span>-->
@@ -17,7 +31,7 @@
 
 <script>
 export default {
-  name: 'ZPHeader'
+  name: 'ZPHeader',
 }
 </script>
 <style scoped>
@@ -69,7 +83,7 @@ a {
 
 
   /*nav*/
-.nav, .user-nav {
+.nav{
   font-size: 0;
   float: left;
   margin-left: 15px;
@@ -94,9 +108,21 @@ li, ol, ul {
 }
 .nav li, .user-nav li {
   display: inline-block;
-  vertical-align: top;
+  vertical-align: center;
   text-align: center;
   font-size: 14px;
   margin: 0 7px;
+}
+/*显示用户跳转链接*/
+.user-nav {
+  font-size: 0;
+  float: right;
+  margin-right: 15px;
+  line-height: 60px;
+}
+/*用户信息*/
+.header-login {
+  cursor: pointer;
+  color: #fff;
 }
 </style>

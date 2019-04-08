@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "emid": "001",
+      "emName": "致上科技",
+      "detailemName": "厦门致上信息科技有限公司",
+      "emheadImage": "https://img.bosszhipin.com/beijin/mcs/chatphoto/20180427/83d82a94678a7a9898686f3c43317895cfcd208495d565ef66e7dff9f98764da.jpg?x-oss-process=image/resize,w_120,limit_0",
+      "emintroduce":
+      "厦门致上是一家技术型的网络科技公司，致力于为客户提供更好的服务为目标精诚创新，止于至善。“至善”二字源于《礼记•大学》：“大学之道，在明明德，在亲民，止于至善”,象征着至善互联在软件服务领域的执着追求。公司核心技术团队来源于北京大学研究生、厦门大学毕业生等，同时多位创始人曾在百度就职，整个团队拥有优秀的技术解决能力。公司核心研发人员由资深系统分析师、资深软件架构师、软件设计师等资深软件工程师组成，于厦门创业起，就已经在电商平台、O2O解决方案、APP原生开发、微信公众号开发、智能硬件研发、行业软件定制、企业信息管理系统等多个领域为多家企业提供定制化技术解决方案。",
+      "emstablishmentDate": "2014-04-02",
+      "emaddress":"厦门市软件园二期观日路54号503单元",
+      "emphone":"145879664",
+      "ememail":"无",
+      "emofficialWebsite":"删除",
+      "emnum":"20-99人",
+      "businessScope":"计算机软件",
+      "jpId":"001",
+      "enterpriceStatus":"存续",
+      "hiringJobType":"软件开发",
+      "stage": "融资阶段",
+      "type": "行业类型",
+      "commentList": [
+        {
+          "commentContent": "福利好"
+        },
+        {
+          "commentContent":"领导nice"
+        },
+        {
+          "commentContent":"移动互联网"
+        },
+        {
+          "commentContent":"公司氛围好"
+        }
+      ]
+    },
+    {
+      "emid": "002",
+      "emName": "致上科技",
+      "emheadImage": "https://img.bosszhipin.com/beijin/mcs/chatphoto/20180427/83d82a94678a7a9898686f3c43317895cfcd208495d565ef66e7dff9f98764da.jpg?x-oss-process=image/resize,w_120,limit_0",
+      "emintroduce":
+      "厦门致上是一家技术型的网络科技公司，致力于为客 户提供更好的服务为目标精诚创新，止于至善。“至善”二字源于《礼记•大学》：“大学之道，在明明德，在亲民，止于至善”,象征着至善互联在软件服务领域的执着追求。公司核心技术团队来源于北京大学研究生、厦门大学毕业生等，同时多位创始人曾在百度就职，整个团队拥有优秀的技术解决能力。公司核心研发人员由资深系统分析师、资深软件架构师、软件设计师等资深软件工程师组成，于厦门创业起，就已经在电商平台、O2O解决方案、APP原生开发、微信公众号",
+      "emstablishmentDate": "2014-04-02",
+      "emaddress":"厦门市软件园二期观日路54号503单元",
+      "emphone":"145879664",
+      "ememail":"无",
+      "emofficialWebsite":"删除",
+      "emnum":"20-99人",
+      "businessScope":"计算机软件",
+      "jpId":"001",
+      "enterpriceStatus":"存续",
+      "hiringJobType":"软件开发"
+    }
+    ]
+}

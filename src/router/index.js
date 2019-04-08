@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
-import JobsList from '@/views/JobsList'
+import JobsList from '../views/JobsList'
 import Title from '../views/Title'
 // 修改简历
 import EditResume from '../views/resume/EditResume'
@@ -24,7 +24,24 @@ import LandingPage from '../components/LandingPage'
 // 用户协议
 import UserAgreement from '../components/UserAgreement'
 //注册组件
-import Register from '../components/Register'
+import EnterpriseRegister from '../components/EnterpriseRegister'
+// 管理员中心
+import Admin from '../views/manager/Admin'
+// 管理员登录
+import AdminLogin from '../views/manager/AdminLogin'
+// 企业用户中心
+import EnterpriseCenter from '../views/enterprise/EnterpriseCenter';
+// 企业用户中心管理职位
+import EnterpriseJobManage from '../views/enterprise/job/EnterpriseJobManage'
+// 企业招聘信息，点击公司名称之后显示的企业招聘信息
+import EnterpriseJobMessage from '../views/enterprise/EnterpriseJobMessage'
+//企业用户中心，管理求职者模块
+import EnterpriseCandidateManage from '../views/enterprise/EnterpriseCandidateManage'
+
+// 企业用户信息，点击公司名称之后显示的企业详细信息
+import EnterpriseIntroduce from  '../views/enterprise/EnterpriseIntroduce'
+//企业招聘职位
+import EnterpriseJobListDetail from '../views/enterprise/EnterpriseJobListDetail'
 // 引入资源请求插件
 import VueResource from 'vue-resource'
 
@@ -66,8 +83,9 @@ export default new Router({
       // name: 'landing',
       // component: LandingPage
       name: 'login',
-      component: Login
+      component: JobsList
     },
+    // 求职者
     {
       path: '/usercenter',
       name: '用户中心',
@@ -130,15 +148,16 @@ export default new Router({
       name: 'uploadAvatar',
       component: UploadAvatar
     },
+    // {
+    //   path: '/detail',
+    //   name: 'detail',
+    //   component: Detail
+    // },
+    //
     {
-      path: '/detail',
-      name: 'detail',
-      component: Detail
-    },
-    {
-      path: '/register',
+      path: '/enterpriseRegister',
       name: 'register',
-      component: Register
+      component: EnterpriseRegister
     },
     {
       path: '/login',
@@ -149,6 +168,65 @@ export default new Router({
       path: '/protocol',
       name: '用户协议',
       component: UserAgreement
+    },
+    {
+      path: '/adminCenter',
+      name: '管理员中心',
+      component: Admin
+    },
+    {
+      path: '/admin',
+      name: '管理员登录',
+      component: AdminLogin
+    },
+    {
+      path: '/enterpriseCenter',
+      name: '企业用户中心',
+      component: EnterpriseCenter,
+      children: [
+        // 管理招聘职位
+        {
+          path: 'jobManage',
+          name: '管理职位',
+          component: EnterpriseJobManage,
+          hidden: true
+        },
+        //管理求职者
+        {
+          path: 'candidateManage',
+          name: '管理求职者',
+          component: EnterpriseCandidateManage,
+          hidden: true
+        },
+        //修改密码
+        {
+          path: 'editPassword',
+          name: '修改密码',
+          component: EditPassword,
+          hidden: true
+        }
+        ]
+    },
+    {
+      path: '/enterprise',
+      name: '招聘企业信息',
+      component: EnterpriseJobMessage,
+      children: [
+        // 职位信息
+        {
+          path: 'jobmessage',
+          name: 'jobmessage',
+          component: EnterpriseJobListDetail,
+          hidden: true
+        },
+        //公司信息介绍
+        {
+          path: 'introduce',
+          name: 'introduce',
+          component: EnterpriseIntroduce,
+          hidden: true
+        }
+      ]
     },
     {
       path: '/jobslist',

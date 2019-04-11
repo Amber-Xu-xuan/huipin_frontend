@@ -131,7 +131,8 @@ import ZPHeader from '@/components/ZPHeader'
             this.loading = true
             this.$message.info('正在登录中...')
             //  /candidate
-            this.$axios.post('/enterprise/login',this.qs.stringify({
+            console.log(this.$axios.defaults.baseURL)
+            this.$axios.post('login',this.qs.stringify({
               phone: this.loginInfoVo.phone,
               password: this.loginInfoVo.cpassword
             },{

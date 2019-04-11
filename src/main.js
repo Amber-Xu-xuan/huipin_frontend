@@ -24,15 +24,16 @@ require('././mock')
 // 引入axios
 import axios from 'axios'
 // 使用qs模块来处理参数
-import Qs from 'qs'
+import qs from 'qs'
 // 引用axios，并设置基础URL为后端服务api地址
-axios.default.baseURL = 'http://localhost:8081/api'
-
+axios.defaults.baseURL = 'http://localhost:8082/api'
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // 引入font-awesome
 import 'font-awesome/css/font-awesome.min.css'
 // 将API方法绑定到全局l
 Vue.prototype.$axios = axios
-Vue.prototype.qs = Qs
+Vue.prototype.qs = qs
 Vue.config.productionTip = false
 // 设置携带cookie
 // axios.defaults.withCredentials =true;

@@ -144,6 +144,7 @@
 
 <script>
 import ZPHeader from './ZPHeader'
+import Qs from 'qs'
 
 export default {
   name: 'LandingPage',
@@ -213,15 +214,15 @@ export default {
           this.loading = true
           this.$message.info('正在登录中...')
           //  /candidate 后端api：/candidate/login
-          this.$axios.post('/candidate/login',
+          //通过修改axios的默认urlbase进行请求的转发，然后再后端添加配置设置允许跨域的域名等内容
+          // console.log(this.$axios.defaults.baseURL)
+          console.log(this.loginInfoVo.phone, this.loginInfoVo.cpassword)
+          this.$axios.post('/login',
            {
-            phone: this.loginInfoVo.phone,
-            password: this.loginInfoVo.cpassword
-          }, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-          }).then(
+
+              phone: this.loginInfoVo.phone,
+              password: this.loginInfoVo.cpassword
+            }).then(
             successResponse => {
               this.responseResult = JSON.stringify(successResponse.data)
               this.loading = false
@@ -236,17 +237,11 @@ export default {
             }
           ).catch(function (error) {
               console.log(error)
+            this.$message.error('登录失败，请重新登陆')
               // this.loading = false
             }
           )
-          //前端测试
-          // this.$router.push({
-          //   path: 'usercenter',
-          //   // params: {
-          //   //   phone: this.loginloginInfoVoForm.phone
-          //   // }
-          // })
-          // loginReq(this.loginInfoVo.phone, this.loginInfoVo.password)
+
         } else {
           //  验证失败
           console.log('验证失败,用户名或密码错误')

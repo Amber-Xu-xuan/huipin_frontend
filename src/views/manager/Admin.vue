@@ -30,7 +30,7 @@
           <aside>
             <!--unique-opened:之保持一个子菜单的展开
             default-active="2"：默认打开-->
-            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened>
+            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
@@ -38,21 +38,21 @@
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="uploadResume"><router-link to="/admin/uploadResume">管理应聘者简历</router-link></el-menu-item>
-                  <el-menu-item index="downloadResume"><router-link to="/admin/downloadResume">管理应聘者账号</router-link></el-menu-item>
-                  <el-menu-item index="editResume"><router-link to="/admin/editResume"></router-link>统计应聘者数据</el-menu-item>
+                  <el-menu-item index="adminManageCandidateResume">管理应聘者简历信息</el-menu-item>
+                  <el-menu-item index="adminManageCandidateCount">管理应聘者账号</el-menu-item>
+                  <el-menu-item index="statisticsCandidateData">统计应聘者数据</el-menu-item>
                 </el-menu-item-group>
 
               </el-submenu>
 
-              <el-submenu index="admin/enterprise">
+              <el-submenu index="enterpriseManage">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">招聘企业管理</span>
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="uploadResume"><router-link to="/admin/uploadResume">管理应聘者信息</router-link></el-menu-item>
+                  <el-menu-item index="uploadResume">管理应聘者信息</el-menu-item>
                   <el-menu-item index="downloadResume"><router-link to="/admin/downloadResume">管理招聘企业账号</router-link></el-menu-item>
                   <el-menu-item index="editResume"><router-link to="/admin/editResume"></router-link>统计招聘企业数据</el-menu-item>
                 </el-menu-item-group>

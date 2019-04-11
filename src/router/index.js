@@ -80,8 +80,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      // name: 'landing',
-      // component: LandingPage
       name: 'login',
       component: JobsList
     },

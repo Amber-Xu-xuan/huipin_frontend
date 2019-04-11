@@ -126,43 +126,44 @@ import ZPHeader from '@/components/ZPHeader'
         // 后端整合
         this.$refs.loginInfoVo.validate((valid) => {
           if (valid) {
-        //     // 验证成功后将数据转换成JSON格式传递到后端
-        //     // alert('正在提交...')
-        //     this.loading = true
-        //     this.$message.info('正在登录中...')
-        //     //  /candidate
-        //     this.$axios.post('/candidate/login',this.qs.stringify({
-        //       phone: this.loginInfoVo.phone,
-        //       password: this.loginInfoVo.cpassword
-        //     },{
-        //       headers: {
-        //         'Content-Type': 'application/x-www-form-urlencoded'
-        //       }
-        //     }) ).then(
-        //       successResponse => {
-        //         this.responseResult = JSON.stringify(successResponse.data)
-        //         this.loading = false
-        //         console.log( this.responseResult)
-        //         if (successResponse.data.code === 200) {
-        //           // 当验证成功后跳转到用户中心
-        //           this.$router.replace({path: '/usercenter'})
-        //           this.$message.success('成功登录！！')
-        //         }else{
-        //           this.$message.error(successResponse.data.message + '请重新输入')
-        //         }
-        //       }
-        //     ).catch(function (error) {
-        //       console.log(error)
-        //       // this.loading = false
-        //     })
+            // 验证成功后将数据转换成JSON格式传递到后端
+            // alert('正在提交...')
+            this.loading = true
+            this.$message.info('正在登录中...')
+            //  /candidate
+            this.$axios.post('/enterprise/login',this.qs.stringify({
+              phone: this.loginInfoVo.phone,
+              password: this.loginInfoVo.cpassword
+            },{
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+            }) ).then(
+              successResponse => {
+                this.responseResult = JSON.stringify(successResponse.data)
+                this.loading = false
+                console.log( this.responseResult)
+                if (successResponse.data.code === 200) {
+                  // 当验证成功后跳转到用户中心
+                  this.$router.replace({path: '/usercenter'})
+                  this.$message.success('成功登录！！')
+                }else{
+                  this.$message.error(successResponse.data.message + '请重新输入')
+                }
+              }
+            ).catch(function (error) {
+              console.log(error)
+              // this.loading = false
+            })
 
             // 前端测试时
-            this.$router.push({
-              path: '/enterpriseCenter',
-              params: {
-                phone: this.loginInfoVo.phone
-              }
-            })
+            // this.$router.push({
+            //   path: '/enterpriseCenter',
+            //   params: {
+            //     phone: this.loginInfoVo.phone
+            //   }
+            // })
+          //  前端测试结束
           } else {
             //  验证失败
             console.log('验证失败,用户名或密码错误')

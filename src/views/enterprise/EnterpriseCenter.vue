@@ -30,24 +30,19 @@
           <aside>
             <!--unique-opened:之保持一个子菜单的展开
             default-active="2"：默认打开-->
-            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened>
+            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">招聘职位</span>
                 </template>
                 <el-menu-item-group>
-                  <!--<span slot="title">我的简历</span>-->
-                  <!--<el-menu-item index="uploadResume"><router-link to="/enterprise_center/addJob">添加招聘职位</router-link></el-menu-item>-->
-                  <el-menu-item index="downloadResume"><router-link to="/enterpriseCenter/jobManage">管理职位信息</router-link></el-menu-item>
+                  <el-menu-item index="/enterpriseCenter/jobManage">管理职位信息</el-menu-item>
                   </el-menu-item-group>
-                <!--<el-submenu index="1-4">-->
-                <!--<span slot="title">在线简历</span>-->
-                <!--<el-menu-item index="editResume">在线编辑</el-menu-item>-->
-                <!--</el-submenu>-->
+
               </el-submenu>
 
-              <el-submenu index="resume-manage">
+              <el-submenu index="enterpriseInfoManage">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">企业信息管理</span>
@@ -59,23 +54,23 @@
                    </el-menu-item-group>
               </el-submenu>
 
-                <el-menu-item :index="candidateManageURL">
+                <el-menu-item index="candidateManage">
                   <i class="el-icon-menu"></i>
                 <!--<span slot="title">求职者管理</span>-->
-                  <span slot="title"><router-link to="/enterpriseCenter/candidateManage">求职者管理</router-link></span>
+                  <span slot="title">求职者管理</span>
                 </el-menu-item>
 
-              <el-menu-item index="/editPassword">
+              <el-menu-item index="editPassword">
                 <i class="el-icon-menu"></i>
-                <span slot="title"><router-link to="/enterpriseCenter/editPassword">修改密码</router-link></span>
-                <!--<span slot="title">修改密码</span>-->
+                <!--<span slot="title"><router-link to="/enterpriseCenter/editPassword">修改密码</router-link></span>-->
+                <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
 
-              <el-menu-item index="/editStatus">
+              <el-menu-item index="editStatus">
                 <i class="el-icon-setting"></i>
-                <!--<span slot="title">状态确认</span>-->
-                <span slot="title"><router-link to="/enterpriseCenter/ensureStatus">状态确认</router-link></span>
+                <span slot="title">状态确认</span>
+                <!--<span slot="title"><router-link to="/enterpriseCenter/ensureStatus">状态确认</router-link></span>-->
               </el-menu-item>
             </el-menu>
           </aside>
@@ -121,7 +116,7 @@ export default {
       activeUrl: '1',
       collapsed: false,
       sysUserName: '',
-      candidateManageURL:'/candidateManage',
+      //用户头像
       sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
       form: {
         name: '',

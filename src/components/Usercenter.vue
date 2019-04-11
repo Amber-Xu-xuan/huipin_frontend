@@ -30,7 +30,7 @@
           <aside>
             <!--unique-opened:之保持一个子菜单的展开
             default-active="2"：默认打开-->
-            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened>
+            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
@@ -38,25 +38,26 @@
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="uploadResume"><router-link to="/usercenter/uploadResume">上传简历</router-link></el-menu-item>
-                  <el-menu-item index="downloadResume"><router-link to="/usercenter/downloadResume">下载简历</router-link></el-menu-item>
-                  <el-menu-item index="editResume"><router-link to="/usercenter/editResume">在线编辑简历</router-link></el-menu-item>
+                  <el-menu-item index="/usercenter/uploadResume">上传简历</el-menu-item>
+                  <el-menu-item index="/usercenter/downloadResume">下载简历</el-menu-item>
+                  <el-menu-item index="/usercenter/editResume">在线编辑简历</el-menu-item>
                 </el-menu-item-group>
                 <!--<el-submenu index="1-4">-->
                   <!--<span slot="title">在线简历</span>-->
                   <!--<el-menu-item index="editResume">在线编辑</el-menu-item>-->
                 <!--</el-submenu>-->
               </el-submenu>
-              <el-menu-item index="usercenter/editResume">
+              <el-menu-item index="/usercenter/editPassword">
                 <i class="el-icon-menu"></i>
-                <span slot="title"><router-link to="/usercenter/editPassword">修改密码</router-link></span>
+                <!--<span slot="title"><router-link to="/usercenter/editPassword">修改密码</router-link></span>-->
+                <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
-              <el-menu-item index="3">
+              <el-menu-item index="/usercenter/editPhone">
                 <i class="el-icon-document"></i>
-                <span slot="title"><router-link to="/usercenter/editResume">修改手机号码</router-link></span>
+                <span slot="title">修改手机号码</span>
               </el-menu-item>
-              <el-menu-item index="4">
+              <el-menu-item index="/usercenter/setStauts">
                 <i class="el-icon-setting"></i>
                 <span slot="title">设置状态</span>
               </el-menu-item>
@@ -146,14 +147,14 @@ export default {
     }
   },
   mounted () {
+    //  前端测试的时候的模拟数据
+    this.sysUserAvatar = 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
     var user = sessionStorage.getItem('user')
     if (user) {
       user = JSON.parse(user)
       this.sysUserName = user.name || ''
       // this.sysUserAvatar = user.avatar || ''
-    //  前端测试的时候的模拟数据
-      this.sysUserAvatar = 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
-    }
+   }
   }
 }
 </script>

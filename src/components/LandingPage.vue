@@ -21,7 +21,7 @@
               <h3 class="title">一键注册</h3>
               <div class="tip-error"></div>
               <!--<form action="/registe/save.json" method="post" label-width="80px">-->
-              <el-form ref="registerForm" :model="registerForm" >
+              <el-form ref="registerForm" :model="registerForm">
                 <input type="hidden" name="pk" value="cpc_sem">
                 <input type="hidden" name="act" value="0">
                 <input type="hidden" name="purpose" value="0">
@@ -29,9 +29,10 @@
 
                 <el-form-item
                   prop="rphone"
-                  >
+                >
                   <el-input placeholder="请输入手机号码" v-model="registerForm.rphone" class="input-with-select">
-                    <el-select v-model="registerForm.selectPhonePrefix" slot="prepend" placeholder="请选择" style="width: 100px">
+                    <el-select v-model="registerForm.selectPhonePrefix" slot="prepend" placeholder="请选择"
+                               style="width: 100px">
                       <el-option label="+86" value="+86"></el-option>
                       <el-option label="+1" value="+1"></el-option>
                       <el-option label="+852" value="+852"></el-option>
@@ -42,22 +43,22 @@
                     <!--<el-button slot="append" icon="el-icon-search"></el-button>-->
                   </el-input>
                 </el-form-item>
-                  <!--密码输入框-->
-                  <el-form-item
-                    prop="rpassword"
-                    >
-                    <el-input
-                      :type="passwordType"
-                      prefix-icon="el-icon-edit-outline"
-                      v-model="registerForm.rpassword"
-                      id="rpassword"
-                      name="rpassword"
-                      show-password
-                      auto-complete="on"
-                      placeholder="请输入密码"
-                      @keyup.enter.native="register"/>
+                <!--密码输入框-->
+                <el-form-item
+                  prop="rpassword"
+                >
+                  <el-input
+                    :type="passwordType"
+                    prefix-icon="el-icon-edit-outline"
+                    v-model="registerForm.rpassword"
+                    id="rpassword"
+                    name="rpassword"
+                    show-password
+                    auto-complete="on"
+                    placeholder="请输入密码"
+                    @keyup.enter.native="register"/>
 
-                  </el-form-item>
+                </el-form-item>
                 <div class="landing-register-btn">
                   <el-button type="primary" @click="register()">注册</el-button>
                 </div>
@@ -68,8 +69,8 @@
                     <el-checkbox v-model="registerForm.checked">同意</el-checkbox>
                     <router-link to="/protocol">用户协议及隐私政策</router-link>
                     <div>
-                    已有账号
-                    <el-button type="text" @click="centerDialogVisible = true">直接登录</el-button>
+                      已有账号
+                      <el-button type="text" @click="centerDialogVisible = true">直接登录</el-button>
                     </div>
                   </label>
                 </div>
@@ -100,7 +101,7 @@
                         </el-form-item>
                         <el-form-item
                           prop="cpassword"
-                          >
+                        >
                           <el-input
                             :type="passwordType"
                             prefix-icon="el-icon-edit-outline"
@@ -209,40 +210,42 @@ export default {
         if (valid) {
           // 验证成功后将数据转换成JSON格式传递到后端
           // alert('正在提交...')
-          // this.loading = true
-          // this.$message.info('正在登录中...')
-          // //  /candidate
-          // this.$axios.post('/candidate/login', this.qs.stringify({
-          //   phone: this.loginInfoVo.phone,
-          //   password: this.loginInfoVo.cpassword
-          // }, {
-          //   headers: {
-          //     'Content-Type': 'application/x-www-form-urlencoded'
-          //   }
-          // })).then(
-          //   successResponse => {
-          //     this.responseResult = JSON.stringify(successResponse.data)
-          //     this.loading = false
-          //     console.log(this.responseResult)
-          //     if (successResponse.data.code === 200) {
-          //       // 当验证成功后跳转到用户中心
-          //       this.$router.replace({path: '/usercenter'})
-          //       this.$message.success('成功登录！！')
-          //     } else {
-          //       this.$message.error(successResponse.data.message + '请重新输入')
-          //     }
-          //   }
-          // ).catch(function (error) {
-          //   console.log(error)
-          //   // this.loading = false
-          // })
+          this.loading = true
+          this.$message.info('正在登录中...')
+          //  /candidate 后端api：/candidate/login
+          this.$axios.post('/candidate/login',
+           {
+            phone: this.loginInfoVo.phone,
+            password: this.loginInfoVo.cpassword
+          }, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }).then(
+            successResponse => {
+              this.responseResult = JSON.stringify(successResponse.data)
+              this.loading = false
+              console.log(this.responseResult)
+              if (successResponse.data.code === 200) {
+                // 当验证成功后跳转到用户中心
+                this.$router.replace({path: '/usercenter'})
+                this.$message.success('成功登录！！')
+              } else {
+                this.$message.error(successResponse.data.message + '请重新输入')
+              }
+            }
+          ).catch(function (error) {
+              console.log(error)
+              // this.loading = false
+            }
+          )
           //前端测试
-          this.$router.push({
-            path: 'usercenter',
-            // params: {
-            //   phone: this.loginloginInfoVoForm.phone
-            // }
-          })
+          // this.$router.push({
+          //   path: 'usercenter',
+          //   // params: {
+          //   //   phone: this.loginloginInfoVoForm.phone
+          //   // }
+          // })
           // loginReq(this.loginInfoVo.phone, this.loginInfoVo.password)
         } else {
           //  验证失败
@@ -253,18 +256,18 @@ export default {
         this.loading = false
       })
     },
-  //  注册
-    register(formName) {
+    //  注册
+    register (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!需迭代');
-        } else if(this.registerForm.checked){
+          alert('submit!需迭代')
+        } else if (this.registerForm.checked) {
           this.$message.error('请先阅读')
         } else {
           this.$message.error('注册失败，请重新检查您输入的信息')
-          return false;
+          return false
         }
-      });
+      })
     },
   }
 }
@@ -456,12 +459,14 @@ export default {
     margin: auto 0;
     margin-top: 20px;
   }
+
   /*同意协议checkbox*/
-  .el-checkbox{
+  .el-checkbox {
     margin: 0;
   }
+
   /*将注册框内的同意协议和直接登录文本设置居中*/
-  .agreement-tip{
+  .agreement-tip {
     text-align: center;
     margin-top: 10px;
   }

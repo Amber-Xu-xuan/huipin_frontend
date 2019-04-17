@@ -49,8 +49,8 @@
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="uploadResume"><router-link to="/enterpriseCenter/editEnterprise">修改企业信息</router-link></el-menu-item>
-                  <el-menu-item index="downloadResume"><router-link to="/enterpriseCenter/certification">企业认证</router-link></el-menu-item>
+                  <el-menu-item index="editEnterpriseInfo">修改企业信息</el-menu-item>
+                  <el-menu-item index="certification">企业认证</el-menu-item>
                    </el-menu-item-group>
               </el-submenu>
 

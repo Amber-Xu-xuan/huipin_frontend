@@ -43,7 +43,7 @@
           <!--<el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>-->
 
         </el-form-item>
-        <router-link to="/register" class="register-link">如果您没有账号，请先注册</router-link>
+        <router-link to="/enterpriseRegister" class="register-link">如果您没有账号，请先注册</router-link>
       </el-form>
 
         </el-col>
@@ -132,21 +132,26 @@ import ZPHeader from '@/components/ZPHeader'
             this.$message.info('正在登录中...')
             //  /candidate
             console.log(this.$axios.defaults.baseURL)
-            this.$axios.post('login',this.qs.stringify({
+            this.$axios.defaults.withCredentials=true
+            
+            this.$axios.post('enterprise/login',{
               phone: this.loginInfoVo.phone,
               password: this.loginInfoVo.cpassword
-            },{
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              }
-            }) ).then(
+            }
+            // ,{
+              // headers: {
+              //   'Content-Type': 'application/x-www-form-urlencoded'
+              // }
+            // }
+            //  this.qs.stringify({
+             ).then(
               successResponse => {
                 this.responseResult = JSON.stringify(successResponse.data)
                 this.loading = false
                 console.log( this.responseResult)
                 if (successResponse.data.code === 200) {
                   // 当验证成功后跳转到用户中心
-                  this.$router.replace({path: '/usercenter'})
+                  this.$router.replace({path: '/enterpriseCenter'})
                   this.$message.success('成功登录！！')
                 }else{
                   this.$message.error(successResponse.data.message + '请重新输入')

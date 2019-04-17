@@ -217,9 +217,8 @@ export default {
           //通过修改axios的默认urlbase进行请求的转发，然后再后端添加配置设置允许跨域的域名等内容
           // console.log(this.$axios.defaults.baseURL)
           console.log(this.loginInfoVo.phone, this.loginInfoVo.cpassword)
-          this.$axios.post('/login',
+          this.$axios.post('/candidate/login',
            {
-
               phone: this.loginInfoVo.phone,
               password: this.loginInfoVo.cpassword
             }).then(

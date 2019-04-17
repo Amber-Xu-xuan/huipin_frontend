@@ -39,7 +39,7 @@
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
                   <el-menu-item index="/usercenter/uploadResume">上传简历</el-menu-item>
-                  <el-menu-item index="/usercenter/downloadResume">下载简历</el-menu-item>
+                  <el-menu-item index="/usercenter/addWorkExperience">添加工作经历</el-menu-item>
                   <el-menu-item index="/usercenter/editResume">在线编辑简历</el-menu-item>
                 </el-menu-item-group>
                 <!--<el-submenu index="1-4">-->
@@ -57,7 +57,7 @@
                 <i class="el-icon-document"></i>
                 <span slot="title">修改手机号码</span>
               </el-menu-item>
-              <el-menu-item index="/usercenter/setStauts">
+              <el-menu-item index="/usercenter/setStatus">
                 <i class="el-icon-setting"></i>
                 <span slot="title">设置状态</span>
               </el-menu-item>
@@ -67,8 +67,14 @@
           <section class="content-container">
             <div class="grid-content bg-purple-light">
               <el-col :span="24" class="breadcrumb-container">
-                <strong class="title">我的简历</strong>
                 <!--面包屑-->
+                <strong class="title">{{$route.name}}</strong>
+                <!--面包屑-->
+                <el-breadcrumb separator="/" class="breadcrumb-inner">
+                  <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+                    {{ item.name }}
+                  </el-breadcrumb-item>
+                </el-breadcrumb>
               </el-col>
               <el-col :span="24" class="content-wrapper">
                 <transition name="fade" mode="out-in">
@@ -98,7 +104,7 @@ export default {
       activeUrl: '1',
       collapsed: false,
       sysUserName: '',
-      sysUserAvatar: '',
+      sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
       form: {
         name: '',
         region: '',
@@ -148,7 +154,7 @@ export default {
   },
   mounted () {
     //  前端测试的时候的模拟数据
-    this.sysUserAvatar = 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
+    this.sysUserAvatar = ''
     var user = sessionStorage.getItem('user')
     if (user) {
       user = JSON.parse(user)
@@ -267,7 +273,8 @@ export default {
     overflow-y: scroll;
     padding: 20px;
   .breadcrumb-container {
-  //margin-bottom: 15px;
+  margin-bottom: 15px;
+
   .title {
     width: 200px;
     float: left;

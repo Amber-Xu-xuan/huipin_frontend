@@ -4,12 +4,12 @@
     <el-form :model="registerForm" :rules="rules" ref="registerForm" label-width="100px" class="register-form">
       <div class="register-font">注册</div>
 
-      <el-form-item label="用户名" prop="cname" required>
-        <el-input v-model="registerForm.cname"></el-input>
+      <el-form-item label="公司名称" prop="emName" required>
+        <el-input v-model="registerForm.emName"></el-input>
       </el-form-item>
 
-      <el-form-item label="手机号码" prop="phone" required>
-        <el-input v-model="registerForm.phone"></el-input>
+      <el-form-item label="手机号码" prop="emphone" required>
+        <el-input v-model="registerForm.emphone"></el-input>
       </el-form-item>
 
 
@@ -25,16 +25,17 @@
       </el-form-item>
 
       <el-form-item label="公司所在地" prop="residenceAddress" required>
-        <el-select v-model="registerForm.residenceAddress" placeholder="请选择活动区域" value="">
-          <el-option label="陕西" value="陕西"></el-option>
-          <el-option label="山东" value="山东"></el-option>
-          <el-option label="福建" value="福建"></el-option>
-        </el-select>
+        <!--<el-select v-model="registerForm.residenceAddress" placeholder="请选择活动区域" value="">-->
+          <!--<el-option label="陕西" value="陕西"></el-option>-->
+          <!--<el-option label="山东" value="山东"></el-option>-->
+          <!--<el-option label="福建" value="福建"></el-option>-->
+        <!--</el-select>-->
+          <v-distpicker :province="registerForm.residenceAddress.province" :city="registerForm.residenceAddress.city" :area="registerForm.residenceAddress.area"></v-distpicker>
       </el-form-item>
       <el-form-item label="创办日期" required>
         <el-col :span="11">
-          <el-form-item prop="birthday">
-            <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.date"
+          <el-form-item prop="emstablishmentDate">
+            <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.emstablishmentDate"
                             style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
@@ -47,9 +48,10 @@
         <!--</el-col>-->
       </el-form-item>
       <el-form-item label="融资情况">
-        <el-select v-model="filterFinancing" filterable placeholder="融资情况"  class="filter">
+
+        <el-select v-model="registerForm.registerFinancing" placeholder="融资情况"  class="register">
           <el-option
-            v-for="(financing,index) in filterCondition.financingList"
+            v-for="(financing,index) in registerForm.registerCondition.financingList"
             :key="index"
             :value="financing.financing">
           </el-option>
@@ -57,9 +59,9 @@
       </el-form-item>
 
       <el-form-item label="公司规模">
-        <el-select v-model="filterCompanyScale" filterable placeholder="公司规模"  class="filter">
+        <el-select v-model="registerForm.registerCompanyScale"  placeholder="公司规模"  class="register">
           <el-option
-            v-for="(companyScale,index) in filterCondition.companyScaleList"
+            v-for="(companyScale,index) in registerForm.registerCondition.companyScaleList"
             :key="index"
             :value="companyScale.companyScale">
           </el-option>
@@ -81,10 +83,11 @@
 </template>
 
 <script>
+import VDistpicker from 'v-distpicker'
   import myHeader from '@/components/ZPHeader'
   export default {
     name: 'EnterpriseRegister',
-    components: {myHeader},
+    components: {myHeader,VDistpicker},
     data () {
       // 自定义的校验规则
       var checkPhone = (rule, value, callback) => {
@@ -110,13 +113,16 @@
       }
       return {
         registerForm: {
-          cname: '',
-          phone: '',
+          emName: '',
+          emphone: '',
           email: '',
           pass: '',
           checkPass:'',
-          residenceAddress: '',
-          filterCondition:
+          registerFinancing: '', // 融资情况
+          registerCompanyScale: '', // 公司规模
+          emstablishmentDate: '', // 创立日期
+          residenceAddress: { province: '', city: '', area: '' },
+          registerCondition:
             {
               financingList : [
                 {
@@ -176,13 +182,13 @@
             },
         },
         rules: {
-          cname: [
-            { required: true, message: '请输入您的用户名', trigger: 'blur' }
+          emName: [
+            { required: true, message: '请输入您的公司名称', trigger: 'blur' }
           ],
           residenceAddress: [
-            { required: true, message: '请选择您的户口所在地', trigger: 'change' }
+            { required: true, message: '请选择您的公司地址', trigger: 'change' }
           ],
-          birthday: [
+          emstablishmentDate: [
             { type: 'date', required: true, message: '请选择日期', trigger: 'change' },
             { required: true, message: '请选择日期', trigger: 'change' }
           ],
@@ -192,7 +198,7 @@
           checkPass: [
             { required: true, message: '请再一次输入您的密码', trigger: 'blur' }
           ],
-          phone:[
+          emphone:[
             { required: true, message: '请输入您的电话号码', trigger: 'blur' },
             {validator: checkPhone, trigger: 'blur'},
           ],
@@ -238,8 +244,5 @@
     justify-content: center;
     margin: 20px 0;
     color: #999;
-    /*linear-gradient(<angle> | to <side-or-corner>， <color-stop>[, <color-stop>]+));线性渐变创建图像*/
-    /*background: linear-gradient( to top right, #f6f5f0, #fefefd);*/
-    /*background: radial-gradient(circle, #3ddccc, #59a0ff);*/
   }
 </style>

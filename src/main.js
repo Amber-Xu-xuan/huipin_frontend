@@ -35,8 +35,8 @@ import 'font-awesome/css/font-awesome.min.css'
 Vue.prototype.$axios = axios
 Vue.prototype.qs = qs
 Vue.config.productionTip = false
-// 设置携带cookie
-// axios.defaults.withCredentials =true;
+// 设置携带cookie,这样设置每次session就是一致的了，解决登录验证
+axios.defaults.withCredentials=true;
 
 // 懒加载
 Vue.use(VueLazyLoad, {

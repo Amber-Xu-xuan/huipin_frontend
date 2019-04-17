@@ -14,12 +14,16 @@ import UploadAvatar from '../views/upload/UploadAvatar'
 // 简历
 //上传简历
 import UploadResume from '../views/resume/UploadResume'
-// 下载简历 DownloadResume
-import DownloadResume from '../views/resume/DownloadResume'
+//添加工作经历
+AddWorkExperience
+import AddWorkExperience from '../views/candidate/AddWorkExperience'
 // 修改密码
 import  EditPassword from '../views/EditPassword'
-import Detail from '../views/Detail'
-// 当第一次进入本网站
+//求职者修改状态
+import SetStatus from '../views/candidate/SetStatus'
+
+
+// 求职者登录
 import LandingPage from '../components/LandingPage'
 // 用户协议
 import UserAgreement from '../components/UserAgreement'
@@ -37,6 +41,9 @@ import EnterpriseJobManage from '../views/enterprise/job/EnterpriseJobManage'
 import EnterpriseJobMessage from '../views/enterprise/EnterpriseJobMessage'
 //企业用户中心，管理求职者模块
 import EnterpriseCandidateManage from '../views/enterprise/EnterpriseCandidateManage'
+//修改企业信息
+import EditEnterpriseInfo  from '../views/enterprise/EditEnterpriseInfo'
+
 
 // 企业用户信息，点击公司名称之后显示的企业详细信息
 import EnterpriseIntroduce from  '../views/enterprise/EnterpriseIntroduce'
@@ -117,11 +124,11 @@ export default new Router({
           hidden: true
         },
         {
-          path: 'downloadResume',
-          name: '下载简历',
-          component: DownloadResume,
+          path: 'addWorkExperience',
+          name: '添加工作经历',
+          component: AddWorkExperience,
           meta: {
-            title: '下载简历'
+            title: '添加工作经历'
           },
           hidden: true
         },
@@ -131,6 +138,15 @@ export default new Router({
           component: EditPassword,
           meta: {
             title: '修改密码'
+          },
+          hidden: true
+        },
+        {
+          path: 'setStatus',
+          name: '修改状态',
+          component: SetStatus,
+          meta: {
+            title: '修改状态'
           },
           hidden: true
         }
@@ -202,6 +218,12 @@ export default new Router({
           name: '修改密码',
           component: EditPassword,
           hidden: true
+        },
+        //修改企业信息
+        {
+          path:'editEnterpriseInfo',
+          name:'修改企业信息',
+          component:EditEnterpriseInfo
         }
         ]
     },

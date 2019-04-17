@@ -32,16 +32,6 @@
         <!--<a href="javascript:void(0)" @click="setSalaryFilter(index)" v-bind:class="{'cur':salaryCheck==index}">{{salary.startSalary}}-{{salary.endSalary}}</a>-->
         <!--</dd>-->
         <span class="filter-select">已选中:</span>
-        <span v-for='(item,index) in condition' class='active'>{{item.name}}|</span>
-        <!--<div class='nav' v-for='(items,index) in category'>-->
-          <!--<div class='mutil-query-title' v-if='items.name' :key="items.id">{{items.name}}-->
-            <!--<span style='margin-left: 20px;' @click='allIn(index)'>全选</span>|<span @click='removeFilter(index)'>清空</span></div>-->
-          <!--<ol v-if='items.items.length'>-->
-            <!--<li v-for='(item,key) in items.items'>-->
-              <!--&lt;!&ndash;<span :class="{'active':item.active}" @click='handle(index,key)' :key='item.id'>{{item.name}}</span>&ndash;&gt;-->
-            <!--</li>-->
-          <!--</ol>-->
-        <!--</div>-->
 
         <el-select v-model="filterSalary" filterable placeholder="薪资要求" class="filter">
           <el-option
@@ -84,26 +74,11 @@
           </el-option>
         </el-select>
 
-        <span><el-button type="primary" plain @click.prevent="removeFilter">搜索</el-button></span>
+        <span><el-button type="primary" plain @click.prevent="searchByFilter">搜索</el-button></span>
         <span><el-button type="primary" plain @click.prevent="removeFilter">清空</el-button></span>
 
       </div>
       <!--筛选条件-结束-->
-      <!--这是职位列表ID{{$route.params.jobsId}}-->
-      <!--<div>-->
-      <!--&lt;!&ndash;要使用绝对地址&ndash;&gt;-->
-      <!--<router-link to="/job/title">显示职位具体信息</router-link>-->
-      <!--</div>-->
-      <!--&lt;!&ndash;显示职位的具体信息&ndash;&gt;-->
-      <!--<div>-->
-      <!--<router-view></router-view>-->
-      <!--</div>-->
-      <!--<div>-->
-      <!--<router-link to="/detail?jobId=11">跳转到详情页面</router-link>-->
-      <!--<button @click="jump">button-跳转到详情页面</button>-->
-      <!--</div>-->
-      <!--<router-link :to="{name: 'detail',params:{cartId:123}}">跳转到详情页面</router-link>-->
-
       <!--显示职位的卡片-->
       <div>
         <el-row class="jobs-content">
@@ -118,12 +93,12 @@
                       v-bind:href="href"
                       v-bind:class="{ active: isActive }"
                       v-on:click="go(item.emname)"
-                    > {{item.emname}}</a>
+                    > {{item.eName}}</a>
                   </span>
                   <el-button style="float: right; padding: 3px 0" type="text">投递简历</el-button>
                 </div>
                 <div class="card-text item">
-                  {{item.jarea}}|{{item.education}}|{{item.experienceDuration}} <span class="card-text-margin">{{item.businessScope}}|{{item.enterpriceStatus}}|{{item.emnum}}</span>
+                  {{item.jarea}}|{{item.education}}|{{item.experienceDuration}} <span class="card-text-margin">{{item.enterpriseMessage.businessScope}}|{{item.enterpriseMessage.enterpriceStatus}}|{{item.enterpriseMessage.emnum}}</span>
                 </div>
               </el-card>
             </div>
@@ -301,9 +276,11 @@ export default {
       filterSalary: '',
       filterExperience: '',
       filterEducation: '',
+      responseResult: '',
       filterFinancing: '', // 融资情况
       filterCompanyScale: '', // 公司规模
       condition: [], //  已选中的条件
+      responseResult: '',
       category: [
         {
           name: '地区',
@@ -317,14 +294,19 @@ export default {
     }
   },
   methods: {
-    jump () {
-      this.$router.push('/detail?jobId=22')
-    },
     getJobsList () {
-      this.$axios.get('candidate/enterprise_job').then((result) => {
-        var res = result.data
-        this.jobsList = res.data
-        console.log(this.jobsList)
+      console.log("getJobsList")
+      this.$axios.get('candidate/getAllJobList').then((result) => {
+        this.responseResult = JSON.stringify(result.data)
+        if (result.data.code === 200) {
+          // 当验证成功后跳转到用户中心
+          var res = result.data
+          this.jobsList = res.data
+          console.log(res.data)
+          console.log(result.data)
+        }else{
+          this.$message.error(result.data.message + '，请刷新页面')
+        }
       })
         .catch(function (error) {
           console.log(error)
@@ -341,6 +323,33 @@ export default {
     setSalaryFilter (index) {
       this.salaryCheck = index
       this.closePop()
+    },
+    //通过筛选条件搜索岗位
+    searchByFilter() {
+      this.$axios.get("/getJobListByFilter",{
+        params: {
+          filterSalary: this.filterSalary,
+          filterExperience:this.filterExperience,
+          filterEducation:this.filterEducation,
+          filterFinancing:this.filterFinancing ,// 融资情况
+          filterCompanyScale:this.filterCompanyScale // 公司规模
+        }
+      }).then(result => {
+          this.responseResult = JSON.stringify(result.data)
+          this.loading = false
+          console.log( this.responseResult)
+          if (result.data.code === 200) {
+            // 筛选后返回的数据
+           this.jobsList = result.data.data
+            console.log(this.jobsList)
+          }else{
+            this.$message.error(result.data.message + '请重新选择筛选条件')
+          }
+        }
+      ).catch(function (error) {
+        console.log(error)
+        // this.loading = false
+      })
     },
     go(emname) {
       alert(emname)

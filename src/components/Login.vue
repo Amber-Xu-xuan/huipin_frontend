@@ -56,6 +56,7 @@
 <script>
   // 引入接口
 import ZPHeader from '@/components/ZPHeader'
+
   export default {
     name: 'login',
     components:{ZPHeader},
@@ -99,14 +100,14 @@ import ZPHeader from '@/components/ZPHeader'
       }
     },
     // 监听，当路由发生变化的时候执行
-    watch: {
-      $route: {
-        handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-        },
-        immediate: true
-      }
-    },
+    // watch: {
+    //   $route: {
+    //     handler: function(route) {
+    //       this.redirect = route.query && route.query.redirect
+    //     },
+    //     immediate: true
+    //   }
+    // },
     created() {
       // window.addEventListener('hashchange', this.afterQRScan)
     },
@@ -131,9 +132,7 @@ import ZPHeader from '@/components/ZPHeader'
             this.loading = true
             this.$message.info('正在登录中...')
             //  /candidate
-            console.log(this.$axios.defaults.baseURL)
-            this.$axios.defaults.withCredentials=true
-            
+
             this.$axios.post('enterprise/login',{
               phone: this.loginInfoVo.phone,
               password: this.loginInfoVo.cpassword
@@ -148,10 +147,16 @@ import ZPHeader from '@/components/ZPHeader'
               successResponse => {
                 this.responseResult = JSON.stringify(successResponse.data)
                 this.loading = false
+                //将登陆的信息储存到localstorage中
+                // this.$route.params.loginPhone=this.loginInfoVo.phone
+                // console.log(this.$route.params.loginPhone)
                 console.log( this.responseResult)
                 if (successResponse.data.code === 200) {
                   // 当验证成功后跳转到用户中心
-                  this.$router.replace({path: '/enterpriseCenter'})
+                  localStorage.setItem('loginEnterprisePhone',this.loginInfoVo.phone)
+                  //将登陆信息保存
+                  localStorage.setItem('loginEnterprise',JSON.stringify(successResponse.data.data))
+                  this.$router.push({path: '/enterpriseCenter/jobManage'})
                   this.$message.success('成功登录！！')
                 }else{
                   this.$message.error(successResponse.data.message + '请重新输入')

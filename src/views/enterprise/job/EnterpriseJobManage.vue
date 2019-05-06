@@ -16,7 +16,7 @@
     </el-col>
 
     <!--列表-->
-    <el-table ref="jobs" :data="jobs" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
+    <el-table ref="joblist" :data="joblist" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
               style="width: 100%;">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -24,12 +24,24 @@
       </el-table-column>
       <el-table-column prop="jName" label="职位名称" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="salary" label="薪资待遇" width="100" :formatter="formatSex" sortable>
+      <el-table-column prop="salary" label="薪资待遇" width="100" sortable>
       </el-table-column>
       <el-table-column prop="experienceDuration" label="经验要求" width="100" sortable>
       </el-table-column>
-      <el-table-column prop="education" label="学历要求" width="120" sortable>
+      <el-table-column prop="education" label="学历要求" width="120">
       </el-table-column>
+
+      <el-table-column prop="obligation" label="岗位职责" min-width="180" max-height="10" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="qualification" label="任职资格" min-width="180" show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column prop="workAddress" label="工作地点" min-width="180" >
+      </el-table-column>
+      <el-table-column prop="jType" label="职位性质" min-width="180">
+      </el-table-column>
+
+
+
       <el-table-column prop="jPublishDate" label="发布时间" min-width="180" sortable>
       </el-table-column>
       <el-table-column prop="stopRecruitDate" label="停止招聘时间" min-width="180" sortable>
@@ -72,15 +84,15 @@
         <el-form-item label="姓名" prop="jName">
           <el-input v-model="editForm.jName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
+        <!--<el-form-item label="性别">-->
+          <!--<el-radio-group v-model="editForm.sex">-->
+            <!--<el-radio class="radio" :label="1">男</el-radio>-->
+            <!--<el-radio class="radio" :label="0">女</el-radio>-->
+          <!--</el-radio-group>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="年龄">-->
+          <!--<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>-->
+        <!--</el-form-item>-->
         <el-form-item label="生日">
           <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
         </el-form-item>
@@ -94,31 +106,94 @@
       </div>
     </el-dialog>
 
-    <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="jName">
-          <el-input v-model="addForm.jName" auto-complete="off"></el-input>
+    <!--新增界面 -->
+    <el-dialog title="新增" :visible.sync="addJobFormVisible" :close-on-click-modal="false">
+      <el-form :model="addJobForm" label-width="80px" :rules="addJobFormRules" ref="addJobForm">
+        <!--<el-form-item label="姓名" prop="jName">-->
+          <!--<el-input v-model="addJobForm.jName" auto-complete="off"></el-input>-->
+        <!--</el-form-item>-->
+        <el-form-item label="职位名称" prop="jName">
+          <el-input v-model="addJobForm.jName" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="addForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+
+        <el-form-item label="薪资要求" prop="salary">
+        <el-select v-model="addJobForm.salary" placeholder="薪资要求">
+          <el-option
+            v-for="(salary,index) in selectCondition.salaryList"
+            :key="index"
+            :label="salary.salary"
+            :value="salary.salary">
+          </el-option>
+        </el-select>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
+
+        <el-form-item label="工作经验" prop="experience">
+        <el-select v-model="addJobForm.experience" placeholder="工作经验">
+          <el-option
+            v-for="(experience,index) in selectCondition.experienceList"
+            :key="index"
+            :value="experience.experience">
+          </el-option>
+        </el-select>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+
+        <el-form-item label="学历要求" prop="experience">
+        <el-select v-model="addJobForm.education" filterable placeholder="学历要求"  class="filter">
+          <el-option
+            v-for="(education,index) in selectCondition.educationList"
+            :key="index"
+            :value="education.education">
+          </el-option>
+        </el-select>
         </el-form-item>
+
+        <el-form-item label="岗位职责" prop="obligation">
+          <el-input type="textarea" v-model="addJobForm.obligation"
+                    placeholder="1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
+2、拓展、维护公司招聘渠道，更新招聘信息；
+3、参加支持HR相关工作（内部推荐、员工关系培训、校园招聘等）。"></el-input>
+        </el-form-item>
+
+        <el-form-item label="任职资格" prop="qualification">
+          <el-input type="textarea" v-model="addJobForm.qualification"
+                    placeholder="1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
+2、熟练使用office等办公软件，对数据处理有经验者优先；
+3、每周保证实习4个工作日以上，实习至少三个月以上；
+4、积极、主动、耐心、踏实、高效、善于沟通。
+实习生福利：弹性工作、优厚薪资、餐补、租房补贴、良好的办公环境、扁平化管理、免费零食+下午茶等"></el-input>
+        </el-form-item>
+
+        <!--<el-form-item label="性别">-->
+          <!--<el-radio-group v-model="addJobForm.sex">-->
+            <!--<el-radio class="radio" :label="1">男</el-radio>-->
+            <!--<el-radio class="radio" :label="0">女</el-radio>-->
+          <!--</el-radio-group>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="年龄">-->
+          <!--<el-input-number v-model="addJobForm.age" :min="0" :max="200"></el-input-number>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="生日">-->
+          <!--<el-date-picker type="date" placeholder="选择日期" v-model="addJobForm.birth"></el-date-picker>-->
+        <!--</el-form-item>-->
         <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+          <el-input v-model="addJobForm.workAddress"></el-input>
         </el-form-item>
       </el-form>
+      <!--职位性质： 实习 -->
+      <el-form-item label="职位性质" prop="jType">
+        <el-select v-model="addJobForm.jType" placeholder="职位性质">
+          <el-option
+            v-for="(salary,index) in selectCondition.jTypeList"
+            :key="index"
+            :label="jType.jType"
+            :value="jType.jType">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native="addFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
+        <el-button @click.native="addJobFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="addJob" :loading="addLoading">提交</el-button>
       </div>
     </el-dialog>
   </section>
@@ -127,7 +202,9 @@
 <script>
 // import util from '/util.js'
 // import { getJobListPage, removeUser, batchRemoveUser, editUser, addUser } from 'src/apis/api'
-
+/**
+ * 企业管理职位信息
+ */
 export default {
   name: 'EnterpriseJobManage',
   data () {
@@ -135,12 +212,14 @@ export default {
       filters: {
         jName: ''
       },
-      jobs: [],
-
+      joblist: [],
+      // joblist: {},
+      loginPhone: '',
       // total: 0,
       // pageNumber: 1, //当前页
       listLoading: false,
       sels: [],//列表选中列
+      //记录登录的账号
 
       //定义分页Config
       pageConf: {
@@ -168,15 +247,91 @@ export default {
         addr: ''
       },
 
-      addFormVisible: false,//新增界面是否显示
+      // 下拉框
+      selectCondition:
+        {
+          salaryList: [
+            {
+              salary: '1k-3k'
+            },
+            {
+              salary: '3k-5k'
+            },
+            {
+              salary: '5k-8k'
+            },
+            {
+              salary: '8k-10k'
+            },
+            {
+              salary: '>10k'
+            }
+          ],
+          experienceList: [
+            {
+              experience: '应届生'
+            },
+            {
+              experience: '1年以内'
+            },
+            {
+              experience: '1-3年'
+            },
+            {
+              experience: '3-5年'
+            },
+            {
+              experience: '5-10年'
+            },
+            {
+              experience: '10年以上'
+            }
+          ],
+          educationList: [
+            {
+              education: '初中及以下'
+            },
+            {
+              education: '中专/中技'
+            },
+            {
+              education: '高中'
+            },
+            {
+              education: '大专'
+            },
+            {
+              education: '本科'
+            },
+            {
+              education: '硕士'
+            },
+            {
+              education: '博士'
+            }
+          ],
+          jTypeList: [
+            {
+              jType: '实习'
+            },
+            {
+              jType: '全职'
+            },
+            {
+              jType: '兼职'
+            }
+          ]
+        },
+
+      addJobFormVisible: false,//新增界面是否显示
       addLoading: false,
-      addFormRules: {
+      addJobFormRules: {
         jName: [
           {required: true, message: '请输入岗位名称', trigger: 'blur'}
         ]
       },
       //新增界面数据
-      addForm: {
+      addJobForm: {
         jName: '',
         sex: -1,
         age: 0,
@@ -188,9 +343,10 @@ export default {
   },
   methods: {
     //性别显示转换
-    formatSex: function (row, column) {
-      return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知'
-    },
+    // formatSex: function (row, column) {
+    //   return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知'
+    // },
+    //:formatter="formatSex"
     //当前页改变时触发的函数,下一页或上一页
     handleCurrentChange (val) {
       // this.pageNumber = val;
@@ -207,13 +363,21 @@ export default {
      */
     getJobList (pageCode, pageSize) {
       this.listLoading = true
+      // this.loginPhone =  this.$route.params.loginPhone
       //NProgress.start();
-      console.log("第"+ pageCode + "页，共" + pageSize +"条记录" )
+      var loginEnterprisePhone = localStorage.getItem('loginEnterprisePhone')
+      var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
+
+      // console.log("登录账号：" + this.$route.params.loginPhone)
+      // console.log("登录账号：" + this.$route.params.loginPhone)
+      // console.log("第"+ pageCode + "页，共" + pageSize +"条记录")
+      // console.log(loginEnterprise)
       this.$axios.get('enterprise/getJobListByEName',
         {
           params: {
             pageCode: pageCode,
-            pageSize: pageSize
+            pageSize: pageSize,
+            phone: loginEnterprisePhone
           }
         }
       ).then((res) => {
@@ -221,7 +385,9 @@ export default {
         if (res.data.code === 200) {
           // 当验证成功后跳转到用户中心
           this.pageConf.totalPage = res.data.total
-          this.jobs = res.data.jobs
+          // console.log(res.data.data.rows)
+          this.joblist = res.data.data.rows
+          // console.log("joblist:" + this.joblist)
           this.listLoading = false
         }else{
           this.$message.error(res.data.message + '请重新登录')
@@ -259,13 +425,18 @@ export default {
     },
     //显示新增界面
     handleAdd: function () {
-      this.addFormVisible = true
-      this.addForm = {
+      this.addJobFormVisible = true
+      this.addJobForm = {
         jName: '',
-        sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        salary: '',
+        experienceDuration: '',
+        education:'',
+        obligation:'',
+        qualification:'',
+        workAddress:'',
+        jType:'',
+        jPublishDate:'',
+        stopRecruitDate:''
       }
     },
     //编辑
@@ -292,25 +463,37 @@ export default {
         }
       })
     },
-    //新增
-    addSubmit: function () {
-      this.$refs.addForm.validate((valid) => {
+    //新增职位
+    addJob: function () {
+      this.$refs.addJobForm.validate((valid) => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.addLoading = true
             //NProgress.start();
-            let para = Object.assign({}, this.addForm)
-            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
-            addUser(para).then((res) => {
+            // let para = Object.assign({}, this.addJobForm)
+            // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
+            // addUser(para).
+            this.$axios.post('enterprise/addJobPosition',{
+              jobPosition: this.addJobForm
+            })
+              .then((result) => {
               this.addLoading = false
               //NProgress.done();
-              this.$message({
-                message: '提交成功',
-                type: 'success'
-              })
-              this.$refs['addForm'].resetFields()
-              this.addFormVisible = false
-              this.getJobList()
+              // this.$message({
+              //   message: '提交成功',
+              //   type: 'success'
+              // })
+                this.responseResult = JSON.stringify(result.data)
+                this.loading = false
+                console.log(this.responseResult)
+                if (result.data.code === 200) {
+                  this.$refs['addJobForm'].resetFields()
+                  this.addJobFormVisible = false
+                  this.getJobList()
+                } else {
+                  this.$message.error(result.data.message + '请重新添加')
+                }
+
             })
           })
         }

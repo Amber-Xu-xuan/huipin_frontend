@@ -89,16 +89,21 @@
                   <span class="jName">{{item.jName}}</span>
                   <span class="salary">{{item.salary}}</span>
                   <span class="card-text-margin">
-                    <a
-                      v-bind:href="href"
-                      v-bind:class="{ active: isActive }"
-                      v-on:click="go(item.emname)"
-                    > {{item.eName}}</a>
+                    <!-- v-bind:href="href" v-on:click="EnterpriseDetailMessage(item.eName)"
+                      v-bind:class="{ active: isActive }"-->
+                    <router-link
+                      :to="{path:'enterprise/introduce',query:{eName:item.eName}}"
+                    > {{item.eName}}</router-link>
                   </span>
                   <el-button style="float: right; padding: 3px 0" type="text">投递简历</el-button>
                 </div>
                 <div class="card-text item">
-                  {{item.jarea}}|{{item.education}}|{{item.experienceDuration}} <span class="card-text-margin">{{item.enterpriseMessage.businessScope}}|{{item.enterpriseMessage.enterpriceStatus}}|{{item.enterpriseMessage.emnum}}</span>
+                  {{item.workAddress.substring(0,2)}}<span class="space"></span>
+                  |<span class="space"></span>{{item.education}}<span class="space"></span>
+                  |<span class="space"></span>{{item.experienceDuration}}
+                  <span class="card-text-margin">{{item.enterpriseMessage.businessScope}}<span class="space"></span>
+                    |<span class="space"></span>{{item.enterpriseMessage.emFinancing}}<span class="space"></span>
+                    |<span class="space"></span>{{item.enterpriseMessage.emScaleList}}</span>
                 </div>
               </el-card>
             </div>
@@ -143,9 +148,6 @@ export default {
         {
           salaryList: [
             {
-              salary: '不限'
-            },
-            {
               salary: '1k-3k'
             },
             {
@@ -162,9 +164,6 @@ export default {
             }
             ],
           experienceList : [
-            {
-              experience: '不限'
-            },
             {
               experience: '应届生'
             },
@@ -185,9 +184,6 @@ export default {
             }
           ],
           educationList : [
-            {
-              education: '不限'
-            },
             {
               education: '初中及以下'
             },
@@ -211,9 +207,6 @@ export default {
             }
           ],
           financingList : [
-            {
-              financing: '不限'
-            },
             {
               financing: '未融资'
             },
@@ -241,9 +234,6 @@ export default {
           ],
           companyScaleList: [
             {
-              companyScale: '不限'
-            },
-            {
               companyScale: '0-20人'
             },
             {
@@ -251,9 +241,6 @@ export default {
             },
             {
               companyScale: '100-499人'
-            },
-            {
-              companyScale: '500-999人'
             },
             {
               companyScale: '500-999人'
@@ -280,7 +267,6 @@ export default {
       filterFinancing: '', // 融资情况
       filterCompanyScale: '', // 公司规模
       condition: [], //  已选中的条件
-      responseResult: '',
       category: [
         {
           name: '地区',
@@ -295,21 +281,19 @@ export default {
   },
   methods: {
     getJobsList () {
-      console.log("getJobsList")
-      this.$axios.get('candidate/getAllJobList').then((result) => {
+      this.$axios.get('getAllJobList').then((result) => {
         this.responseResult = JSON.stringify(result.data)
         if (result.data.code === 200) {
           // 当验证成功后跳转到用户中心
           var res = result.data
           this.jobsList = res.data
-          console.log(res.data)
-          console.log(result.data)
         }else{
           this.$message.error(result.data.message + '，请刷新页面')
         }
       })
         .catch(function (error) {
           console.log(error)
+          alert(error)
         })
     },
     showFilterPop () {
@@ -324,9 +308,9 @@ export default {
       this.salaryCheck = index
       this.closePop()
     },
-    //通过筛选条件搜索岗位
+    //通过筛选条件搜索岗位,从后端获取对应数据
     searchByFilter() {
-      this.$axios.get("/getJobListByFilter",{
+      this.$axios.get("getJobListByFilterCondition",{
         params: {
           filterSalary: this.filterSalary,
           filterExperience:this.filterExperience,
@@ -337,11 +321,11 @@ export default {
       }).then(result => {
           this.responseResult = JSON.stringify(result.data)
           this.loading = false
-          console.log( this.responseResult)
+          // console.log( this.responseResult)
           if (result.data.code === 200) {
             // 筛选后返回的数据
            this.jobsList = result.data.data
-            console.log(this.jobsList)
+            // console.log(this.jobsList)
           }else{
             this.$message.error(result.data.message + '请重新选择筛选条件')
           }
@@ -351,8 +335,10 @@ export default {
         // this.loading = false
       })
     },
-    go(emname) {
+    // 跳转到详细的公司信息页面 Detail
+    EnterpriseDetailMessage(emname) {
       alert(emname)
+      this.$route.params.eName=emname
       // 跳转到对应的公司详情页面
       this.$router.push({
         path: '/enterprise/jobmessage',
@@ -449,5 +435,9 @@ export default {
 
   .salary {
     color: #ff2126;
+  }
+
+  .space{
+    margin:0 0.2rem ;
   }
 </style>

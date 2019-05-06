@@ -1,5 +1,5 @@
 <template>
-  <div class="margin-top">
+  <div class="xxcenter-content">
     <el-form :model="workExperience" :rules="rules" ref="workExperience" label-width="100px" class="register-form">
 
       <el-form-item label="公司名称" prop="ename" required>
@@ -113,7 +113,4 @@ export default {
 </script>
 
 <style scoped>
-.margin-top{
-  padding-top: 20px;
-}
 </style>

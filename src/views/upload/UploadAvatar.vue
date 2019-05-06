@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="xxcenter-content">
   <el-upload
     action=""
     list-type="picture-card"

@@ -28,45 +28,41 @@
 
         <el-col :span="24" class="main">
           <aside>
-            <!--unique-opened:之保持一个子菜单的展开
-            default-active="2"：默认打开-->
             <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
-              <el-submenu index="1">
+              <el-submenu index="candidate">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">应聘者</span>
                 </template>
                 <el-menu-item-group>
-                  <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="adminManageCandidateResume">管理应聘者简历信息</el-menu-item>
-                  <el-menu-item index="adminManageCandidateCount">管理应聘者账号</el-menu-item>
-                  <el-menu-item index="statisticsCandidateData">统计应聘者数据</el-menu-item>
+                  <!--<el-menu-item index="adminManageCandidateResume">管理应聘者简历信息</el-menu-item>-->
+                  <!--<el-menu-item index="adminManageCandidateCount">管理应聘者</el-menu-item>-->
+                  <el-menu-item index="/adminCenter/statisticsCandidate">统计应聘者数据</el-menu-item>
                 </el-menu-item-group>
 
               </el-submenu>
 
-              <el-submenu index="enterpriseManage">
+              <el-submenu index="enterprise">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">招聘企业管理</span>
                 </template>
                 <el-menu-item-group>
-                  <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="uploadResume">管理应聘者信息</el-menu-item>
-                  <el-menu-item index="downloadResume"><router-link to="/admin/downloadResume">管理招聘企业账号</router-link></el-menu-item>
-                  <el-menu-item index="editResume"><router-link to="/admin/editResume"></router-link>统计招聘企业数据</el-menu-item>
+                  <!--<el-menu-item index="">管理应聘者信息</el-menu-item>-->
+                  <el-menu-item index="enterpriseCertification">企业审核认证</el-menu-item>
+                  <el-menu-item index="statisticsEnterprise">统计招聘企业数据</el-menu-item>
                 </el-menu-item-group>
 
               </el-submenu>
 
-              <el-menu-item index="admin/editResume">
+              <el-menu-item index="editPassword">
                 <i class="el-icon-menu"></i>
-                <span slot="title"><router-link to="/admin/editPassword">修改密码</router-link></span>
+                <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
-              <el-menu-item index="3">
+              <el-menu-item index="editResume">
                 <i class="el-icon-document"></i>
-                <span slot="title"><router-link to="/admin/editResume">修改手机号码</router-link></span>
+                <span slot="title">修改手机号码</span>
               </el-menu-item>
             </el-menu>
           </aside>
@@ -74,8 +70,14 @@
           <section class="content-container">
             <div class="grid-content bg-purple-light">
               <el-col :span="24" class="breadcrumb-container">
-                <!--<strong class="title">我的简历</strong>-->
+                <strong class="title">{{$route.name}}</strong>
                 <!--面包屑-->
+                <el-breadcrumb separator="/" class="breadcrumb-inner">
+                  <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+                    {{ item.name }}
+                  </el-breadcrumb-item>
+                </el-breadcrumb>
+                <!---->
               </el-col>
               <el-col :span="24" class="content-wrapper">
                 <transition name="fade" mode="out-in">
@@ -92,9 +94,6 @@
 </template>
 
 <script>
-// import ZPHeader from './ZPHeader'
-// import ZPFooter from './ZPFooter'
-
 
 export default {
   name: 'Admin',

@@ -9,15 +9,16 @@
             <div class="company-sider">
               <!-- 快速登录注册 -->
 
-              <div class="update-time">更新时间:2019-03-29</div>
+              <div class="update-time">更新时间:{{businessInformation.updateTime}}</div>
             </div>
 
             <div class="job-detail">
               <div class="detail-content">
                 <div class="job-sec">
-                  <h3>{{enterpriseMessageList.emName}}简介</h3>
-                  <div class="text fold-text" style="max-height: none; overflow: visible;">
-                    {{enterpriseMessageList.emintroduce}}
+                  <h3>{{enterpriseMessage.eName}}简介</h3>
+                  <!-- style="max-height: none; overflow: visible;"-->
+                  <div class="text fold-text">
+                    {{enterpriseMessage.emintroduce}}
                     <!--<a href="javascript:;" class="more-view" ka="company-intro-more" style="display: inline;">-->
                       <!--{{extendFlag?'展开':'收起'}} <i class="fz fz-slidedown"></i>-->
                     <!--</a>-->
@@ -25,18 +26,20 @@
                 </div>
                 <div class="job-sec company-business">
                   <h3>工商信息</h3>
-                  <h4>{{enterpriseMessageList.detailemName}}</h4>
+                  <h4>{{businessInformation.eName}}</h4>
                   <div class="business-detail" :class="extendsStyle">
                     <label><span v-on:click="changeExtendFlag">{{extendFlag?'展开':'收起'}}</span><i :class="extendsIcon"></i></label>
                     <ul >
-                      <li><span class="t">法人代表：</span>何申密</li>
-                      <li><span class="t">注册资本：</span>1500万人民币</li>
-                      <li><span class="t">成立时间：</span>{{enterpriseMessageList.emstablishmentDate}}</li>
-                      <li class="col-auto"><span class="t">企业类型：</span>有限责任公司(自然人投资或控股)</li>
-                      <li class="col-auto"><span class="t">经营状态：</span>{{enterpriseMessageList.enterpriceStatus}}</li>
-                      <li class="col-auto"><span class="t">注册地址：</span>{{enterpriseMessageList.emaddress}}</li>
-                      <li class="col-auto"><span class="t">统一信用代码：</span>913502000944120645</li>
-                      <li class="col-auto"><span class="t">经营范围：</span>软件开发；信息系统集成服务；信息技术咨询服务；数据处理和存储服务；集成电路设计；数字内容服务；计算机、软件及辅助设备批发；计算机、软件及辅助设备零售。</li>
+                      <li><span class="t">法人代表：</span>{{businessInformation.legalRepresentative}}</li>
+                      <li><span class="t">注册资本：</span>{{businessInformation.registeredCapital}}人民币</li>
+                      <li><span class="t">成立时间：</span>{{emstablishmentDate}}</li>
+                      <li class="col-auto"><span class="t">企业类型：</span>{{businessInformation.enterprisesType}}</li>
+                      <li class="col-auto"><span class="t">经营状态：</span>{{businessInformation.managementState}}</li>
+                      <li class="col-auto"><span class="t">注册地址：</span>{{businessInformation.registeredAddress}}</li>
+                      <li class="col-auto"><span class="t">统一信用代码：</span>{{businessInformation.unifiedCreditCode}}</li>
+                      <li class="col-auto"><span class="t">经营范围：</span>
+                        {{businessInformation.businessScope}}
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -44,8 +47,8 @@
                   <h3>公司地址</h3>
                   <div class="job-location">
                     <div class="location-item show-map">
-                      <div class="location-address"><a href="javascript:;" class="more-view" ka="job-poi-1"><i class="fz fz-slidedown"></i></a>厦门市 思明区 厦门市软件园2期 观日路54号之三五楼</div>
-                      <div class="map-container js-open-detail" data-num="0" data-lat="118.182171,24.483892" data-id="map-container-1" data-content="厦门市 思明区 厦门市软件园2期 观日路54号之三五楼">
+                      <div class="location-address"><a href="javascript:;" class="more-view" ka="job-poi-1"><i class="fz fz-slidedown"></i></a>{{businessInformation.registeredAddress}}</div>
+                      <div class="map-container js-open-detail" data-num="0" data-lat="118.182171,24.483892" data-id="map-container-1">
                         <img src="https://restapi.amap.com/v3/staticmap?zoom=16&amp;size=652*174&amp;markers=mid,0xFF0000,A:118.182171,24.483892&amp;key=21b56a6cc83fad7668dbb0e9564759a7" alt="公司地址">
                         <!--<p>点击查看地图</p>-->
                       </div>
@@ -68,7 +71,9 @@ export default {
   name: 'EnterpriseIntroduce',
   data () {
     return{
-      enterpriseMessageList :{},
+      businessInformation :{},
+      enterpriseMessage: {},
+      emstablishmentDate:'',
     //  是否展开
       extendFlag: true,
       extendsStyle: '',
@@ -77,16 +82,48 @@ export default {
     }
   },
   methods : {
-    getEnterpriseMessage () {
-      this.$axios.get('candidate/enterprise_message').then((result) => {
-        var res = result.data
-        this.enterpriseMessageList = res.data[0]
-        console.log("从后端获取到的公司信息" + this.enterpriseMessageList)
+    getBusinessInformation () {
+      this.eName = this.$route.query.eName
+      this.$axios.get('/getBusinessInformation',
+        {
+          params: {
+            eName: this.eName
+          }
+        }
+          ).then((result) => {
+        if(result.data.code === 200){
+          this.businessInformation = result.data.data
+          this.emstablishmentDate = result.data.data.emstablishmentDate
+          console.log(this.businessInformation)
+        }else{
+          this.$message.error(result.data.message + "，跳转回首页")
+          this.$router.push("/")
+        }
       })
         .catch(function (error) {
           console.log(error)
         })
     },
+    getEnterpriseMessage () {
+      this.eName = this.$route.query.eName
+      // console.log("company::" + this.eName)
+      this.$axios.get('/getEnterpriseByEName', {
+          params:{
+            eName: this.eName
+          }
+        }
+      ).then((result) => {
+        var res = result.data
+        this.enterpriseMessage = res.data[0]
+        // console.log(this.enterpriseMessage)
+      })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+
+    //展开、收齐工商信息
     changeExtendFlag (){
       this.extendFlag = !this.extendFlag
       if(this.extendFlag === true){
@@ -99,6 +136,7 @@ export default {
     }
   },
   mounted () {
+    this.getBusinessInformation()
     this.getEnterpriseMessage()
   }
 }
@@ -153,8 +191,9 @@ export default {
   position: relative;
 }
 .job-sec .text, .secretary-sec .text {
-  color: #61687c;
+  color: #000;
   line-height: 36px;
+  font-size: 14px;
 }
   /*显示天眼查的内容*/
 .business-detail {

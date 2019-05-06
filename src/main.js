@@ -26,9 +26,9 @@ import axios from 'axios'
 // 使用qs模块来处理参数
 import qs from 'qs'
 // 引用axios，并设置基础URL为后端服务api地址
-axios.defaults.baseURL = 'http://localhost:8082/api'
-// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.baseURL = 'http://localhost:8082/zp'
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // 引入font-awesome
 import 'font-awesome/css/font-awesome.min.css'
 // 将API方法绑定到全局l
@@ -36,7 +36,9 @@ Vue.prototype.$axios = axios
 Vue.prototype.qs = qs
 Vue.config.productionTip = false
 // 设置携带cookie,这样设置每次session就是一致的了，解决登录验证
-axios.defaults.withCredentials=true;
+axios.defaults.withCredentials = true
+//开启debug
+Vue.config.debug = true;
 
 // 懒加载
 Vue.use(VueLazyLoad, {
@@ -45,11 +47,13 @@ Vue.use(VueLazyLoad, {
 Vue.use(VueRouter)
 
 Vue.use(ElementUI, {locale})
+//在store.js文件中使用vuex集中式状态管理
+import store from './store.js'
 
 /* eslint-disable no-new */
 new Vue({el: '#app',
   router,
-  // store,//使用store
+  store,//使用store
   components: { App },
   template: '<App/>'
   // render:h=>h(App)

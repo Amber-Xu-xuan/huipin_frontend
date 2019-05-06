@@ -39,4 +39,9 @@ export default {
     margin: 0em;
     font: 400 13.3333px Arial;
   }
+
+  /*用户中心设置外边距，此处的用户指的是招聘者和求职者、管理员*/
+  .xxcenter-content{
+    padding:20px;
+  }
 </style>

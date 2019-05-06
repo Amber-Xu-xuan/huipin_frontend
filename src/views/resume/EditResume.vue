@@ -1,16 +1,16 @@
 <template>
   <!--在线编辑简历-->
-    <div>
+    <div class="xxcenter-content">
 
       <el-form :model="resume" :rules="rules" ref="resume" label-width="100px" class="register-form">
 
-        <el-form-item label="真实姓名" prop="rname" required>
-          <el-input v-model="resume.rname"></el-input>
+        <el-form-item label="学校名称" prop="school" required>
+          <el-input v-model="resume.school"></el-input>
         </el-form-item>
 
         <!--学历:博士、硕士、本科、大专、中专、高中、初中、小学-->
         <el-form-item label="学历" prop="education">
-            <el-select v-model="education" placeholder="学历">
+            <el-select v-model="educationBackground" placeholder="学历">
               <el-option
                 v-for="(education,index) in educationList"
                 :key="index"
@@ -19,6 +19,10 @@
               >
               </el-option>
           </el-select>
+        </el-form-item>
+
+        <el-form-item label="所学专业" prop="major" required>
+          <el-input v-model="resume.major"></el-input>
         </el-form-item>
 
         <el-form-item label="经验" prop="experience">
@@ -38,49 +42,33 @@
         </el-form-item>
 
 
-        <el-form-item label="电子邮件" prop="email" required>
-          <el-input v-model="resume.email"></el-input>
-        </el-form-item>
 
-        <el-form-item label="户口所在地" prop="residenceAddress" required>
-          <v-distpicker :province="resume.select.province" :city="resume.select.city" :area="resume.select.area"></v-distpicker>
-        </el-form-item>
-        <el-form-item label="出生日期" required>
-          <el-col :span="11">
-            <el-form-item prop="birthday">
-              <el-date-picker type="date" placeholder="选择日期" v-model="resume.date"
+        <el-form-item label="开始就读时间" required>
+            <el-form-item prop="studyingTime">
+              <el-date-picker type="date" placeholder="选择日期" v-model="resume.studyingTime"
                               style="width: 100%;"></el-date-picker>
             </el-form-item>
-          </el-col>
-          <!--<el-col class="line" :span="2">-</el-col>-->
-          <!--<el-col :span="11">-->
-          <!--<el-form-item prop="date2">-->
-          <!--<el-time-picker type="fixed-time" placeholder="选择时间" v-model="resume.date2"-->
-          <!--style="width: 100%;"></el-time-picker>-->
-          <!--</el-form-item>-->
-          <!--</el-col>-->
+        </el-form-item>
+
+        <el-form-item label="毕业时间" required>
+          <el-form-item prop="graduationTime">
+            <el-date-picker type="date" placeholder="选择日期" v-model="resume.graduationTime"
+                            style="width: 100%;"></el-date-picker>
+          </el-form-item>
         </el-form-item>
 
         <el-form-item label="个人简介" prop="introduce">
           <el-input type="textarea" v-model="resume.introduce"></el-input>
         </el-form-item>
 
-        <el-form-item label="爱好" prop="hobby">
-          <el-input type="textarea" v-model="resume.hobby"></el-input>
+
+
+        <el-form-item label="是否是实习过" prop="isStudent">
+          <el-switch v-model="resume.internship"></el-switch>
         </el-form-item>
 
-        <el-form-item label="是否是学生" prop="isStudent">
-          <el-switch v-model="resume.isStudent"></el-switch>
-        </el-form-item>
-
-        <el-form-item label="性别" prop="gender" required>
-          <el-radio-group v-model="resume.gender">
-            <el-radio label="男"></el-radio>
-            <el-radio label="女"></el-radio>
-          </el-radio-group>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('resume')">提交</el-button>
+          <el-button type="primary" @click="submitForm">提交</el-button>
           <el-button @click="resetForm('resume')">重置</el-button>
         </el-form-item>
       </el-form>

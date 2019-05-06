@@ -78,7 +78,6 @@
           <section class="content-container">
             <div class="grid-content bg-purple-light">
               <el-col :span="24" class="breadcrumb-container">
-                <!--<strong class="title">我的简历</strong>-->
                 <strong class="title">{{$route.name}}</strong>
                 <!--面包屑-->
                 <el-breadcrumb separator="/" class="breadcrumb-inner">
@@ -117,7 +116,7 @@ export default {
       collapsed: false,
       sysUserName: '',
       //用户头像
-      sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+      sysUserAvatar: 'static/user.png',
       form: {
         name: '',
         region: '',
@@ -143,10 +142,12 @@ export default {
     //退出登录
     logout: function () {
       var _this = this
+
       this.$confirm('确认退出吗?', '提示', {
         //type: 'warning'
       }).then(() => {
-        sessionStorage.removeItem('user')
+        // sessionStorage.removeItem('user')
+        localStorage.clear()
         _this.$router.push('/login')
       }).catch(() => {
 
@@ -161,14 +162,15 @@ export default {
     }
   },
   mounted () {
-    var user = sessionStorage.getItem('user')
-    if (user) {
-      user = JSON.parse(user)
-      this.sysUserName = user.name || ''
-      // this.sysUserAvatar = user.avatar || ''
+    // var user = sessionStorage.getItem('user')
+    // if (user) {
+    //   user = JSON.parse(user)
+    //   this.sysUserName = user.name || ''
       //  前端测试的时候的模拟数据
-      this.sysUserAvatar = 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
-    }
+      // this.sysUserAvatar = 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png'
+      this.sysUserAvatar = '/static/user.png'
+      this.sysUserName = '欢迎使用'
+    // }
   }
 }
 </script>

@@ -3,7 +3,7 @@
   <!--:action，必选参数，上传的地址，String类型。data()需要使用代理转发，要不然会有跨域的问题
 
 　　:data，上传时附带的额外参数，object类型。用于传递其他的需要携带的参数，比如下面的srid-->
-<div>
+<div class="xxcenter-content">
   <el-upload
     class="upload-file"
     drag

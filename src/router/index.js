@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
 import JobsList from '../views/JobsList'
-import Title from '../views/Title'
+// 求职者
 // 修改简历
 import EditResume from '../views/resume/EditResume'
 // 登录
@@ -22,17 +21,26 @@ import  EditPassword from '../views/EditPassword'
 //求职者修改状态
 import SetStatus from '../views/candidate/SetStatus'
 
-
 // 求职者登录
 import LandingPage from '../components/LandingPage'
 // 用户协议
 import UserAgreement from '../components/UserAgreement'
 //注册组件
 import EnterpriseRegister from '../components/EnterpriseRegister'
+
+//管理员
 // 管理员中心
 import Admin from '../views/manager/Admin'
 // 管理员登录
 import AdminLogin from '../views/manager/AdminLogin'
+//企业认证
+import EnterpriseCertification from '../views/manager/EnterpriseCertification'
+//统计企业数据
+import StatisticsEnterprise from '../views/manager/StatisticsEnterprise'
+//统计个人数据
+import StatisticsCandidate from '../views/manager/StatisticCandidate'
+
+
 // 企业用户中心
 import EnterpriseCenter from '../views/enterprise/EnterpriseCenter';
 // 企业用户中心管理职位
@@ -43,6 +51,8 @@ import EnterpriseJobMessage from '../views/enterprise/EnterpriseJobMessage'
 import EnterpriseCandidateManage from '../views/enterprise/EnterpriseCandidateManage'
 //修改企业信息
 import EditEnterpriseInfo  from '../views/enterprise/EditEnterpriseInfo'
+//上传企业信息
+import UploadEnterpriseCertification from '../views/enterprise/UploadEnterpriseCertification'
 
 
 // 企业用户信息，点击公司名称之后显示的企业详细信息
@@ -56,9 +66,7 @@ import VueResource from 'vue-resource'
 // import VDistpicker from 'v-distpicker'
 // Vue.component('v-distpicker', VDistpicker)
 
-// 引入vuex
-import Vuex from 'vuex';
-Vue.use(Vuex);
+
 // @是src
 Vue.use(Router)
 // 使用VueResource插件,ajax插件
@@ -96,14 +104,14 @@ export default new Router({
       name: '用户中心',
       iconCls: 'el-icon-user',
       component: Usercenter,
-      meta: {
-        roles: ['admin', 'editor'], //设置该路由进入的权限，支持多个权限叠加
-        title: '用户中心', //设置该路由在侧边栏和面包屑中展示的名字
-        icon: 'user', //设置该路由的图标
-        noCache: false, //如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
-        breadcrumb: false, // 如果设置为false，则不会在breadcrumb面包屑中显示
-        index: {index:'/usercenter'}
-      },
+      // meta: {
+      //   roles: ['admin', 'editor'], //设置该路由进入的权限，支持多个权限叠加
+      //   title: '用户中心', //设置该路由在侧边栏和面包屑中展示的名字
+      //   icon: 'user', //设置该路由的图标
+      //   noCache: false, //如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
+      //   breadcrumb: false, // 如果设置为false，则不会在breadcrumb面包屑中显示
+      //   index: {index:'/usercenter'}
+      // },
       children: [
         {
           path: 'editResume',
@@ -162,15 +170,9 @@ export default new Router({
       name: 'uploadAvatar',
       component: UploadAvatar
     },
-    // {
-    //   path: '/detail',
-    //   name: 'detail',
-    //   component: Detail
-    // },
-    //
     {
       path: '/enterpriseRegister',
-      name: 'register',
+      name: '注册企业用户',
       component: EnterpriseRegister
     },
     {
@@ -186,12 +188,64 @@ export default new Router({
     {
       path: '/adminCenter',
       name: '管理员中心',
-      component: Admin
+      component: Admin,
+      children: [
+        // 对注册的企业进行认证
+        {
+          path: 'enterpriseCertification',
+          name: '企业认证',
+          component: EnterpriseCertification,
+          hidden: true
+        },
+        {
+          //  统计注册企业页面
+          path: 'statisticsEnterprise',
+          name: '统计企业用户',
+          component: StatisticsEnterprise,
+          hidden: true
+        },{
+          //统计注册应聘者
+          path: 'statisticsCandidate',
+          name: '统计应聘用户',
+          component: StatisticsCandidate,
+          hidden: true
+        },
+        {
+          path: 'editPassword',
+          name: '修改密码',
+          component: EditPassword,
+          meta: {
+            title: '修改密码'
+          },
+          hidden: true
+        },
+      ]
     },
     {
       path: '/admin',
       name: '管理员登录',
-      component: AdminLogin
+      component: AdminLogin,
+    },
+    {
+      path: '/enterprise',
+      name: 'enterprise',
+      component: EnterpriseJobMessage,
+      children: [
+        //公司信息介绍
+        {
+          path: 'introduce',
+          name: 'introduce',
+          component: EnterpriseIntroduce,
+          hidden: true
+        },
+        // 职位信息
+        {
+          path: 'jobmessage',
+          name: 'jobmessage',
+          component: EnterpriseJobListDetail,
+          hidden: true
+        }
+      ]
     },
     {
       path: '/enterpriseCenter',
@@ -224,6 +278,12 @@ export default new Router({
           path:'editEnterpriseInfo',
           name:'修改企业信息',
           component:EditEnterpriseInfo
+        },
+        //上传企业认证信息
+        {
+          path:'UploadEnterpriseCertification',
+          name:'上传认证信息',
+          component:UploadEnterpriseCertification
         }
         ]
     },
@@ -252,16 +312,6 @@ export default new Router({
       path: '/jobslist',
       name: 'JobsList',
       component: JobsList,
-      children: [
-        {
-          // 不能加斜杠，要不就是一级路由
-          // 组件建议使用大写开头
-          path: 'title',
-          name: 'title',
-          component: Title,
-          hidden: true
-        }
-      ]
     }
   ]
 })

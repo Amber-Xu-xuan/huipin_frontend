@@ -8,43 +8,43 @@
       <!--头像-->
       <div class="clearfix"></div>
       <div class="enterprise-message">
-        <img :src="this.enterpriseMessageList.emheadImage"/>
-       <span> <h1 class="emname">{{this.enterpriseMessageList.emName}}</h1>
-        <p>{{this.enterpriseMessageList.stage}}<em class="dolt"></em>{{this.enterpriseMessageList.emnum}}<em
-          class="dolt"></em>{{this.enterpriseMessageList.type}}</p>
+        <img :src="this.enterpriseMessage.emheadImage" class="company-headImage"/>
+        <span> <h1 class="emname">{{this.enterpriseMessage.emName}}</h1>
+        <p>{{this.enterpriseMessage.emFinancing}}<em class="dolt"></em>{{this.enterpriseMessage.emScaleList}}
+          <em class="dolt"></em>{{this.enterpriseMessage.businessScope}}</p>
        </span>
-        <div class="tag-container">
-          <div class="tag-more" style="opacity: 1;">
-            <div class="tag-all job-tags" v-for="(item,index) in this.enterpriseMessageList.commentList" :key="index"><span>{{item.commentContent}}</span>
-            </div>
-          </div>
-        </div>
+        <!--关于公司的评论小标签-->
+        <!--<div class="tag-container">-->
+        <!--<div class="tag-more" style="opacity: 1;">-->
+        <!--<div class="tag-all job-tags" v-for="(item,index) in this.enterpriseMessage.commentList" :key="index"><span>哈哈哈哈哈{{item.commentContent}}</span>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
 
-        </div>
+      </div>
 
 
+    </div>
 
-  </div>
+    <div>
+      <!--显示公司简略信息-->
+      <!--菜单栏-开始-->
+      <!--<el-menu-->
+        <!--:default-active="activeIndex"-->
+        <!--class="el-menu-demo"-->
+        <!--mode="horizontal"-->
+        <!--@select="handleSelect"-->
+        <!--background-color="#545c64"-->
+        <!--text-color="#fff"-->
+        <!--router-->
+        <!--active-text-color="#ffd04b">-->
+        <!--&lt;!&ndash;<el-menu-item index="/enterprise/introduce" :class="{'isActive': !active}">公司简介</el-menu-item>&ndash;&gt;-->
+        <!--<el-menu-item index="/enterprise/jobmessage" :class="{'isActive': !active}">招聘职位</el-menu-item>-->
+      <!--</el-menu>-->
 
-  <div>
-    <!--显示公司简略信息-->
-    <!--菜单栏-开始-->
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu-demo"
-      mode="horizontal"
-      @select="handleSelect"
-      background-color="#545c64"
-      text-color="#fff"
-      router
-      active-text-color="#ffd04b">
-      <el-menu-item index="/enterprise/introduce" :class="{'isActive': !active}">公司简介</el-menu-item>
-      <el-menu-item index="/enterprise/jobmessage" :class="{'isActive': !active}">招聘职位</el-menu-item>
-    </el-menu>
-
-    <!--菜单栏结束-->
-  </div>
-  <router-view class="view"></router-view>
+      <!--菜单栏结束-->
+    </div>
+    <router-view class="view"></router-view>
 
 
   </div>
@@ -60,31 +60,39 @@ export default {
   },
   data () {
     return {
-      enterpriseList: [],
+      JobList: [],
       // 默认选中“公司简介”页面
-      activeIndex: '/enterprise/jobmessage',
+      activeIndex: '/enterprise/introduce',
       //薪资字体绑定的样式
       salaryFont: 'salary-font',
+      eName:'',
       active: true,
-      enterpriseMessageList: {}
+      enterpriseMessage: {}
     }
   },
   methods: {
-    getJobsList () {
-      this.$axios.get('candidate/enterprise_job').then((result) => {
-        var res = result.data
-        this.enterpriseList = res.data
-        console.log(this.enterpriseList)
-      })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
+    // getJobsList () {
+      // this.$axios.get('candidate/enterprise_job').then((result) => {
+      //   var res = result.data
+      //   this.JobList = res.data
+      //   console.log(this.JobList)
+      // })
+      //   .catch(function (error) {
+      //     console.log(error)
+      //   })
+    // },
     getEnterpriseMessage () {
-      this.$axios.get('candidate/enterprise_message').then((result) => {
+      this.eName = this.$route.query.eName
+      // console.log("company::" + this.eName)
+      this.$axios.get('/getEnterpriseByEName', {
+        params:{
+          eName: this.eName
+        }
+        }
+      ).then((result) => {
         var res = result.data
-        this.enterpriseMessageList = res.data[0]
-        console.log(this.enterpriseMessageList)
+        this.enterpriseMessage = res.data[0]
+        // console.log(this.enterpriseMessage)
       })
         .catch(function (error) {
           console.log(error)
@@ -96,7 +104,7 @@ export default {
   },
 //  页面挂载时
   mounted () {
-    this.getJobsList()
+    // this.getJobsList()
     this.getEnterpriseMessage()
   }
 }
@@ -107,9 +115,11 @@ export default {
     margin-left: 100px;
     margin-top: 60px;
   }
-  .clearfix{
+
+  .clearfix {
     clear: both;
   }
+
   /*将工资范围文字显示成红色*/
   .salary-font {
     margin-left: 10px;
@@ -122,6 +132,7 @@ export default {
     text-overflow: ellipsis;
     color: #fff;
   }
+
   /*菜单栏左侧设置padding*/
   .el-menu-demo {
     padding-left: 100px;
@@ -151,8 +162,9 @@ export default {
     display: flex;
     flex-wrap: wrap;
     max-width: 700px;
-    margin :0 100px;
+    margin: 0 100px;
   }
+
   .enterprise-message img {
     width: 103px;
     height: 103px;
@@ -161,18 +173,20 @@ export default {
     margin-right: 25px;
     float: left;
   }
-  .enterprise-message:after{
+
+  .enterprise-message:after {
     content: '';
     display: block;
     overflow: hidden;
     visibility: hidden;
     clear: both;
   }
+
   /*.enterprise-message-detaile{*/
-    /*display: inline-flex;*/
-    /*flex-wrap: wrap;*/
-    /*max-width: 700px;*/
-    /*margin :0 100px;*/
+  /*display: inline-flex;*/
+  /*flex-wrap: wrap;*/
+  /*max-width: 700px;*/
+  /*margin :0 100px;*/
   /*}*/
 
   /*公司缩略信息*/
@@ -195,11 +209,13 @@ export default {
     padding: 0;
     margin: 0;
   }
-.tag-container .job-tags, .detail-box .job-tags,  .tag-container .job-tags {
+
+  .tag-container .job-tags, .detail-box .job-tags, .tag-container .job-tags {
     display: inline-block;
     height: 36px;
     overflow: hidden;
   }
+
   .tag-container {
     margin-top: 20px;
     margin-left: 100px;
@@ -217,5 +233,9 @@ export default {
     line-height: 23px;
     border-radius: 13px;
     margin-top: 0;
+  }
+  /*公司头像*/
+  .company-headImage{
+    margin: 20px 10px;
   }
 </style>

@@ -12,10 +12,14 @@
         <el-input v-model="registerForm.emphone"></el-input>
       </el-form-item>
 
+      <el-form-item label="公司简介" prop="emintroduce" required>
+        <el-input  type="textarea" v-model="registerForm.emintroduce"></el-input>
+      </el-form-item>
+
 
       <el-form-item label="电子邮件" prop="email" required>
-        <el-input v-model="registerForm.email"></el-input>
-      </el-form-item>
+      <el-input v-model="registerForm.email"></el-input>
+    </el-form-item>
 
       <el-form-item label="密码" prop="pass" required>
         <el-input type="password" v-model="registerForm.pass" autocomplete="off"></el-input>
@@ -25,35 +29,35 @@
       </el-form-item>
 
       <el-form-item label="公司所在地" prop="residenceAddress" required>
-        <!--<el-select v-model="registerForm.residenceAddress" placeholder="请选择活动区域" value="">-->
-          <!--<el-option label="陕西" value="陕西"></el-option>-->
-          <!--<el-option label="山东" value="山东"></el-option>-->
-          <!--<el-option label="福建" value="福建"></el-option>-->
-        <!--</el-select>-->
-          <v-distpicker :province="registerForm.residenceAddress.province" :city="registerForm.residenceAddress.city" :area="registerForm.residenceAddress.area"></v-distpicker>
+          <v-distpicker :province="registerForm.residenceAddress.province" :city="registerForm.residenceAddress.city" :area="registerForm.residenceAddress.area" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
       </el-form-item>
-      <el-form-item label="创办日期" required>
+      <el-form-item label="创立日期" required>
         <el-col :span="11">
           <el-form-item prop="emstablishmentDate">
             <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.emstablishmentDate"
                             style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
-        <!--<el-col class="line" :span="2">-</el-col>-->
-        <!--<el-col :span="11">-->
-          <!--<el-form-item prop="date2">-->
-            <!--<el-time-picker type="fixed-time" placeholder="选择时间" v-model="registerForm.date2"-->
-                            <!--style="width: 100%;"></el-time-picker>-->
-          <!--</el-form-item>-->
-        <!--</el-col>-->
       </el-form-item>
       <el-form-item label="融资情况">
 
-        <el-select v-model="registerForm.registerFinancing" placeholder="融资情况"  class="register">
+        <el-select v-model="registerForm.emFinancing" placeholder="融资情况"  class="register">
           <el-option
             v-for="(financing,index) in registerForm.registerCondition.financingList"
             :key="index"
             :value="financing.financing">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <!--businessScope-->
+      <el-form-item label="经营类型">
+
+        <el-select v-model="registerForm.businessScope" placeholder="经营类型"  class="register">
+          <el-option
+            v-for="(businessScope,index) in registerForm.registerCondition.businessScope"
+            :key="index"
+            :value="businessScope.type">
           </el-option>
         </el-select>
       </el-form-item>
@@ -68,14 +72,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="性别" prop="gender" required>
-        <el-radio-group v-model="registerForm.gender">
-          <el-radio label="男"></el-radio>
-          <el-radio label="女"></el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('registerForm')">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('registerForm')">注册</el-button>
         <el-button @click="resetForm('registerForm')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -111,16 +109,29 @@ import VDistpicker from 'v-distpicker'
           return callbacks(new Error('请输入正确的邮箱地址'))
         }
       }
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.registerForm.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
       return {
         registerForm: {
+          loading: '',
           emName: '',
           emphone: '',
+          emintroduce: '',
           email: '',
           pass: '',
           checkPass:'',
           registerFinancing: '', // 融资情况
           registerCompanyScale: '', // 公司规模
           emstablishmentDate: '', // 创立日期
+          businessScope:'', //经营类型
+          emFinancing: '',
           residenceAddress: { province: '', city: '', area: '' },
           registerCondition:
             {
@@ -138,7 +149,7 @@ import VDistpicker from 'v-distpicker'
                   financing: 'A轮'
                 },
                 {
-                  financing: 'A轮'
+                  financing: 'B轮'
                 },
                 {
                   financing: 'C轮'
@@ -178,7 +189,43 @@ import VDistpicker from 'v-distpicker'
                 {
                   companyScale: '10000人以上'
                 }
+              ],
+              businessScope:[
+                {
+                  type:" IT·互联网"
+                },
+                {
+                  type:" 金融"
+                },
+                {
+                  type:" 房地产·建筑"
+                },
+                {
+                  type:" 教育培训"
+                },
+                {
+                  type:" 教育培训"
+                },
+                {
+                  type:" 汽车"
+                },
+                {
+                  type:" 娱乐传媒"
+                },
+                {
+                  type:" 医疗健康"
+                },
+                {
+                  type:" 法律咨询"
+                },
+                {
+                  type:"  供应链·物流"
+                },
+                {
+                  type:" 采购贸易"
+                }
               ]
+
             },
         },
         rules: {
@@ -196,7 +243,11 @@ import VDistpicker from 'v-distpicker'
             { required: true, message: '请输入您的密码', trigger: 'blur' }
           ],
           checkPass: [
-            { required: true, message: '请再一次输入您的密码', trigger: 'blur' }
+            { required: true, message: '请再一次输入您的密码', trigger: 'blur' },
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          emintroduce: [
+            { required: true, message: '请输入公司简介', trigger: 'blur' }
           ],
           emphone:[
             { required: true, message: '请输入您的电话号码', trigger: 'blur' },
@@ -213,18 +264,71 @@ import VDistpicker from 'v-distpicker'
       }
     },
     methods: {
+      //当地址下拉框变化时获取地址值
+      onChangeProvince(data) {
+        this.registerForm.residenceAddress.province= data.value
+      },
+      onChangeCity(data) {
+        this.registerForm.residenceAddress.city = data.value
+      },
+      onChangeArea(data){
+        this.registerForm.residenceAddress.area= data.value
+      },
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+        console.log(this.registerForm.emstablishmentDate.toLocaleDateString())
+        this.$refs.registerForm.validate((valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
+            // 验证成功后将数据转换成JSON格式传递到后端
+            this.loading = true
+            this.$message.info("正在提交数据")
+
+            // 通过axios的post方法将表单数据传递给后端接口
+            this.$axios.post('/registerEnterprise',{
+              enterprise: {
+                eName: this.registerForm.emName,
+                ephone: this.registerForm.emphone,
+                epassword: this.registerForm.emName,
+                ecreateTime: new Date().toLocaleDateString(),
+                status: "注册"
+              },
+              enterpriseMessage:{
+                emName: this.registerForm.emName,
+                emphone: this.registerForm.emphone,
+                emstablishmentDate: this.registerForm.emstablishmentDate.toLocaleDateString(),
+                emintroduce: this.registerForm.emintroduce, //公司简介
+                registerFinancing: this.registerForm.registerFinancing, // 融资情况
+                emScaleList: this.registerForm.registerCompanyScale, // 公司规模
+                ememail: this.registerForm.email,
+                businessScope: this.registerForm.businessScope, //经营类型
+                emaddress: this.registerForm.residenceAddress.province + this.registerForm.residenceAddress.city+this.registerForm.residenceAddress.area,
+                emFinancing: this.registerForm.emFinancing,
+              }
+              }).then(
+              result => {
+                this.responseResult = JSON.stringify(result.data)
+                this.loading = false
+                console.log( this.responseResult)
+                if (result.data.code === 200) {
+                  // 当验证成功后跳转到用户中心
+                  this.$router.replace({path: '/login'})
+                  this.$message.success('注册成功！！')
+                }else{
+                  this.$message.error(result.data.message + '请重新输入')
+                }
+              }
+            ).catch(function (error) {
+              console.log(error)
+              // this.loading = false
+            })
+
+          }else {
             this.$message.error('验证失败，请重新检查您输入的信息')
             return false;
           }
         });
       },
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        this.$refs.registerForm.resetFields();
       }
     }
   }

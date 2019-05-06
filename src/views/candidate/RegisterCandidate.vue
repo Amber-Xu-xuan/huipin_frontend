@@ -24,15 +24,10 @@
       </el-form-item>
 
       <el-form-item label="户口所在地" prop="residenceAddress" required>
-        <el-select v-model="registerForm.residenceAddress" placeholder="请选择活动区域" value="">
-          <el-option label="陕西" value="陕西"></el-option>
-          <el-option label="山东" value="山东"></el-option>
-          <el-option label="福建" value="福建"></el-option>
-        </el-select>
+        <v-distpicker :province="registerForm.residenceAddress.province" :city="registerForm.residenceAddress.city" :area="registerForm.residenceAddress.area" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
       </el-form-item>
-      <el-form-item label="出生日期" required>
         <el-col :span="11">
-          <el-form-item prop="birthday">
+          <el-form-item prop="birthday" label="出生日期" required>
             <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.date"
                             style="width: 100%;"></el-date-picker>
           </el-form-item>
@@ -44,7 +39,6 @@
         <!--style="width: 100%;"></el-time-picker>-->
         <!--</el-form-item>-->
         <!--</el-col>-->
-      </el-form-item>
       <el-form-item label="是否是学生" prop="isStudent">
         <el-switch v-model="registerForm.isStudent"></el-switch>
       </el-form-item>

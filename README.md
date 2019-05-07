@@ -101,3 +101,6 @@ npm install mockjs --save-dev
 
 ####  axios-mock-adapter
 安装：npm install axios-mock-adapter --save-dev
+
+### 使用nprogress
+$ npm install --save nprogress

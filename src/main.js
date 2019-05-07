@@ -11,6 +11,8 @@ import VueLazyLoad from 'vue-lazyload'
 // 导入Element
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+
 // 进行多语言设置，以英文为例
 import locale from 'element-ui/lib/locale/lang/en'
 

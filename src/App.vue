@@ -44,4 +44,9 @@ export default {
   .xxcenter-content{
     padding:20px;
   }
+
+  /*修改nprogress的颜色*/
+  /*#nprogress .bar {*/
+    /*background: red !important; //自定义颜色*/
+  /*}*/
 </style>

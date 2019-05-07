@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="xxcenter-content">
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
@@ -7,7 +7,8 @@
           <el-input v-model="filters.jName" placeholder="职位名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="getJobListByjName(this.pageConf.pageCode,this.pageConf.pageSize)">查询</el-button>
+          <el-button type="primary" v-on:click="getJobListByjName(this.pageConf.pageCode,this.pageConf.pageSize)">查询
+          </el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -35,11 +36,10 @@
       </el-table-column>
       <el-table-column prop="qualification" label="任职资格" min-width="180" show-overflow-tooltip>
       </el-table-column>
-      <el-table-column prop="workAddress" label="工作地点" min-width="180" >
+      <el-table-column prop="workAddress" label="工作地点" min-width="180">
       </el-table-column>
       <el-table-column prop="jType" label="职位性质" min-width="180">
       </el-table-column>
-
 
 
       <el-table-column prop="jPublishDate" label="发布时间" min-width="180" sortable>
@@ -49,7 +49,8 @@
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <!---->
+          <el-button type="danger" size="small" @click.native.prevent="deleteJob(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,84 +80,60 @@
     </el-col>
 
     <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
+    <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="姓名" prop="jName">
+        <el-form-item label="职位名称" prop="jName">
           <el-input v-model="editForm.jName" auto-complete="off"></el-input>
         </el-form-item>
-        <!--<el-form-item label="性别">-->
-          <!--<el-radio-group v-model="editForm.sex">-->
-            <!--<el-radio class="radio" :label="1">男</el-radio>-->
-            <!--<el-radio class="radio" :label="0">女</el-radio>-->
-          <!--</el-radio-group>-->
+        <!--<el-form-item label="生日">-->
+          <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>-->
         <!--</el-form-item>-->
-        <!--<el-form-item label="年龄">-->
-          <!--<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>-->
+        <!--<el-form-item label="地址">-->
+          <!--<el-input type="textarea" v-model="editForm.addr"></el-input>-->
         <!--</el-form-item>-->
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="editFormVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-      </div>
-    </el-dialog>
-
-    <!--新增界面 -->
-    <el-dialog title="新增" :visible.sync="addJobFormVisible" :close-on-click-modal="false">
-      <el-form :model="addJobForm" label-width="80px" :rules="addJobFormRules" ref="addJobForm">
-        <!--<el-form-item label="姓名" prop="jName">-->
-          <!--<el-input v-model="addJobForm.jName" auto-complete="off"></el-input>-->
-        <!--</el-form-item>-->
-        <el-form-item label="职位名称" prop="jName">
-          <el-input v-model="addJobForm.jName" auto-complete="off"></el-input>
-        </el-form-item>
-
         <el-form-item label="薪资要求" prop="salary">
-        <el-select v-model="addJobForm.salary" placeholder="薪资要求">
-          <el-option
-            v-for="(salary,index) in selectCondition.salaryList"
-            :key="index"
-            :label="salary.salary"
-            :value="salary.salary">
-          </el-option>
-        </el-select>
+          <el-select v-model="editForm.salary" placeholder="薪资要求">
+            <el-option
+              v-for="(salary,index) in selectCondition.salaryList"
+              :key="index"
+              :label="salary.salary"
+              :value="salary.salary">
+            </el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="工作经验" prop="experience">
-        <el-select v-model="addJobForm.experience" placeholder="工作经验">
-          <el-option
-            v-for="(experience,index) in selectCondition.experienceList"
-            :key="index"
-            :value="experience.experience">
-          </el-option>
-        </el-select>
+        <el-form-item label="工作经验" prop="experienceDuration">
+          <el-select v-model="editForm.experienceDuration" placeholder="工作经验">
+            <el-option
+              v-for="(experienceDuration,index) in selectCondition.experienceDurationList"
+              :key="index"
+              :value="experienceDuration.experienceDuration">
+            </el-option>
+          </el-select>
         </el-form-item>
 
-        <el-form-item label="学历要求" prop="experience">
-        <el-select v-model="addJobForm.education" filterable placeholder="学历要求"  class="filter">
-          <el-option
-            v-for="(education,index) in selectCondition.educationList"
-            :key="index"
-            :value="education.education">
-          </el-option>
-        </el-select>
+        <el-form-item label="学历要求" prop="education">
+          <el-select v-model="editForm.education" placeholder="学历要求">
+            <el-option
+              v-for="(education,index) in selectCondition.educationList"
+              :key="index"
+              :value="education.education">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="岗位职责" prop="obligation">
-          <el-input type="textarea" v-model="addJobForm.obligation"
-                    placeholder="1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
+          <el-input type="textarea" rows="5" v-model="editForm.obligation"
+                    placeholder="例如:
+1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
 2、拓展、维护公司招聘渠道，更新招聘信息；
 3、参加支持HR相关工作（内部推荐、员工关系培训、校园招聘等）。"></el-input>
         </el-form-item>
 
         <el-form-item label="任职资格" prop="qualification">
-          <el-input type="textarea" v-model="addJobForm.qualification"
-                    placeholder="1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
+          <el-input type="textarea" rows="5" v-model="editForm.qualification"
+                    placeholder="例如:
+1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
 2、熟练使用office等办公软件，对数据处理有经验者优先；
 3、每周保证实习4个工作日以上，实习至少三个月以上；
 4、积极、主动、耐心、踏实、高效、善于沟通。
@@ -164,32 +141,121 @@
         </el-form-item>
 
         <!--<el-form-item label="性别">-->
-          <!--<el-radio-group v-model="addJobForm.sex">-->
-            <!--<el-radio class="radio" :label="1">男</el-radio>-->
-            <!--<el-radio class="radio" :label="0">女</el-radio>-->
-          <!--</el-radio-group>-->
+        <!--<el-radio-group v-model="editForm.sex">-->
+        <!--<el-radio class="radio" :label="1">男</el-radio>-->
+        <!--<el-radio class="radio" :label="0">女</el-radio>-->
+        <!--</el-radio-group>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="年龄">-->
-          <!--<el-input-number v-model="addJobForm.age" :min="0" :max="200"></el-input-number>-->
+        <!--<el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>-->
         <!--</el-form-item>-->
-        <!--<el-form-item label="生日">-->
-          <!--<el-date-picker type="date" placeholder="选择日期" v-model="addJobForm.birth"></el-date-picker>-->
-        <!--</el-form-item>-->
-        <el-form-item label="地址">
-          <el-input v-model="addJobForm.workAddress"></el-input>
+        <el-form-item label="停止招聘">
+          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.stopRecruitDate"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="地址" prop="workAddress">
+          <el-input v-model="editForm.workAddress"></el-input>
+        </el-form-item>
+        <!--职位性质： 实习 -->
+        <el-form-item label="职位性质" prop="jType">
+          <el-select v-model="editForm.jType" placeholder="职位性质">
+            <el-option
+              v-for="(jType,index) in selectCondition.jTypeList"
+              :key="index"
+              :label="jType.jType"
+              :value="jType.jType">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
-      <!--职位性质： 实习 -->
-      <el-form-item label="职位性质" prop="jType">
-        <el-select v-model="addJobForm.jType" placeholder="职位性质">
-          <el-option
-            v-for="(salary,index) in selectCondition.jTypeList"
-            :key="index"
-            :label="jType.jType"
-            :value="jType.jType">
-          </el-option>
-        </el-select>
-      </el-form-item>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native="editFormVisible = false">取消</el-button>
+        <el-button type="primary" @click.native="editJob" :loading="editLoading">提交</el-button>
+      </div>
+    </el-dialog>
+
+    <!--新增界面 -->
+    <el-dialog title="新增" :visible.sync="addJobFormVisible" :close-on-click-modal="false">
+      <el-form :model="addJobForm" label-width="80px" :rules="addJobFormRules" ref="addJobForm">
+        <el-form-item label="职位名称" prop="jName">
+          <el-input v-model="addJobForm.jName" auto-complete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="薪资要求" prop="salary">
+          <el-select v-model="addJobForm.salary" placeholder="薪资要求">
+            <el-option
+              v-for="(salary,index) in selectCondition.salaryList"
+              :key="index"
+              :label="salary.salary"
+              :value="salary.salary">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="工作经验" prop="experienceDuration">
+          <el-select v-model="addJobForm.experienceDuration" placeholder="工作经验">
+            <el-option
+              v-for="(experienceDuration,index) in selectCondition.experienceDurationList"
+              :key="index"
+              :value="experienceDuration.experienceDuration">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="学历要求" prop="education">
+          <el-select v-model="addJobForm.education" placeholder="学历要求">
+            <el-option
+              v-for="(education,index) in selectCondition.educationList"
+              :key="index"
+              :value="education.education">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="岗位职责" prop="obligation">
+          <el-input type="textarea" rows="5" v-model="addJobForm.obligation"
+                    placeholder="例如:
+1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
+2、拓展、维护公司招聘渠道，更新招聘信息；
+3、参加支持HR相关工作（内部推荐、员工关系培训、校园招聘等）。"></el-input>
+        </el-form-item>
+
+        <el-form-item label="任职资格" prop="qualification">
+          <el-input type="textarea" rows="5" v-model="addJobForm.qualification"
+                    placeholder="例如:
+1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
+2、熟练使用office等办公软件，对数据处理有经验者优先；
+3、每周保证实习4个工作日以上，实习至少三个月以上；
+4、积极、主动、耐心、踏实、高效、善于沟通。
+实习生福利：弹性工作、优厚薪资、餐补、租房补贴、良好的办公环境、扁平化管理、免费零食+下午茶等"></el-input>
+        </el-form-item>
+
+        <!--<el-form-item label="性别">-->
+        <!--<el-radio-group v-model="addJobForm.sex">-->
+        <!--<el-radio class="radio" :label="1">男</el-radio>-->
+        <!--<el-radio class="radio" :label="0">女</el-radio>-->
+        <!--</el-radio-group>-->
+        <!--</el-form-item>-->
+        <!--<el-form-item label="年龄">-->
+        <!--<el-input-number v-model="addJobForm.age" :min="0" :max="200"></el-input-number>-->
+        <!--</el-form-item>-->
+        <el-form-item label="停止招聘">
+        <el-date-picker type="date" placeholder="选择日期" v-model="addJobForm.stopRecruitDate"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="地址" prop="workAddress">
+          <el-input v-model="addJobForm.workAddress"></el-input>
+        </el-form-item>
+        <!--职位性质： 实习 -->
+        <el-form-item label="职位性质" prop="jType">
+          <el-select v-model="addJobForm.jType" placeholder="职位性质">
+            <el-option
+              v-for="(jType,index) in selectCondition.jTypeList"
+              :key="index"
+              :label="jType.jType"
+              :value="jType.jType">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="addJobFormVisible = false">取消</el-button>
@@ -201,7 +267,10 @@
 
 <script>
 // import util from '/util.js'
-// import { getJobListPage, removeUser, batchRemoveUser, editUser, addUser } from 'src/apis/api'
+// import { removeJob, batchRemoveUser, editUser, addUser } from 'src/apis/api'
+//导入nprogress
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 /**
  * 企业管理职位信息
  */
@@ -215,11 +284,12 @@ export default {
       joblist: [],
       // joblist: {},
       loginPhone: '',
+      //登录的用户信息
+      loginEnterprise:{},
       // total: 0,
       // pageNumber: 1, //当前页
       listLoading: false,
       sels: [],//列表选中列
-      //记录登录的账号
 
       //定义分页Config
       pageConf: {
@@ -239,12 +309,16 @@ export default {
       },
       //编辑界面数据
       editForm: {
-        id: 0,
         jName: '',
-        sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        salary: '',
+        experienceDuration: '',
+        education: '',
+        obligation: '',
+        qualification: '',
+        workAddress: '',
+        jType: '',
+        jPublishDate: '',
+        stopRecruitDate: ''
       },
 
       // 下拉框
@@ -267,24 +341,24 @@ export default {
               salary: '>10k'
             }
           ],
-          experienceList: [
+          experienceDurationList: [
             {
-              experience: '应届生'
+              experienceDuration: '应届生'
             },
             {
-              experience: '1年以内'
+              experienceDuration: '1年以内'
             },
             {
-              experience: '1-3年'
+              experienceDuration: '1-3年'
             },
             {
-              experience: '3-5年'
+              experienceDuration: '3-5年'
             },
             {
-              experience: '5-10年'
+              experienceDuration: '5-10年'
             },
             {
-              experience: '10年以上'
+              experienceDuration: '10年以上'
             }
           ],
           educationList: [
@@ -328,15 +402,41 @@ export default {
       addJobFormRules: {
         jName: [
           {required: true, message: '请输入岗位名称', trigger: 'blur'}
-        ]
+        ],
+        salary: [
+          {required: true, message: '请输入薪资待遇', trigger: 'blur'}
+        ],
+        experienceDuration: [
+          {required: true, message: '请输入经验要求', trigger: 'blur'}
+        ],
+        education: [
+          {required: true, message: '请输入学历要求', trigger: 'blur'}
+        ],
+        obligation: [
+          {required: true, message: '请输入岗位职责', trigger: 'blur'}
+        ],
+        qualification: [
+          {required: true, message: '请输入任职资格', trigger: 'blur'}
+        ],
+        workAddress: [
+          {required: true, message: '请输入工作地点', trigger: 'blur'}
+        ],
+        jType: [
+          {required: true, message: '请输入职位性质', trigger: 'blur'}
+        ],
       },
       //新增界面数据
       addJobForm: {
         jName: '',
-        sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        salary: '',
+        experienceDuration: '',
+        education: '',
+        obligation: '',
+        qualification: '',
+        workAddress: '',
+        jType: '',
+        jPublishDate: '',
+        stopRecruitDate: ''
       }
 
     }
@@ -353,7 +453,7 @@ export default {
       this.getJobList(val, this.pageConf.pageSize)
     },
     getJobListByjName () {
-      console.log("通过职位名查询，为完善")
+      console.log('通过职位名查询，为完善')
     },
     //获取用户列表(分页）
     /**
@@ -364,13 +464,12 @@ export default {
     getJobList (pageCode, pageSize) {
       this.listLoading = true
       // this.loginPhone =  this.$route.params.loginPhone
-      //NProgress.start();
+      NProgress.start();
       var loginEnterprisePhone = localStorage.getItem('loginEnterprisePhone')
       var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
-
+      this.loginEnterprise = loginEnterprise
       // console.log("登录账号：" + this.$route.params.loginPhone)
       // console.log("登录账号：" + this.$route.params.loginPhone)
-      // console.log("第"+ pageCode + "页，共" + pageSize +"条记录")
       // console.log(loginEnterprise)
       this.$axios.get('enterprise/getJobListByEName',
         {
@@ -389,30 +488,42 @@ export default {
           this.joblist = res.data.data.rows
           // console.log("joblist:" + this.joblist)
           this.listLoading = false
-        }else{
+        } else {
           this.$message.error(res.data.message + '请重新登录')
         }
 
-        //NProgress.done();
+        NProgress.done();
 
       })
     },
     //删除
-    handleDel: function (index, row) {
+    deleteJob: function (index, row) {
       this.$confirm('确认删除该记录吗?', '提示', {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        //NProgress.start();
-        let para = {id: row.id}
-        removeUser(para).then((res) => {
-          this.listLoading = false
-          //NProgress.done();
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getJobList()
+        NProgress.start();
+        console.log(row.jpId)
+        console.log("index" + index)
+        this.$axios.delete('enterprise/deleteJobPosition',
+          {
+            data: {
+              jpId: row.jpId
+            }
+          }
+        )
+        .then((res) => {
+          if(res.data.code === 200) {
+            this.listLoading = false
+            NProgress.done();
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
+          }else {
+            this.$message.error(res.data.message + '删除失败')
+          }
         })
       }).catch(() => {
 
@@ -430,34 +541,46 @@ export default {
         jName: '',
         salary: '',
         experienceDuration: '',
-        education:'',
-        obligation:'',
-        qualification:'',
-        workAddress:'',
-        jType:'',
-        jPublishDate:'',
-        stopRecruitDate:''
+        education: '',
+        obligation: '',
+        qualification: '',
+        workAddress: '',
+        jType: '',
+        stopRecruitDate: ''
       }
     },
-    //编辑
-    editSubmit: function () {
+    //修改求职信息
+    editJob: function (index,row) {
+      //获取到对应的行数的数据信息
+      this.editForm = row
+
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
-            //NProgress.start();
-            let para = Object.assign({}, this.editForm)
-            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
-            editUser(para).then((res) => {
+            NProgress.start();
+            // let para = Object.assign({}, this.editForm)
+            // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
+            this.$axios.post("/enterprise/updateJobPosition",{
+              jName: this.editForm.jName,
+              salary: this.editForm.salary,
+              experienceDuration: this.editForm.experienceDuration,
+              education: this.editForm.education,
+              obligation: this.editForm.obligation,
+              qualification: this.editForm.qualification,
+              workAddress: this.editForm.workAddress,
+              jType: this.editForm.jType,
+              stopRecruitDate: this.editForm.stopRecruitDate
+            }).then((res) => {
               this.editLoading = false
-              //NProgress.done();
+              NProgress.done();
               this.$message({
                 message: '提交成功',
                 type: 'success'
               })
               this.$refs['editForm'].resetFields()
               this.editFormVisible = false
-              this.getJobList()
+              this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
             })
           })
         }
@@ -465,36 +588,49 @@ export default {
     },
     //新增职位
     addJob: function () {
+      console.log(this.loginEnterprise)
       this.$refs.addJobForm.validate((valid) => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.addLoading = true
-            //NProgress.start();
+            NProgress.start();
             // let para = Object.assign({}, this.addJobForm)
             // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
             // addUser(para).
-            this.$axios.post('enterprise/addJobPosition',{
-              jobPosition: this.addJobForm
+            console.log(this.addJobForm.jName)
+            this.$axios.post('enterprise/addJobPosition', {
+
+                jName: this.addJobForm.jName,
+                salary: this.addJobForm.salary,
+                experienceDuration: this.addJobForm.experienceDuration,
+                education: this.addJobForm.education,
+                obligation: this.addJobForm.obligation,
+                qualification: this.addJobForm.qualification,
+                workAddress: this.addJobForm.workAddress,
+                jType: this.addJobForm.jType,
+                jPublishDate: new Date().toLocaleDateString(),
+                stopRecruitDate: this.addJobForm.jName,
+                eName: this.loginEnterprise.eName
             })
               .then((result) => {
-              this.addLoading = false
-              //NProgress.done();
-              // this.$message({
-              //   message: '提交成功',
-              //   type: 'success'
-              // })
+                this.addLoading = false
+                NProgress.done();
+                // this.$message({
+                //   message: '提交成功',
+                //   type: 'success'
+                // })
                 this.responseResult = JSON.stringify(result.data)
                 this.loading = false
                 console.log(this.responseResult)
                 if (result.data.code === 200) {
                   this.$refs['addJobForm'].resetFields()
                   this.addJobFormVisible = false
-                  this.getJobList()
+                  this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
                 } else {
                   this.$message.error(result.data.message + '请重新添加')
                 }
 
-            })
+              })
           })
         }
       })
@@ -509,16 +645,16 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        //NProgress.start();
+        NProgress.start();
         let para = {ids: ids}
         batchRemoveUser(para).then((res) => {
           this.listLoading = false
-          //NProgress.done();
+          NProgress.done();
           this.$message({
             message: '删除成功',
             type: 'success'
           })
-          this.getJobList()
+          this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
         })
       }).catch(() => {
 
@@ -526,7 +662,7 @@ export default {
     }
   },
   mounted () {
-    this.getJobList(this.pageConf.pageCode,this.pageConf.pageSize)
+    this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
   }
 
 }

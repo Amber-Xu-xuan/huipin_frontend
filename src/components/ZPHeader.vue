@@ -13,7 +13,7 @@
           </ul>
         </div>
           <div class="user-nav">
-                <el-dropdown trigger="hover">
+                <el-dropdown trigger="click">
                     <span class="el-dropdown-link header-login">
                       <!--显示头像-->
                       登录

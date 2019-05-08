@@ -95,7 +95,7 @@
                       :to="{path:'enterprise/introduce',query:{eName:item.eName}}"
                     > {{item.eName}}</router-link>
                   </span>
-                  <el-button style="float: right; padding: 3px 0" type="text">投递简历</el-button>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="SendingResume(item.jName,item.eName)">投递简历</el-button>
                 </div>
                 <div class="card-text item">
                   {{item.workAddress.substring(0,2)}}<span class="space"></span>
@@ -295,6 +295,9 @@ export default {
           console.log(error)
           alert(error)
         })
+    },
+    SendingResume(jName,eName){
+      console.log(jName,eName)
     },
     showFilterPop () {
       this.filterBy = true

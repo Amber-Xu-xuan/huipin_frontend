@@ -6,16 +6,30 @@ import JobsList from '../views/JobsList'
 import EditResume from '../views/resume/EditResume'
 // 登录
 import Login from '../components/Login'
-// 个人中心
-import Usercenter from '../components/Usercenter'
+//求职者中心
+import CandidateCenter from '../views/candidate/CandidateCenter'
+
+// 编辑自我描述
+import EditSelfDescription from '../views/resume/EditSelfDescription'
+// 编辑基本信息
+import EditCandidateBaseInfo from '../views/resume/EditCandidateBaseInfo'
+// 管理教育经历
+import ManageEducation from '../views/resume/ManageEducation'
+// 管理项目经历
+import ManageProjectExperience from '../views/resume/ManageProjectExperience'
+// 管理社交主页
+import ManageSocialHomepage from '../views/resume/ManageSocialHomepage'
+// 投递过简历的公司
+import DiliveryResumeEnterprise from '../views/deliveryBox/DiliveryResumeEnterprise'
+// 收藏夹
+import CollectEnterprise from '../views/candidate/CollectEnterprise'
 // 上传头像
 import UploadAvatar from '../views/upload/UploadAvatar'
 // 简历
-//上传简历
-import UploadResume from '../views/resume/UploadResume'
-//添加工作经历
-AddWorkExperience
-import AddWorkExperience from '../views/candidate/AddWorkExperience'
+
+//工作经历
+// ManageWorkExperience
+import ManageWorkExperience from '../views/resume/ManageWorkExperience'
 // 修改密码
 import  EditPassword from '../views/EditPassword'
 //求职者修改状态
@@ -45,7 +59,7 @@ import StatisticsCandidate from '../views/manager/StatisticCandidate'
 import EnterpriseCenter from '../views/enterprise/EnterpriseCenter';
 // 企业用户中心管理职位
 import EnterpriseJobManage from '../views/enterprise/job/EnterpriseJobManage'
-// 企业招聘信息，点击公司名称之后显示的企业招聘信息
+// 游客模式：企业招聘信息，点击公司名称之后显示的企业招聘信息
 import EnterpriseJobMessage from '../views/enterprise/EnterpriseJobMessage'
 //企业用户中心，管理求职者模块
 import EnterpriseCandidateManage from '../views/enterprise/EnterpriseCandidateManage'
@@ -53,26 +67,22 @@ import EnterpriseCandidateManage from '../views/enterprise/EnterpriseCandidateMa
 import EditEnterpriseInfo  from '../views/enterprise/EditEnterpriseInfo'
 //上传企业信息
 import UploadEnterpriseCertification from '../views/enterprise/UploadEnterpriseCertification'
+//企业账号状态，是否通过验证，管理员的反馈信息，审核信息哪里不合格
+import EnterpriseStatus from '../views/enterprise/EnterpriseStatus'
 
-
-// 企业用户信息，点击公司名称之后显示的企业详细信息
+// 游客模式：企业用户信息，点击公司名称之后显示的企业详细信息
 import EnterpriseIntroduce from  '../views/enterprise/EnterpriseIntroduce'
-//企业招聘职位
+//首页，企业招聘职位的card
 import EnterpriseJobListDetail from '../views/enterprise/EnterpriseJobListDetail'
 // 引入资源请求插件
 import VueResource from 'vue-resource'
 
-// 引入地址选择器组件
-// import VDistpicker from 'v-distpicker'
-// Vue.component('v-distpicker', VDistpicker)
 
 
 // @是src
 Vue.use(Router)
 // 使用VueResource插件,ajax插件
 Vue.use(VueResource)
-
-
 
 // const state={//要设置的全局访问的state对象
 //   showFooter: true,
@@ -100,10 +110,10 @@ export default new Router({
     },
     // 求职者
     {
-      path: '/usercenter',
+      path: '/candidateCenter',
       name: '用户中心',
       iconCls: 'el-icon-user',
-      component: Usercenter,
+      component: CandidateCenter,
       // meta: {
       //   roles: ['admin', 'editor'], //设置该路由进入的权限，支持多个权限叠加
       //   title: '用户中心', //设置该路由在侧边栏和面包屑中展示的名字
@@ -123,20 +133,11 @@ export default new Router({
           hidden: true
         },
         {
-          path: 'uploadResume',
-          name: '上传简历',
-          component: UploadResume,
+          path: 'WorkExperience',
+          name: '管理工作经历',
+          component: ManageWorkExperience,
           meta: {
-            title: '上传简历'
-          },
-          hidden: true
-        },
-        {
-          path: 'addWorkExperience',
-          name: '添加工作经历',
-          component: AddWorkExperience,
-          meta: {
-            title: '添加工作经历'
+            title: '管理工作经历'
           },
           hidden: true
         },
@@ -155,6 +156,69 @@ export default new Router({
           component: SetStatus,
           meta: {
             title: '修改状态'
+          },
+          hidden: true
+        },
+        {
+          path: 'selfDescription',
+          name: '编辑自我描述',
+          component: EditSelfDescription,
+          meta: {
+            title: '编辑自我描述'
+          },
+          hidden: true
+        },
+        {
+          path: 'candidateBaseInfo',
+          name: '编辑基本信息',
+          component: EditCandidateBaseInfo,
+          meta: {
+            title: '编辑基本信息'
+          },
+          hidden: true
+        },
+        {
+          path: 'education',
+          name: '管理教育经历',
+          component: ManageEducation,
+          meta: {
+            title: '管理教育经历'
+          },
+          hidden: true
+        },
+        {
+          path: 'project',
+          name: '管理项目经历',
+          component: ManageProjectExperience,
+          meta: {
+            title: '管理项目经历'
+          },
+          hidden: true
+        },
+        {
+          path: 'socialHomepage',
+          name: '管理社交主页',
+          component: ManageSocialHomepage,
+          meta: {
+            title: '管理社交主页'
+          },
+          hidden: true
+        },
+        {
+          path: 'dilivery',
+          name: '投递过',
+          component: DiliveryResumeEnterprise,
+          meta: {
+            title: '投递过'
+          },
+          hidden: true
+        },
+        {
+          path: 'collect',
+          name: '收藏夹',
+          component: CollectEnterprise,
+          meta: {
+            title: '收藏夹'
           },
           hidden: true
         }
@@ -281,9 +345,15 @@ export default new Router({
         },
         //上传企业认证信息
         {
-          path:'UploadEnterpriseCertification',
-          name:'上传认证信息',
+          path:'uploadEnterpriseCertification',
+          name:'企业认证',
           component:UploadEnterpriseCertification
+        },
+        //查看企业最新的验证状态
+        {
+          path:'EnterpriseStatus',
+          name:'账号状态管理',
+          component:EnterpriseStatus
         }
         ]
     },

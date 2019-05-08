@@ -371,7 +371,7 @@ export default {
               console.log(this.responseResult)
               if (result.data.code === 200) {
                 // 当验证成功后跳转到用户中心
-                this.$router.replace({path: '/usercenter'})
+                this.$router.replace({path: '/candidateCenter'})
                 this.$message.success('成功登录！！')
                 //通过vuex集中管理登录的求职者信息
                 // this.$store.commit('updateLoginCandidate',result.data.data)

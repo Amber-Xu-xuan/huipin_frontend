@@ -44,13 +44,13 @@
 
               <el-submenu index="enterpriseInfoManage">
                 <template slot="title">
-                  <i class="el-icon-location"></i>
+                  <i class="el-icon-tickets"></i>
                   <span slot="title">企业信息管理</span>
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
                   <el-menu-item index="editEnterpriseInfo">修改企业信息</el-menu-item>
-                  <el-menu-item index="certification">企业认证</el-menu-item>
+                  <el-menu-item index="uploadEnterpriseCertification">企业认证</el-menu-item>
                    </el-menu-item-group>
               </el-submenu>
 
@@ -61,15 +61,15 @@
                 </el-menu-item>
 
               <el-menu-item index="editPassword">
-                <i class="el-icon-menu"></i>
+                <i class="el-icon-edit"></i>
                 <!--<span slot="title"><router-link to="/enterpriseCenter/editPassword">修改密码</router-link></span>-->
                 <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
 
-              <el-menu-item index="editStatus">
+              <el-menu-item index="EnterpriseStatus">
                 <i class="el-icon-setting"></i>
-                <span slot="title">状态确认</span>
+                <span slot="title">账号状态管理</span>
                 <!--<span slot="title"><router-link to="/enterpriseCenter/ensureStatus">状态确认</router-link></span>-->
               </el-menu-item>
             </el-menu>

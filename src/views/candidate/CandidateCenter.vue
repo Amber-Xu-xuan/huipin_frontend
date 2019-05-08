@@ -29,37 +29,42 @@
         <el-col :span="24" class="main">
           <aside>
             <!--unique-opened:之保持一个子菜单的展开
-            default-active="2"：默认打开-->
-            <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
+            default-openeds="1"：默认打开-->
+            <el-menu  class="el-menu-vertical-demo"  @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-location"></i>
                   <span slot="title">我的简历</span>
                 </template>
                 <el-menu-item-group>
-                  <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="/usercenter/uploadResume">上传简历</el-menu-item>
-                  <el-menu-item index="/usercenter/addWorkExperience">添加工作经历</el-menu-item>
-                  <el-menu-item index="/usercenter/editResume">在线编辑简历</el-menu-item>
+                  <el-menu-item index="/candidateCenter/selfDescription">自我描述</el-menu-item>
+                  <el-menu-item index="/candidateCenter/candidateBaseInfo">基本信息</el-menu-item>
+                  <el-menu-item index="/candidateCenter/education">管理教育经历</el-menu-item>
+                  <el-menu-item index="/candidateCenter/WorkExperience">管理工作经历</el-menu-item>
+                  <el-menu-item index="/candidateCenter/project">管理项目经历</el-menu-item>
+                  <el-menu-item index="/candidateCenter/socialHomepage">管理社交主页</el-menu-item>
+
                 </el-menu-item-group>
-                <!--<el-submenu index="1-4">-->
-                  <!--<span slot="title">在线简历</span>-->
-                  <!--<el-menu-item index="editResume">在线编辑</el-menu-item>-->
-                <!--</el-submenu>-->
               </el-submenu>
-              <el-menu-item index="/usercenter/editPassword">
-                <i class="el-icon-menu"></i>
-                <!--<span slot="title"><router-link to="/usercenter/editPassword">修改密码</router-link></span>-->
-                <span slot="title">修改密码</span>
-              </el-menu-item>
-              <!--disabled-->
-              <el-menu-item index="/usercenter/editPhone">
-                <i class="el-icon-document"></i>
-                <span slot="title">修改手机号码</span>
-              </el-menu-item>
-              <el-menu-item index="/usercenter/setStatus">
+              <el-submenu index="2">
+                <template slot="title">
+                  <i class="el-icon-location"></i>
+                  <span slot="title">投递箱</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/candidateCenter/dilivery">投递过</el-menu-item>
+                  <!--<el-menu-item index="/candidateCenter/look">被查看</el-menu-item>-->
+                  <!--<el-menu-item index="/candidateCenter/communication">待沟通</el-menu-item>-->
+                  <!--<el-menu-item index="/candidateCenter/dilivery">邀请面试</el-menu-item>-->
+                </el-menu-item-group>
+              </el-submenu>
+              <el-menu-item index="/candidateCenter/collect">
                 <i class="el-icon-setting"></i>
-                <span slot="title">设置状态</span>
+                <span slot="title">收藏夹</span>
+              </el-menu-item>
+              <el-menu-item index="/candidateCenter/editPassword">
+                <i class="el-icon-menu"></i>
+                <span slot="title">修改密码</span>
               </el-menu-item>
             </el-menu>
           </aside>
@@ -91,12 +96,12 @@
 </template>
 
 <script>
-import ZPHeader from './ZPHeader'
-import ZPFooter from './ZPFooter'
+import ZPHeader from '../../components/ZPHeader'
+import ZPFooter from '../../components/ZPFooter'
 // import EditResume from '@/views/resume/EditResume'
 
 export default {
-  name: 'usercenter',
+  name: 'candidateCenter',
   components: {ZPHeader, ZPFooter},
   data () {
     return {
@@ -104,7 +109,7 @@ export default {
       activeUrl: '1',
       collapsed: false,
       sysUserName: '',
-      sysUserAvatar: 'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+      sysUserAvatar: '../static/avatar.jpg',
       form: {
         name: '',
         region: '',
@@ -154,7 +159,7 @@ export default {
   },
   mounted () {
     //  前端测试的时候的模拟数据
-    this.sysUserAvatar = ''
+    this.sysUserAvatar = '../static/avatar.jpg'
     var user = sessionStorage.getItem('user')
     if (user) {
       user = JSON.parse(user)

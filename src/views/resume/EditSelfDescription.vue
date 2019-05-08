@@ -1,5 +1,5 @@
 <template>
-    <!--修改企业信息 :rules="rules" -->
+  <!--修改企业信息 :rules="rules" -->
   <div class="xxcenter-content">
     <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="register-form">
 
@@ -21,10 +21,10 @@
       </el-form-item>
 
       <!--<el-form-item label="密码" prop="pass">-->
-        <!--<el-input type="password" v-model="editForm.pass" autocomplete="off"></el-input>-->
+      <!--<el-input type="password" v-model="editForm.pass" autocomplete="off"></el-input>-->
       <!--</el-form-item>-->
       <!--<el-form-item label="确认密码" prop="checkPass">-->
-        <!--<el-input type="password" v-model="editForm.checkPass" autocomplete="off"></el-input>-->
+      <!--<el-input type="password" v-model="editForm.checkPass" autocomplete="off"></el-input>-->
       <!--</el-form-item>-->
 
       <el-form-item label="公司所在地" prop="residenceAddress">
@@ -32,12 +32,12 @@
         <el-input v-model="enterpriseMessage.emaddress" autocomplete="off"></el-input>
       </el-form-item>
       <!--<el-form-item label="创立日期" required>-->
-        <!--<el-col :span="11">-->
-          <!--<el-form-item prop="emstablishmentDate">-->
-            <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.emstablishmentDate"-->
-                            <!--style="width: 100%;"></el-date-picker>-->
-          <!--</el-form-item>-->
-        <!--</el-col>-->
+      <!--<el-col :span="11">-->
+      <!--<el-form-item prop="emstablishmentDate">-->
+      <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.emstablishmentDate"-->
+      <!--style="width: 100%;"></el-date-picker>-->
+      <!--</el-form-item>-->
+      <!--</el-col>-->
       <!--</el-form-item>-->
       <el-form-item label="融资情况">
 
@@ -53,13 +53,13 @@
       <!--businessScope-->
       <!--<el-form-item label="经营类型">-->
 
-        <!--<el-select v-model="enterpriseMessage.businessScope" placeholder="经营类型"  class="register">-->
-          <!--<el-option-->
-            <!--v-for="(businessScope,index) in editForm.editCondition.businessScope"-->
-            <!--:key="index"-->
-            <!--:value="businessScope.type">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
+      <!--<el-select v-model="enterpriseMessage.businessScope" placeholder="经营类型"  class="register">-->
+      <!--<el-option-->
+      <!--v-for="(businessScope,index) in editForm.editCondition.businessScope"-->
+      <!--:key="index"-->
+      <!--:value="businessScope.type">-->
+      <!--</el-option>-->
+      <!--</el-select>-->
       <!--</el-form-item>-->
 
       <el-form-item label="公司规模">
@@ -83,7 +83,7 @@
 <script>
 import VDistpicker from 'v-distpicker'
 export default {
-  name: 'EditenterpriseInfo',
+  name: 'EditSelfDescription',
   components: { VDistpicker },
   data () {
     // 自定义的校验规则
@@ -307,7 +307,7 @@ export default {
     resetForm(formName) {
       this.$refs.editForm.resetFields();
     },
-  //  页面挂载时加载公司信息
+    //  页面挂载时加载公司信息
     getEnterpriseMessage(){
       var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
       // console.log(loginEnterprise.eName)
@@ -335,3 +335,4 @@ export default {
 <style scoped>
 
 </style>
+

@@ -9,7 +9,7 @@
               <span class="jName">{{item.jName}}</span>
               <span class="salary" :class="salaryFont">{{item.salary}}</span>
               <!--<span class="card-text-margin">{{item.emname}}</span>-->
-              <el-button style="float: right; padding: 3px 0" type="text">投递简历</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="SendingResume(item.jName,item.eName)">投递简历</el-button>
             </div>
             <div class="card-text item">
               {{item.jarea}}|{{item.education}}|{{item.experienceDuration}} <span class="card-text-margin">{{item.businessScope}}|{{item.enterpriceStatus}}|{{item.emnum}}</span>
@@ -48,6 +48,9 @@ export default {
           console.log(error)
         })
     },
+    SendingResume(jName,eName){
+      console.log(jName,eName)
+    }
   },
   //  页面挂载时
   mounted () {

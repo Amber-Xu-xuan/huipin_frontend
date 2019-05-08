@@ -87,10 +87,10 @@
           <el-input v-model="editForm.jName" auto-complete="off"></el-input>
         </el-form-item>
         <!--<el-form-item label="生日">-->
-          <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>-->
+        <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>-->
         <!--</el-form-item>-->
         <!--<el-form-item label="地址">-->
-          <!--<el-input type="textarea" v-model="editForm.addr"></el-input>-->
+        <!--<el-input type="textarea" v-model="editForm.addr"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item label="薪资要求" prop="salary">
           <el-select v-model="editForm.salary" placeholder="薪资要求">
@@ -247,13 +247,13 @@
         <!--<el-input-number v-model="addJobForm.age" :min="0" :max="200"></el-input-number>-->
         <!--</el-form-item>-->
         <el-form-item label="停止招聘">
-        <el-date-picker
-          type="date"
-          placeholder="选择日期"
-          v-model="addJobForm.stopRecruitDate"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd"
-        ></el-date-picker>
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="addJobForm.stopRecruitDate"
+            format="yyyy 年 MM 月 dd 日"
+            value-format="yyyy-MM-dd"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="地址" prop="workAddress">
           <el-input v-model="addJobForm.workAddress"></el-input>
@@ -289,7 +289,7 @@ import 'nprogress/nprogress.css'
  * 企业管理职位信息
  */
 export default {
-  name: 'EnterpriseJobManage',
+  name: 'ManageEducation',
   data () {
     return {
       filters: {
@@ -479,12 +479,12 @@ export default {
           jName: this.filters.jName,
           eName: this.loginEnterprise.eName
         }).then((res) => {
-          if(res.data.code === 200){
-            this.pageConf.totalPage = res.data.total
-            this.joblist = res.data.data.rows
-          }else {
-            this.$message.error(res.data.message + '请重新查询')
-          }
+        if(res.data.code === 200){
+          this.pageConf.totalPage = res.data.total
+          this.joblist = res.data.data.rows
+        }else {
+          this.$message.error(res.data.message + '请重新查询')
+        }
       })
     },
     //获取列表(分页）
@@ -544,19 +544,19 @@ export default {
             }
           }
         )
-        .then((res) => {
-          if(res.data.code === 200) {
-            this.listLoading = false
-            NProgress.done();
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-            this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
-          }else {
-            this.$message.error(res.data.message + '删除失败')
-          }
-        })
+          .then((res) => {
+            if(res.data.code === 200) {
+              this.listLoading = false
+              NProgress.done();
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
+            }else {
+              this.$message.error(res.data.message + '删除失败')
+            }
+          })
       }).catch(() => {
 
       })
@@ -634,17 +634,17 @@ export default {
             // console.log(this.addJobForm.jName)
             this.$axios.post('enterprise/addJobPosition', {
 
-                jName: this.addJobForm.jName,
-                salary: this.addJobForm.salary,
-                experienceDuration: this.addJobForm.experienceDuration,
-                education: this.addJobForm.education,
-                obligation: this.addJobForm.obligation,
-                qualification: this.addJobForm.qualification,
-                workAddress: this.addJobForm.workAddress,
-                jType: this.addJobForm.jType,
-                jPublishDate: new Date().toLocaleDateString(),
-                stopRecruitDate: this.addJobForm.stopRecruitDate,
-                eName: this.loginEnterprise.eName
+              jName: this.addJobForm.jName,
+              salary: this.addJobForm.salary,
+              experienceDuration: this.addJobForm.experienceDuration,
+              education: this.addJobForm.education,
+              obligation: this.addJobForm.obligation,
+              qualification: this.addJobForm.qualification,
+              workAddress: this.addJobForm.workAddress,
+              jType: this.addJobForm.jType,
+              jPublishDate: new Date().toLocaleDateString(),
+              stopRecruitDate: this.addJobForm.stopRecruitDate,
+              eName: this.loginEnterprise.eName
             })
               .then((result) => {
                 this.addLoading = false

@@ -124,7 +124,7 @@
         </el-form-item>
 
         <el-form-item label="岗位职责" prop="obligation">
-          <el-input type="textarea" rows="5" v-model="editForm.obligation"
+          <el-input type="textarea" autosize rows="5" v-model="editForm.obligation"
                     placeholder="例如:
 1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
 2、拓展、维护公司招聘渠道，更新招聘信息；
@@ -132,7 +132,7 @@
         </el-form-item>
 
         <el-form-item label="任职资格" prop="qualification">
-          <el-input type="textarea" rows="5" v-model="editForm.qualification"
+          <el-input type="textarea" autosize rows="5" v-model="editForm.qualification"
                     placeholder="例如:
 1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
 2、熟练使用office等办公软件，对数据处理有经验者优先；
@@ -220,7 +220,7 @@
         </el-form-item>
 
         <el-form-item label="岗位职责" prop="obligation">
-          <el-input type="textarea" rows="5" v-model="addJobForm.obligation"
+          <el-input type="textarea" autosize rows="5" v-model="addJobForm.obligation"
                     placeholder="例如:
 1、负责对接业务部门招聘工作，根据简历筛选；推荐简历，协调面试官、候选人沟通，面试安排与反馈等整体招聘流程；
 2、拓展、维护公司招聘渠道，更新招聘信息；
@@ -228,7 +228,7 @@
         </el-form-item>
 
         <el-form-item label="任职资格" prop="qualification">
-          <el-input type="textarea" rows="5" v-model="addJobForm.qualification"
+          <el-input type="textarea" autosize rows="5" v-model="addJobForm.qualification"
                     placeholder="例如:
 1、本科一本或研究生在读，985，211学校、大三优先、大四保研优先；
 2、熟练使用office等办公软件，对数据处理有经验者优先；

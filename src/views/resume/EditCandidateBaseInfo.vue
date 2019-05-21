@@ -1,80 +1,53 @@
 <template>
-  <!--修改企业信息 :rules="rules" -->
+  <!--修改企业信息  -->
   <div class="xxcenter-content">
-    <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="register-form">
+    <el-form :model="candidateBaseInfo" :rules="rules" ref="candidateBaseInfo" label-width="100px" class="register-form">
 
-      <el-form-item label="公司名称" prop="emName">
-        <el-input v-model="enterpriseMessage.emName"></el-input>
+      <el-form-item label="姓名" prop="crname">
+        <el-input v-model="candidateBaseInfo.crname"></el-input>
       </el-form-item>
-
-      <el-form-item label="手机号码" prop="emphone">
-        <el-input v-model="enterpriseMessage.emphone"></el-input>
-      </el-form-item>
-
-      <el-form-item label="公司简介" prop="emintroduce">
-        <el-input  type="textarea" v-model="enterpriseMessage.emintroduce"></el-input>
+      <el-form-item label="手机号码" prop="phone"  >
+        <el-input v-model="candidateBaseInfo.phone"></el-input>
       </el-form-item>
 
 
-      <el-form-item label="电子邮件" prop="email">
-        <el-input v-model="enterpriseMessage.ememail"></el-input>
+      <el-form-item label="电子邮件" prop="email"  >
+        <el-input v-model="candidateBaseInfo.email"></el-input>
+      </el-form-item>
+      <el-form-item label="现居城市" prop="nowAddress"  >
+        <v-distpicker
+          :province="nowAddress.province"
+          :city="nowAddress.city"
+          :area="nowAddress.area"
+          @province="onChangeProvince"
+          @city="onChangeCity"
+          @area="onChangeArea"
+        ></v-distpicker>
+        <span style="font-size: 10px; color: #ccc;">{{candidateBaseInfo.nowAddress}}</span>
+      </el-form-item>
+      <el-form-item prop="birthday" label="出生日期"  >
+        <el-date-picker type="date" placeholder="选择日期" v-model="candidateBaseInfo.birthday"
+                        style="width: 100%;"></el-date-picker>
       </el-form-item>
 
-      <!--<el-form-item label="密码" prop="pass">-->
-      <!--<el-input type="password" v-model="editForm.pass" autocomplete="off"></el-input>-->
-      <!--</el-form-item>-->
-      <!--<el-form-item label="确认密码" prop="checkPass">-->
-      <!--<el-input type="password" v-model="editForm.checkPass" autocomplete="off"></el-input>-->
-      <!--</el-form-item>-->
-
-      <el-form-item label="公司所在地" prop="residenceAddress">
-        <!--<v-distpicker :province="editForm.residenceAddress.province" :city="editForm.residenceAddress.city" :area="editForm.residenceAddress.area" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>-->
-        <el-input v-model="enterpriseMessage.emaddress" autocomplete="off"></el-input>
-      </el-form-item>
-      <!--<el-form-item label="创立日期" required>-->
-      <!--<el-col :span="11">-->
-      <!--<el-form-item prop="emstablishmentDate">-->
-      <!--<el-date-picker type="date" placeholder="选择日期" v-model="editForm.emstablishmentDate"-->
-      <!--style="width: 100%;"></el-date-picker>-->
-      <!--</el-form-item>-->
-      <!--</el-col>-->
-      <!--</el-form-item>-->
-      <el-form-item label="融资情况">
-
-        <el-select v-model="enterpriseMessage.emFinancing" placeholder="融资情况"  class="register">
-          <el-option
-            v-for="(financing,index) in editForm.editCondition.financingList"
-            :key="index"
-            :value="financing.financing">
-          </el-option>
-        </el-select>
+      <el-form-item label="性别" prop="sex"  >
+        <el-radio-group v-model="candidateBaseInfo.sex">
+          <el-radio label="男"></el-radio>
+          <el-radio label="女"></el-radio>
+        </el-radio-group>
       </el-form-item>
 
-      <!--businessScope-->
-      <!--<el-form-item label="经营类型">-->
-
-      <!--<el-select v-model="enterpriseMessage.businessScope" placeholder="经营类型"  class="register">-->
-      <!--<el-option-->
-      <!--v-for="(businessScope,index) in editForm.editCondition.businessScope"-->
-      <!--:key="index"-->
-      <!--:value="businessScope.type">-->
-      <!--</el-option>-->
-      <!--</el-select>-->
-      <!--</el-form-item>-->
-
-      <el-form-item label="公司规模">
-        <el-select v-model="enterpriseMessage.emScaleList"  placeholder="公司规模"  class="register">
-          <el-option
-            v-for="(companyScale,index) in editForm.editCondition.companyScaleList"
-            :key="index"
-            :value="companyScale.companyScale">
-          </el-option>
-        </el-select>
+      <el-form-item label="是否是学生" prop="isStudent"  >
+        <el-radio-group v-model="candidateBaseInfo.isStudent">
+          <el-radio label="是" value="true"></el-radio>
+          <el-radio label="否" value="false"></el-radio>
+        </el-radio-group>
       </el-form-item>
+
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm('editForm')">修改</el-button>
-        <el-button @click="resetForm('editForm')">重置</el-button>
+        <el-button type="primary" :loading="loading" @click="submitForm('candidateBaseInfo')">修改</el-button>
+        <el-button @click="resetForm('candidateBaseInfo')">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -82,12 +55,21 @@
 
 <script>
 import VDistpicker from 'v-distpicker'
+
 export default {
   name: 'EditCandidateBaseInfo',
-  components: { VDistpicker },
+  components: {VDistpicker},
   data () {
-    // 自定义的校验规则
-    var checkPhone = (rule, value, callback) => {
+    //验证邮箱
+    var checkEmail = (ruler, value, callbacks) =>{
+      const emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+      if(emailReg.test(value)){
+        callbacks()
+      }else{
+        return callbacks(new Error('请输入正确的邮箱地址'))
+      }
+    }
+    var checkCount = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('账号不能为空'))
       } else {
@@ -100,226 +82,107 @@ export default {
         }
       }
     }
-    var checkEmail = (ruler, value, callbacks) =>{
-      const emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
-      if(emailReg.test(value)){
-        callbacks()
-      }else{
-        return callbacks(new Error('请输入正确的邮箱地址'))
-      }
-    }
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.editForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
-      }
-    };
-    return{
-      loading: '',
-      //获得的企业信息
-      enterpriseMessage: '',
-      editForm: {
-        emName: '',
-        emphone: '',
-        emintroduce: '',
+    return {
+      loading: false,
+      nowAddress: {province: '', city: '',area: ''},
+      candidateBaseInfo: {
+        crname: '',
+        phone: '',
         email: '',
-        pass: '',
-        checkPass:'',
-        registerFinancing: '', // 融资情况
-        registerCompanyScale: '', // 公司规模
-        emstablishmentDate: '', // 创立日期
-        businessScope:'', //经营类型
-        emFinancing: '',
-        // residenceAddress: { province: '', city: '', area: '' },
-        emaddress: '',
-        editCondition:
-          {
-            financingList : [
-              {
-                financing: '不限'
-              },
-              {
-                financing: '未融资'
-              },
-              {
-                financing: '天使轮'
-              },
-              {
-                financing: 'A轮'
-              },
-              {
-                financing: 'B轮'
-              },
-              {
-                financing: 'C轮'
-              },
-              {
-                financing: 'D轮及以上'
-              },
-              {
-                financing: '已上市'
-              },
-              {
-                financing: '不需要融资'
-              }
-            ],
-            companyScaleList: [
-              {
-                companyScale: '不限'
-              },
-              {
-                companyScale: '0-20人'
-              },
-              {
-                companyScale: '20-99人'
-              },
-              {
-                companyScale: '100-499人'
-              },
-              {
-                companyScale: '500-999人'
-              },
-              {
-                companyScale: '500-999人'
-              },
-              {
-                companyScale: '1000-9999人'
-              },
-              {
-                companyScale: '10000人以上'
-              }
-            ],
-            // businessScope:[
-            //   {
-            //     type:" IT·互联网"
-            //   },
-            //   {
-            //     type:" 金融"
-            //   },
-            //   {
-            //     type:" 房地产·建筑"
-            //   },
-            //   {
-            //     type:" 教育培训"
-            //   },
-            //   {
-            //     type:" 教育培训"
-            //   },
-            //   {
-            //     type:" 汽车"
-            //   },
-            //   {
-            //     type:" 娱乐传媒"
-            //   },
-            //   {
-            //     type:" 医疗健康"
-            //   },
-            //   {
-            //     type:" 法律咨询"
-            //   },
-            //   {
-            //     type:"  供应链·物流"
-            //   },
-            //   {
-            //     type:" 采购贸易"
-            //   }
-            // ]
-
-
-          },
+        isStudent: false,
+        birthday: '',
+        sex: '',
       },
+      //  表单校验规则;用prop
       rules: {
-        emphone:[
-          {validator: checkPhone, trigger: 'blur'},
+        phone: [
+          {required: true, message: '请输入账号', trigger: 'blur'},
+          {validator: checkCount, trigger: 'blur'},
+          {min: 8, max: 11, message: '长度在8到11个数字', trigger: 'blur'}
+        ],
+        crname: [
+          {required: true, message: '请输入真实姓名', trigger: 'blur'}
+        ],
+        birthday: [
+          {required: true, message: '请选择生日', trigger: 'blur'}
+        ],
+        isStudent: [
+          {required: true, message: '请选择户口所在地', trigger: 'blur'}
         ],
         email: [
           {validator: checkEmail, trigger:'blur'},
+          { required: true, message: '请输入您的邮箱地址', trigger: 'blur' }
+        ],
+        sex: [
+          { required: true, message: '请选择您的性别', trigger: 'blur' }
+        ],
+        nowAddress: [
+          { required: true, message: '请选择您的现居城市', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
     //当地址下拉框变化时获取地址值
-    // onChangeProvince(data) {
-    //   this.editForm.residenceAddress.province= data.value
-    // },
-    // onChangeCity(data) {
-    //   this.editForm.residenceAddress.city = data.value
-    // },
-    // onChangeArea(data){
-    //   this.editForm.residenceAddress.area= data.value
-    // },
-    submitForm(formName) {
-      this.$refs.editForm.validate((valid) => {
+    onChangeProvince(data) {
+      this.nowAddress.province= data.value
+    },
+    onChangeCity(data) {
+      this.nowAddress.city = data.value
+    },
+    onChangeArea(data){
+      this.nowAddress.area= data.value
+    },
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           // 验证成功后将数据转换成JSON格式传递到后端
           this.loading = true
-          this.$message.info("正在提交数据")
-
+          this.$message.info('正在提交数据')
           // 通过axios的post方法将表单数据传递给后端接口
-          this.$axios.post('/editEnterprise',{
-            enterprise: {
-              eName: this.editForm.emName,
-              ephone: this.editForm.emphone,
-              epassword: this.editForm.emName,
-              ecreateTime: new Date().toLocaleDateString(),
-              status: "注册"
-            },
-            enterpriseMessage:{
-              emName: this.editForm.emName,
-              emphone: this.editForm.emphone,
-              emstablishmentDate: this.editForm.emstablishmentDate.toLocaleDateString(),
-              emintroduce: this.editForm.emintroduce, //公司简介
-              registerFinancing: this.editForm.registerFinancing, // 融资情况
-              emScaleList: this.editForm.registerCompanyScale, // 公司规模
-              ememail: this.editForm.email,
-              businessScope: this.editForm.businessScope, //经营类型
-              emaddress: this.editForm.residenceAddress.province + this.editForm.residenceAddress.city+this.editForm.residenceAddress.area,
-              emFinancing: this.editForm.emFinancing,
-            }
+          this.$axios.post('candidate/editCandidateBaseInfo', {
+              crname: this.candidateBaseInfo.crname,
+              phone: this.candidateBaseInfo.phone,
+              email: this.candidateBaseInfo.email,
+              isStudent: this.candidateBaseInfo.isStudent,
+              nowAddress: this.nowAddress.province + this.nowAddress.city + this.nowAddress.area,
+              birthday: this.candidateBaseInfo.birthday,
+              sex: this.candidateBaseInfo.sex
           }).then(
             result => {
               this.responseResult = JSON.stringify(result.data)
               this.loading = false
-              console.log( this.responseResult)
               if (result.data.code === 200) {
                 // 当验证成功后跳转到用户中心
-                this.$router.replace({path: '/login'})
-                this.$message.success('注册成功！！')
-              }else{
+                this.$message.success(result.data.message)
+                this.loading = false
+              } else {
                 this.$message.error(result.data.message + '请重新输入')
+                this.loading = false
               }
             }
           ).catch(function (error) {
-            console.log(error)
-            // this.loading = false
+            alert(error)
           })
-
-        }else {
+        } else {
           this.$message.error('验证失败，请重新检查您输入的信息')
-          return false;
         }
-      });
+      })
     },
-    resetForm(formName) {
-      this.$refs.editForm.resetFields();
+    resetForm (formName) {
+      this.$refs.candidateBaseInfo.resetFields()
     },
-    //  页面挂载时加载公司信息
-    getEnterpriseMessage(){
-      var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
-      // console.log(loginEnterprise.eName)
-      this.$axios.get('/getEnterpriseByEName', {
-          params:{
-            eName: loginEnterprise.eName
-          }
+    //  页面挂载时
+    getCandidateMessage () {
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+      if (loginCandidatePhone === null){
+        alert("请重新登录您的个人账号")
+      }
+      this.$axios.post('/candidate/getCandidateMessageByPhone', {
+          phone:loginCandidatePhone
         }
       ).then((result) => {
-        var res = result.data
-        this.enterpriseMessage = res.data[0]
-        console.log(res.data[0])
+        this.candidateBaseInfo = result.data.data[0]
       })
         .catch(function (error) {
           alert(error)
@@ -327,7 +190,7 @@ export default {
     }
   },
   mounted () {
-    this.getEnterpriseMessage()
+    this.getCandidateMessage()
   }
 }
 </script>

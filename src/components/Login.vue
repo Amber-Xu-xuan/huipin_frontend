@@ -150,7 +150,7 @@ import ZPHeader from '@/components/ZPHeader'
                 //将登陆的信息储存到localstorage中
                 // this.$route.params.loginPhone=this.loginInfoVo.phone
                 // console.log(this.$route.params.loginPhone)
-                console.log( this.responseResult)
+                // console.log( this.responseResult)
                 if (successResponse.data.code === 200) {
                   // 当验证成功后跳转到用户中心
                   localStorage.setItem('loginEnterprisePhone',this.loginInfoVo.phone)
@@ -163,7 +163,8 @@ import ZPHeader from '@/components/ZPHeader'
                 }
               }
             ).catch(function (error) {
-              console.log(error)
+              // console.log(error)
+              alert(error)
               // this.loading = false
             })
 
@@ -177,8 +178,8 @@ import ZPHeader from '@/components/ZPHeader'
           //  前端测试结束
           } else {
             //  验证失败
-            console.log('验证失败,用户名或密码错误')
-            this.$message.error('用户名或密码错误')
+            // console.log('用户名或密码错误')
+            this.$message.error('验证失败,用户名或密码错误')
             return false
           }
           this.loading = false

@@ -42,14 +42,54 @@ export default {
       this.$axios.get('candidate/enterprise_job').then((result) => {
         var res = result.data
         this.enterpriseList = res.data
-        console.log(this.enterpriseList)
+        // console.log(this.enterpriseList)
       })
         .catch(function (error) {
-          console.log(error)
+          // console.log(error)
+          alert(error)
         })
     },
     SendingResume(jName,eName){
-      console.log(jName,eName)
+      // console.log(jName,eName)
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+      var loginCandidate = JSON.parse(localStorage.getItem('loginCandidate'))
+      if (loginCandidatePhone === null || loginCandidatePhone === ""){
+        this.$message.error("请先登录您的个人账号")
+      }else{
+        // console.log(loginCandidate)
+        this.$confirm('确认将您的简历投递到该公司吗？', '提示', {}).then(() => {
+          NProgress.start();
+          // let para = Object.assign({}, this.addJobForm)
+          // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
+          // addUser(para).
+          // console.log(this.addJobForm.jName)
+          this.$axios.post('candidate/sendingResume', {
+
+            jName:jName,
+            eName: eName,
+            phone: loginCandidatePhone,
+            date: new Date().toLocaleDateString(),
+            status: "已投递"
+          })
+            .then((result) => {
+              NProgress.done();
+
+              this.responseResult = JSON.stringify(result.data)
+              this.loading = false
+              // console.log(this.responseResult)
+              if (result.data.code === 200) {
+                this.$message({
+                  message: '简历投递成功',
+                  type: 'success'
+                })
+              } else {
+                this.$message.error(result.data.message + '请重新投递')
+              }
+
+            })
+
+        })
+      }
     }
   },
   //  页面挂载时

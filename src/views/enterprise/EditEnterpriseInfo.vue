@@ -3,20 +3,22 @@
   <div class="xxcenter-content">
     <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="register-form">
 
+      <el-form-item label="手机号码">
+        {{enterpriseMessage.emphone}}
+      </el-form-item>
+
       <el-form-item label="公司名称" prop="emName">
         <el-input v-model="enterpriseMessage.emName"></el-input>
       </el-form-item>
 
-      <el-form-item label="手机号码" prop="emphone">
-        <el-input v-model="enterpriseMessage.emphone"></el-input>
-      </el-form-item>
+
 
       <el-form-item label="公司简介" prop="emintroduce">
-        <el-input  type="textarea" v-model="enterpriseMessage.emintroduce"></el-input>
+        <el-input  type="textarea" autosize v-model="enterpriseMessage.emintroduce"></el-input>
       </el-form-item>
 
 
-      <el-form-item label="电子邮件" prop="email">
+      <el-form-item label="电子邮件">
         <el-input v-model="enterpriseMessage.ememail"></el-input>
       </el-form-item>
 
@@ -108,33 +110,21 @@ export default {
         return callbacks(new Error('请输入正确的邮箱地址'))
       }
     }
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'));
-      } else if (value !== this.editForm.pass) {
-        callback(new Error('两次输入密码不一致!'));
-      } else {
-        callback();
-      }
-    };
     return{
       loading: '',
       //获得的企业信息
-      enterpriseMessage: '',
-      editForm: {
-        emName: '',
+      enterpriseMessage: {
         emphone: '',
-        emintroduce: '',
-        email: '',
-        pass: '',
-        checkPass:'',
-        registerFinancing: '', // 融资情况
-        registerCompanyScale: '', // 公司规模
-        emstablishmentDate: '', // 创立日期
-        businessScope:'', //经营类型
-        emFinancing: '',
-        // residenceAddress: { province: '', city: '', area: '' },
-        emaddress: '',
+        emFinancing: ''
+      },
+      editForm: {
+        // registerFinancing: '', // 融资情况
+        // registerCompanyScale: '',
+        // emstablishmentDate: '', // 创立日期
+        // businessScope:'', //经营类型
+        // emFinancing: '',// 公司规模
+        // // residenceAddress: { province: '', city: '', area: '' },
+        // emaddress: '',
         editCondition:
           {
             financingList : [
@@ -192,41 +182,6 @@ export default {
                 companyScale: '10000人以上'
               }
             ],
-            // businessScope:[
-            //   {
-            //     type:" IT·互联网"
-            //   },
-            //   {
-            //     type:" 金融"
-            //   },
-            //   {
-            //     type:" 房地产·建筑"
-            //   },
-            //   {
-            //     type:" 教育培训"
-            //   },
-            //   {
-            //     type:" 教育培训"
-            //   },
-            //   {
-            //     type:" 汽车"
-            //   },
-            //   {
-            //     type:" 娱乐传媒"
-            //   },
-            //   {
-            //     type:" 医疗健康"
-            //   },
-            //   {
-            //     type:" 法律咨询"
-            //   },
-            //   {
-            //     type:"  供应链·物流"
-            //   },
-            //   {
-            //     type:" 采购贸易"
-            //   }
-            // ]
 
 
           },
@@ -242,17 +197,8 @@ export default {
     }
   },
   methods: {
-    //当地址下拉框变化时获取地址值
-    // onChangeProvince(data) {
-    //   this.editForm.residenceAddress.province= data.value
-    // },
-    // onChangeCity(data) {
-    //   this.editForm.residenceAddress.city = data.value
-    // },
-    // onChangeArea(data){
-    //   this.editForm.residenceAddress.area= data.value
-    // },
     submitForm(formName) {
+      console.log(this.enterpriseMessage)
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           // 验证成功后将数据转换成JSON格式传递到后端
@@ -260,25 +206,22 @@ export default {
           this.$message.info("正在提交数据")
 
           // 通过axios的post方法将表单数据传递给后端接口
-          this.$axios.post('/editEnterprise',{
+          this.$axios.post('enterprise/editEnterprise',{
             enterprise: {
-              eName: this.editForm.emName,
-              ephone: this.editForm.emphone,
-              epassword: this.editForm.emName,
+              eName: this.enterpriseMessage.emName,
+              ephone: this.enterpriseMessage.emphone,
               ecreateTime: new Date().toLocaleDateString(),
-              status: "注册"
+              status: "注册后修改"
             },
             enterpriseMessage:{
-              emName: this.editForm.emName,
-              emphone: this.editForm.emphone,
-              emstablishmentDate: this.editForm.emstablishmentDate.toLocaleDateString(),
-              emintroduce: this.editForm.emintroduce, //公司简介
-              registerFinancing: this.editForm.registerFinancing, // 融资情况
-              emScaleList: this.editForm.registerCompanyScale, // 公司规模
-              ememail: this.editForm.email,
-              businessScope: this.editForm.businessScope, //经营类型
-              emaddress: this.editForm.residenceAddress.province + this.editForm.residenceAddress.city+this.editForm.residenceAddress.area,
-              emFinancing: this.editForm.emFinancing,
+              emName: this.enterpriseMessage.emName,
+              emphone: this.enterpriseMessage.emphone,
+              emintroduce: this.enterpriseMessage.emintroduce, //公司简介
+              emFinancing: this.enterpriseMessage.emFinancing, // 融资情况
+              emScaleList: this.enterpriseMessage.emScaleList, // 公司规模
+              ememail: this.enterpriseMessage.email,
+              // businessScope: this.enterpriseMessage.businessScope, //经营类型
+              emaddress: this.enterpriseMessage.emaddress,
             }
           }).then(
             result => {
@@ -286,9 +229,9 @@ export default {
               this.loading = false
               console.log( this.responseResult)
               if (result.data.code === 200) {
-                // 当验证成功后跳转到用户中心
-                this.$router.replace({path: '/login'})
-                this.$message.success('注册成功！！')
+                this.$message.success("修改成功，请重新登录")
+                localStorage.clear();
+                this.$router.push("/login")
               }else{
                 this.$message.error(result.data.message + '请重新输入')
               }
@@ -310,7 +253,7 @@ export default {
   //  页面挂载时加载公司信息
     getEnterpriseMessage(){
       var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
-      // console.log(loginEnterprise.eName)
+      console.log(loginEnterprise.eName)
       this.$axios.get('/getEnterpriseByEName', {
           params:{
             eName: loginEnterprise.eName

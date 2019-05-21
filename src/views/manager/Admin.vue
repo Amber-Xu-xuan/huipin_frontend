@@ -31,7 +31,7 @@
             <el-menu  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="collapsed" unique-opened router>
               <el-submenu index="candidate">
                 <template slot="title">
-                  <i class="el-icon-location"></i>
+                  <i class="el-icon-user-solid"></i>
                   <span slot="title">应聘者</span>
                 </template>
                 <el-menu-item-group>
@@ -44,13 +44,13 @@
 
               <el-submenu index="enterprise">
                 <template slot="title">
-                  <i class="el-icon-location"></i>
+                  <i class="el-icon-s-shop"></i>
                   <span slot="title">招聘企业管理</span>
                 </template>
                 <el-menu-item-group>
                   <!--<el-menu-item index="">管理应聘者信息</el-menu-item>-->
-                  <el-menu-item index="enterpriseCertification">企业审核认证</el-menu-item>
-                  <el-menu-item index="statisticsEnterprise">统计招聘企业数据</el-menu-item>
+                  <el-menu-item index="/adminCenter/enterpriseCertification">企业审核认证</el-menu-item>
+                  <el-menu-item index="/adminCenter/statisticsEnterprise">统计招聘企业数据</el-menu-item>
                 </el-menu-item-group>
 
               </el-submenu>
@@ -60,10 +60,10 @@
                 <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
-              <el-menu-item index="editResume">
-                <i class="el-icon-document"></i>
-                <span slot="title">修改手机号码</span>
-              </el-menu-item>
+              <!--<el-menu-item index="">-->
+                <!--<i class="el-icon-document"></i>-->
+                <!--<span slot="title">修改手机号码</span>-->
+              <!--</el-menu-item>-->
             </el-menu>
           </aside>
           <!--侧边栏-结束-->
@@ -104,7 +104,7 @@ export default {
       activeUrl: '1',
       collapsed: false,
       sysAdminName: '',
-      sysAdminAvatar: '../static/user.png',
+      sysAdminAvatar: '../static/avatar2.jpg',
       form: {
         name: '',
         region: '',
@@ -139,7 +139,7 @@ export default {
         //type: 'warning'
       }).then(() => {
         sessionStorage.removeItem('admin')
-        _this.$router.push('/login')
+        _this.$router.push('/admin')
       }).catch(() => {
 
       })
@@ -156,10 +156,10 @@ export default {
     var admin = sessionStorage.getItem('admin')
     if (admin) {
       admin = JSON.parse(admin)
-      this.sysAdminName = admin.name || ''
+      // this.sysAdminName = admin.name || ''
       // this.sysAdminAvatar = admin.avatar || ''
       //  前端测试的时候的模拟数据
-      this.sysAdminAvatar = '../static/user.png'
+      this.sysAdminAvatar = '../static/avatar2.png'
     }
   }
 }
@@ -174,7 +174,11 @@ export default {
     .header {
       height: 60px;
       line-height: 60px;
-      background: #20a0ff;
+      /*background: rgb(28, 28, 28);*/
+      background: -webkit-linear-gradient(#5c5b61, #292829); /* Safari 5.1 - 6.0 */
+      background: -o-linear-gradient(#5c5b61, #292829); /* Opera 11.1 - 12.0 */
+      background: -moz-linear-gradient(#5c5b61, #292829); /* Firefox 3.6 - 15 */
+      background: linear-gradient(#5c5b61, #292829); /* 标准的语法 */
       color: #fff;
       .admininfo {
         text-align: right;

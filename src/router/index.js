@@ -14,12 +14,12 @@ import EditSelfDescription from '../views/resume/EditSelfDescription'
 // 编辑基本信息
 import EditCandidateBaseInfo from '../views/resume/EditCandidateBaseInfo'
 // 管理教育经历
-import ManageEducation from '../views/resume/ManageEducation'
+// import ManageEducation from '../views/resume/ManageEducation'
 // 管理项目经历
 import ManageProjectExperience from '../views/resume/ManageProjectExperience'
 // 管理社交主页
 import ManageSocialHomepage from '../views/resume/ManageSocialHomepage'
-// 投递过简历的公司
+// 投递箱：过简历的公司
 import DiliveryResumeEnterprise from '../views/deliveryBox/DiliveryResumeEnterprise'
 // 收藏夹
 import CollectEnterprise from '../views/candidate/CollectEnterprise'
@@ -105,7 +105,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'login',
+      name: '首页',
       component: JobsList
     },
     // 求职者
@@ -129,15 +129,6 @@ export default new Router({
           component: EditResume,
           meta: {
             title: '在线编辑简历'
-          },
-          hidden: true
-        },
-        {
-          path: 'WorkExperience',
-          name: '管理工作经历',
-          component: ManageWorkExperience,
-          meta: {
-            title: '管理工作经历'
           },
           hidden: true
         },
@@ -180,9 +171,18 @@ export default new Router({
         {
           path: 'education',
           name: '管理教育经历',
-          component: ManageEducation,
+          component: EditResume,
           meta: {
             title: '管理教育经历'
+          },
+          hidden: true
+        },
+        {
+          path: 'workExperience',
+          name: '管理工作经历',
+          component: ManageWorkExperience,
+          meta: {
+            title: '管理工作经历'
           },
           hidden: true
         },
@@ -250,6 +250,11 @@ export default new Router({
       component: UserAgreement
     },
     {
+      path: '/admin',
+      name: '管理员登录',
+      component: AdminLogin,
+    },
+    {
       path: '/adminCenter',
       name: '管理员中心',
       component: Admin,
@@ -284,11 +289,6 @@ export default new Router({
           hidden: true
         },
       ]
-    },
-    {
-      path: '/admin',
-      name: '管理员登录',
-      component: AdminLogin,
     },
     {
       path: '/enterprise',
@@ -362,7 +362,7 @@ export default new Router({
       name: '招聘企业信息',
       component: EnterpriseJobMessage,
       children: [
-        // 职位信息
+        // 首页点击公司名称，职位信息
         {
           path: 'jobmessage',
           name: 'jobmessage',

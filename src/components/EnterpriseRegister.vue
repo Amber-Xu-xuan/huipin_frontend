@@ -13,7 +13,7 @@
       </el-form-item>
 
       <el-form-item label="公司简介" prop="emintroduce" required>
-        <el-input  type="textarea" v-model="registerForm.emintroduce"></el-input>
+        <el-input  type="textarea" autosize v-model="registerForm.emintroduce"></el-input>
       </el-form-item>
 
 
@@ -93,7 +93,7 @@ import VDistpicker from 'v-distpicker'
           return callback(new Error('手机号不能为空'))
         } else {
           const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
-          console.log(reg.test(value))
+          // console.log(reg.test(value))
           if (reg.test(value)) {
             callback()
           } else {
@@ -275,7 +275,7 @@ import VDistpicker from 'v-distpicker'
         this.registerForm.residenceAddress.area= data.value
       },
       submitForm(formName) {
-        console.log(this.registerForm.emstablishmentDate.toLocaleDateString())
+        // console.log(this.registerForm.emstablishmentDate.toLocaleDateString())
         this.$refs.registerForm.validate((valid) => {
           if (valid) {
             // 验证成功后将数据转换成JSON格式传递到后端
@@ -307,7 +307,7 @@ import VDistpicker from 'v-distpicker'
               result => {
                 this.responseResult = JSON.stringify(result.data)
                 this.loading = false
-                console.log( this.responseResult)
+                // console.log( this.responseResult)
                 if (result.data.code === 200) {
                   // 当验证成功后跳转到用户中心
                   this.$router.replace({path: '/login'})
@@ -317,7 +317,7 @@ import VDistpicker from 'v-distpicker'
                 }
               }
             ).catch(function (error) {
-              console.log(error)
+              // console.log(error)
               // this.loading = false
             })
 

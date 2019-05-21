@@ -95,12 +95,52 @@
     </el-dialog>
 
     <!--显示招聘情况界面 -->
-    <el-dialog title="招聘情况" :visible.sync=" recruitmentSituationDialogVisible" :close-on-click-modal="false">
-      显示招聘情况，未完善
+    <el-dialog title="招聘情况" :visible.sync="recruitmentSituationDialogVisible"
+               :close-on-click-modal="false"
+               :before-close="handleClose"
+               width="95%"
+    >
+      <!--显示招聘者信息 ref="jobCandidate" :data="jobCandidate"-->
+      <el-table ref="jobCandidate" :data="recruitmentSituation" highlight-current-row v-loading="listLoading"
+                @selection-change="selsChange"
+                style="width: 100%;">
+        <!--查询-->
+        <!--<el-table-column type="selection" width="55">-->
+        <!--</el-table-column>-->
+        <!--<el-table-column type="index" width="60">-->
+        <!--</el-table-column>-->
+        <el-table-column prop="phone" label="联系方式" max-width="120" min-width="65">
+        </el-table-column>
+
+
+        <el-table-column prop="educationBackground"
+          label="学历"
+          max-width="50"
+          min-width="50">
+        </el-table-column>
+        <span >
+
+        </span>
+        <el-table-column prop="major" label="所学专业" min-width="80">
+        </el-table-column>
+        <!--<el-table-column prop="graduationTime" label="毕业时间" sortable>-->
+        <!--</el-table-column>-->
+        <el-table-column prop="havaWorkExperience" label="是否有工作经验" sortable>
+        </el-table-column>
+        <el-table-column prop="havaProjectExperience" label="是否有项目经验" min-width="80" sortable>
+        </el-table-column>
+        <el-table-column prop="socialHomePage" label="社交主页" min-width="100" sortable>
+        </el-table-column>
+        <el-table-column label="操作" width="300" fixed="right">
+          <template slot-scope="scope">
+            <el-button size="small" @click="fetchWorkExperience(scope.$index, scope.row)">查看工作经验ing</el-button>
+            <el-button size="small" @click="notificationInterview(scope.$index, scope.row)">通知面试ing</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native=" recruitmentSituationDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click.native="addJob" :loading="addLoading">提交</el-button>
+        <el-button @click.native=" recruitmentSituationDialogVisible = false">关闭</el-button>
       </div>
     </el-dialog>
   </section>
@@ -112,6 +152,7 @@
 //导入nprogress
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+
 /**
  * 企业管理职位信息
  */
@@ -126,12 +167,17 @@ export default {
       // joblist: {},
       loginPhone: '',
       //登录的用户信息
-      loginEnterprise:{},
+      loginEnterprise: {},
       // total: 0,
       // pageNumber: 1, //当前页
       listLoading: false,
       sels: [],//列表选中列
 
+      //应聘情况框中的求职者信息
+      jobCandidate: [],
+      //recruitment_situation表，获取职位对应的phone，投递时间等
+      recruitmentSituation:[
+      ],
       // 当前修改行的数据
       rowData: {},
       //定义分页Config
@@ -142,7 +188,13 @@ export default {
         totalPage: 12, //总记录数
         pageOption: [4, 10, 20], //分页选项
       },
-
+      dialogPageConf: {
+        //设置一些初始值(会被覆盖)
+        pageCode: 1, //当前页
+        pageSize: 2, //每页显示的记录数
+        totalPage: 12, //总记录数
+        pageOption: [4, 10, 20], //分页选项
+      },
       editFormVisible: false,//编辑界面是否显示
       editLoading: false,
       editFormRules: {
@@ -179,7 +231,7 @@ export default {
           ]
         },
 
-       recruitmentSituationDialogVisible: false,//显示招聘情况界面是否显示
+      recruitmentSituationDialogVisible: false,//显示招聘情况界面是否显示
       addLoading: false,
       //新增界面数据
       addJobForm: {
@@ -198,10 +250,27 @@ export default {
     }
   },
   methods: {
+    //查看详细工作
+    fetchWorkExperience (index, row) {
+      console.log("fetchWorkExperience" + row)
+    },
+    //通知面试
+    notificationInterview(index, row) {
+      console.log("notificationInterview" + row)
+    },
     //显示职位信息弹框
     // 点击相应职位信息，查看该岗位收到的简历信息
-    selectCandidateByJobPosition(index,row){
+    selectCandidateByJobPosition (index, row) {
 
+    },
+    //关闭招聘详情弹出框
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {
+        })
     },
     //当前页改变时触发的函数,下一页或上一页
     handleCurrentChange (val) {
@@ -219,10 +288,10 @@ export default {
           jName: this.filters.jName,
           eName: this.loginEnterprise.eName
         }).then((res) => {
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.pageConf.totalPage = res.data.total
           this.joblist = res.data.data.rows
-        }else {
+        } else {
           this.$message.error(res.data.message + '请重新查询')
         }
       })
@@ -236,7 +305,7 @@ export default {
     getJobList (pageCode, pageSize) {
       this.listLoading = true
       // this.loginPhone =  this.$route.params.loginPhone
-      NProgress.start();
+      NProgress.start()
       var loginEnterprisePhone = localStorage.getItem('loginEnterprisePhone')
       var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
       this.loginEnterprise = loginEnterprise
@@ -264,7 +333,7 @@ export default {
           this.$message.error(res.data.message + '请重新登录')
         }
 
-        NProgress.done();
+        NProgress.done()
 
       })
     },
@@ -274,7 +343,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        NProgress.start();
+        NProgress.start()
         // console.log(row.jpId)
         // console.log("index" + index)
         this.$axios.delete('enterprise/deleteJobPosition',
@@ -285,15 +354,15 @@ export default {
           }
         )
           .then((res) => {
-            if(res.data.code === 200) {
+            if (res.data.code === 200) {
               this.listLoading = false
-              NProgress.done();
+              NProgress.done()
               this.$message({
                 message: '删除成功',
                 type: 'success'
               })
               this.getJobList(this.pageConf.pageCode, this.pageConf.pageSize)
-            }else {
+            } else {
               this.$message.error(res.data.message + '删除失败')
             }
           })
@@ -302,9 +371,38 @@ export default {
       })
     },
     //显示招聘情况界面
-    handleRecruitmentSituation: function () {
-      this. recruitmentSituationDialogVisible = true
-
+    handleRecruitmentSituation: function (index,row) {
+      this.recruitmentSituationDialogVisible = true
+      console.log(row.eName + row.jName)
+      //获取该岗位的所有应聘者
+      this.$axios.post('enterprise/selectRecruitmentSituationByeNameAndjName',{
+        pageCode: this.dialogPageConf.pageCode,
+        pageSize: this.dialogPageConf.pageSize,
+        eName:row.eName,
+        jName:row.jName
+      }).then((result)=> {
+        if (result.data.code === 200) {
+          this.pageConf.totalPage = result.data.total
+          this.recruitmentSituation = result.data.data
+          console.log(result.data.data)
+        }else{
+          this.$message.error(result.data.message + '无法获取该岗位的招聘情况，请重新登录')
+        }
+      }).catch((error) => {
+        alert(error)
+      })
+      // this.$axios.post('enterprise/selectAllMessageAboutCandidateByphone',{
+      //   pageCode: this.pageConf.pageCode,
+      //   pageSize: this.pageConf.pageSize,
+      //   phone:this.ephone
+      // }).then((result)=> {
+      //   if (result.data.code === 200) {
+      //     this.pageConf.totalPage = res.data.total
+      //     this.jobCandidate = res.data.data.rows
+      //   }else{
+      //     this.$message.error(res.data.message + '无法获取该岗位的招聘情况，请重新登录')
+      //   }
+      // })
     },
     //显示编辑界面
     handleEdit: function (index, row) {
@@ -314,18 +412,18 @@ export default {
       this.rowData = row
     },
     //修改求职信息
-    editJob: function (index,row) {
+    editJob: function (index, row) {
       //获取到对应的行数的数据信息
       // this.editForm = row
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.$confirm('确认提交吗？', '提示', {}).then(() => {
             this.editLoading = true
-            NProgress.start();
+            NProgress.start()
 
             // let para = Object.assign({}, this.editForm)
             // para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd')
-            this.$axios.post("/enterprise/updateJobPosition",{
+            this.$axios.post('/enterprise/updateJobPosition', {
               jpId: this.rowData.jpId,
               jName: this.editForm.jName,
               salary: this.editForm.salary,
@@ -338,7 +436,7 @@ export default {
               stopRecruitDate: this.editForm.stopRecruitDate
             }).then((res) => {
               this.editLoading = false
-              NProgress.done();
+              NProgress.done()
               this.$message({
                 message: '修改成功',
                 type: 'success'
@@ -410,11 +508,11 @@ export default {
         type: 'warning'
       }).then(() => {
         this.listLoading = true
-        NProgress.start();
+        NProgress.start()
         let para = {ids: ids}
         batchRemoveUser(para).then((res) => {
           this.listLoading = false
-          NProgress.done();
+          NProgress.done()
           this.$message({
             message: '删除成功',
             type: 'success'

@@ -18,8 +18,8 @@
                       <img :src="this.sysUserAvatar"/>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人中心</el-dropdown-item>
-                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item @click.native="goToJobPage">找工作</el-dropdown-item>
+                <el-dropdown-item>上传头像</el-dropdown-item>
                 <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -40,7 +40,7 @@
                   <el-menu-item index="/candidateCenter/selfDescription">自我描述</el-menu-item>
                   <el-menu-item index="/candidateCenter/candidateBaseInfo">基本信息</el-menu-item>
                   <el-menu-item index="/candidateCenter/education">管理教育经历</el-menu-item>
-                  <el-menu-item index="/candidateCenter/WorkExperience">管理工作经历</el-menu-item>
+                  <el-menu-item index="/candidateCenter/workExperience">管理工作经历</el-menu-item>
                   <el-menu-item index="/candidateCenter/project">管理项目经历</el-menu-item>
                   <el-menu-item index="/candidateCenter/socialHomepage">管理社交主页</el-menu-item>
 
@@ -129,11 +129,11 @@ export default {
     handleOpen () {
       //console.log('handleopen');
     },
-    handleClose () {
-
+    goToJobPage () {
+      this.$router.push('/jobslist')
     },
-    handleclose () {
-      //console.log('handleclose');
+    handleClose () {
+      console.log('handleclose');
     },
     handleselect: function (a, b) {
     },
@@ -143,7 +143,9 @@ export default {
       this.$confirm('确认退出吗?', '提示', {
         //type: 'warning'
       }).then(() => {
-        sessionStorage.removeItem('user')
+        sessionStorage.removeItem('loginCandidatePhone')
+        sessionStorage.removeItem('loginCandidate')
+        localStorage.clear()
         _this.$router.push('/landing')
       }).catch(() => {
 

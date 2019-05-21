@@ -6,23 +6,46 @@
         <div class="zoom-title">
           <span></span>
         </div>
+        <h2 style="color: #fff;margin: 0;">热门职位</h2>
         <div class="slider-box">
           <!--<form class="sem-search"><input name="" class="ipt-search" placeholder="搜索“职位”填写一份简历，涨薪59%">-->
           <!--<button class="landing-btn" type="submit">搜索职位</button>-->
           <!--</form>-->
           <el-row :gutter="5" class="enterprise-row-margin">
             <!--:offset="index > 0 ? 2 : 0"-->
-            <el-col :span="8" v-for="(enterprise, index) in enterpriseList" :key="enterprise.index">
-              <el-card>
-                <img :src="enterprise.img" class="image">
-                <div style="padding: 1px;">
-                  <span>{{enterprise.name}}</span>
-                  <div class="bottom clearfix">
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" v-for="item in hotJobPosition" :key="item.jId">
+              <div class="grid-content">
+                <el-card class="box-card" shadow="hover" body-style="margin:'10px'">
+                  <img :src="img" class="image" style="width: 80%;">
+
+                  <div class="card-text item">
+                    <div slot="header" class="clearfix">
+                      <span class="jName" style="margin-left: 10px;">{{item.jName}}</span>
+                      <span class="salary" style=" color: #ff2126; font-size: 10px;">{{item.salary}}</span>
+                      <span class="card-text-margin">
+                    <router-link
+                      :to="{path:'enterprise/introduce',query:{eName:item.eName}}" style="width: 20px; text-overflow: ellipsis"
+                    > {{item.eName}}</router-link>
+                  </span>
+
+                    </div>
+                    <!--{{item.workAddress.substring(0,2)}}<span class="space"></span>-->
+                    <!--|<span class="space"></span>{{item.education}}<span class="space"></span>-->
+                    <!--|<span class="space"></span>{{item.experienceDuration}}-->
+                    <!--<span class="card-text-margin"><span class="space"></span>-->
+                    <!--<span class="space"></span>{{item.enterpriseMessage.emFinancing}}<span class="space"></span>-->
+                    <!--|<span class="space"></span>{{item.enterpriseMessage.emScaleList}}</span>-->
                   </div>
-                </div>
-              </el-card>
+                </el-card>
+              </div>
             </el-col>
+                <!--<img :src="enterprise.img" class="image">-->
+                <!--<div style="padding: 1px;">-->
+
+                <!--</div>-->
+
           </el-row>
+          <!--显示职位的卡片-->
 
         </div>
         <!--<div class="clearfix"></div>-->
@@ -46,6 +69,7 @@
                             v-model="loginForm.phone"
                             maxlength="12"
                             type="text"
+                            auto-complete
                             class="input-with-select">
                   </el-input>
                 </el-form-item>
@@ -90,7 +114,7 @@
                   <el-row>
                     <el-col :span="24" :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                       <!--不显示必填输入框旁的星号=hide-required-asterisk-->
-                      <el-form show-message status-icon :model="registerForm" :rules="rules"
+                      <el-form show-message status-icon :model="registerForm" :rules="registerRules"
                                     ref="registerForm"
                       >
                         <!-- prop="phone"绑定校验规则-->
@@ -99,7 +123,7 @@
                                     type="text"
                                     v-model="registerForm.rphone"
                                     prefix-icon="el-icon-mobile-phone"
-                                    name="rphone"
+                                    name="rPhone"
                                     id="account"
                                     auto-complete="on"
                                     placeholder="请输入您注册的账号（手机号码）"/>
@@ -111,7 +135,7 @@
                             :type="passwordType"
                             prefix-icon="el-icon-edit-outline"
                             v-model="registerForm.rpassword"
-                            name="password"
+                            name="rPassword"
                             show-password
                             auto-complete="on"
                             placeholder="请输入密码"
@@ -124,29 +148,36 @@
                           <el-input type="password" show-password v-model="registerForm.checkPass" autocomplete="off"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="真实姓名" prop="cname" required autocomplete>
-                          <el-input v-model="registerForm.cname"></el-input>
+                        <el-form-item label="真实姓名" prop="crname" required autocomplete>
+                          <el-input v-model="registerForm.crname"></el-input>
                         </el-form-item>
 
                         <el-form-item label="用户名" prop="cusername" required autocomplete>
                           <el-input v-model="registerForm.cusername"></el-input>
                         </el-form-item>
 
-                        <el-form-item label="个人简介" prop="introduce" required>
-                          <el-input type="textarea"
-                                    v-model="registerForm.introduce"
-                                    placeholder=""
-                          ></el-input>
-                        </el-form-item>
+                        <!--<el-form-item label="个人简介" prop="introduce" required>-->
+                          <!--<el-input type="textarea"-->
+                                    <!--autosize-->
+                                    <!--v-model="registerForm.introduce"-->
+                                    <!--placeholder=""-->
+                          <!--&gt;</el-input>-->
+                        <!--</el-form-item>-->
 
                         <el-form-item label="出生日期" required prop="birthday">
-                          <el-date-picker type="date" placeholder="选择日期" v-model="registerForm.birthday"
-                                          style="width: 100%;"></el-date-picker>
+                          <el-date-picker
+                            type="date"
+                            placeholder="选择日期"
+                            format="yyyy 年 MM 月 dd 日"
+                            value-format="yyyy-MM-dd"
+                            v-model="registerForm.birthday"
+                            style="width: 100%;"
+                          ></el-date-picker>
 
                         </el-form-item>
 
-                        <el-form-item label="现居地址" prop="address" required>
-                          <v-distpicker :province="registerForm.address.province" :city="registerForm.address.city" :area="registerForm.address.area" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
+                        <el-form-item label="户口所在地" prop="residenceAddress">
+                          <v-distpicker :province="residenceAddress.province" :city="residenceAddress.city" :area="residenceAddress.area" @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea"></v-distpicker>
                         </el-form-item>
 
                         <el-form-item label="电子邮件" prop="email" required>
@@ -161,7 +192,7 @@
                         </el-form-item>
 
                         <el-form-item label="爱好" prop="hobby">
-                          <el-input type="textarea" v-model="registerForm.hobby"></el-input>
+                          <el-input type="textarea" autosize v-model="registerForm.hobby"></el-input>
                         </el-form-item>
 
                         <!--用户协议-->
@@ -204,6 +235,11 @@ import VDistpicker from 'v-distpicker'
 export default {
   name: 'LandingPage',
   components: {ZPHeader,VDistpicker},
+  //  页面挂载时
+  mounted () {
+    this.getHotJobPosition()
+    this.img='../static/job.jpg'
+  },
   data () {
     // 自定义的校验规则
     var checkCount = (rule, value, callback) => {
@@ -211,7 +247,7 @@ export default {
         return callback(new Error('账号不能为空'))
       } else {
         const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
-        console.log(reg.test(value))
+        // console.log(reg.test(value))
         if (reg.test(value)) {
           callback()
         } else {
@@ -237,34 +273,38 @@ export default {
       }
     }
     return {
+      img:'',
       phone: '',
       //广告显示的公司
-      enterpriseList: [
-        {
-          name: '阿里巴巴',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/20180906/5fd9804307c9e266559d8c4c911d228fbe1bd4a3bd2a63f070bdbdada9aad826.png?x-oss-process=image/resize,w_120,limit_0'
-        }, {
-          name: '百度',
-          img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20190228/a83fc908c1bcb5510b35da79ebc74a9286b6a9e98aa8f150dd17e2f5328c5178.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '腾讯',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/109.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '京东数字科技',
-          img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20181203/edd5783606744772f3d55fda265b5fc7cfcd208495d565ef66e7dff9f98764da.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '小米',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/84270.jpg?x-oss-process=image/resize,w_120,limit_0'
-        }, {
-          name: 'OPPO',
-          img: 'https://img.bosszhipin.com/beijin/logo/0181f814e6ac2d0d826b403e8235c8f9be1bd4a3bd2a63f070bdbdada9aad826.jpg?x-oss-process=image/resize,w_120,limit_0'
-        }
+      // enterpriseList: [
+      //   {
+      //     name: '阿里巴巴',
+      //     img: 'https://img.bosszhipin.com/beijin/mcs/bar/20180906/5fd9804307c9e266559d8c4c911d228fbe1bd4a3bd2a63f070bdbdada9aad826.png?x-oss-process=image/resize,w_120,limit_0'
+      //   }, {
+      //     name: '百度',
+      //     img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20190228/a83fc908c1bcb5510b35da79ebc74a9286b6a9e98aa8f150dd17e2f5328c5178.jpg?x-oss-process=image/resize,w_120,limit_0'
+      //   },
+      //   {
+      //     name: '腾讯',
+      //     img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/109.jpg?x-oss-process=image/resize,w_120,limit_0'
+      //   },
+      //   {
+      //     name: '京东数字科技',
+      //     img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20181203/edd5783606744772f3d55fda265b5fc7cfcd208495d565ef66e7dff9f98764da.jpg?x-oss-process=image/resize,w_120,limit_0'
+      //   },
+      //   {
+      //     name: '小米',
+      //     img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/84270.jpg?x-oss-process=image/resize,w_120,limit_0'
+      //   }, {
+      //     name: 'OPPO',
+      //     img: 'https://img.bosszhipin.com/beijin/logo/0181f814e6ac2d0d826b403e8235c8f9be1bd4a3bd2a63f070bdbdada9aad826.jpg?x-oss-process=image/resize,w_120,limit_0'
+      //   }
+      // ],
+
+      // 热门职位
+      hotJobPosition: [
 
       ],
-
       //是否显示注册弹出框
       centerDialogVisible: false,
       passwordType: 'password',
@@ -276,6 +316,7 @@ export default {
         phone: '',
         cpassword: ''
       },
+      residenceAddress: {province:'',city:'',area:''},
       //注册信息
       registerForm: {
         rphone: '',
@@ -284,11 +325,10 @@ export default {
         cusername: '',
         cname:'',
         birthday: '',
-        cname: '', //真实姓名
-        checkPass: '',
+        crname: '', //真实姓名
         introduce: '', //自我介绍
         sex: '',
-        address: {province:'',city:'',area:''},
+        // residenceAddress: {province:'',city:'',area:''},
         hobby: '',
         email: ''
       },
@@ -304,16 +344,27 @@ export default {
         cpassword: [
           {required: true, message: '请输入密码', trigger: 'blur'}
         ],
+      },
+      registerRules: {
         rphone: [
           {required: true, message: '请输入账号', trigger: 'blur'},
           {validator: checkCount, trigger: 'blur'},
           {min: 8, max: 11, message: '长度在8到11个数字', trigger: 'blur'}
         ],
+        crname: [
+          {required: true, message: '请输入真实姓名', trigger: 'blur'}
+        ],
         rpassword: [
           {required: true, message: '请输入密码', trigger: 'blur'}
         ],
+        birthday: [
+          {required: true, message: '请选择生日', trigger: 'blur'}
+        ],
+        // residenceAddress: [
+        //   {required: true, message: '请选择户口所在地', trigger: 'blur'}
+        // ],
         checkPass: [
-          {required: true, message: '请在次输入您的密码',trigger: 'blur'},
+          {required: true, message: '请再次输入您的密码',trigger: 'blur'},
           {validator: validatePass2,trigger: 'blur'}
         ],
         introduce: [
@@ -332,13 +383,13 @@ export default {
   methods: {
     //当地址下拉框变化时获取地址值
     onChangeProvince(data) {
-      this.registerForm.address.province= data.value
+      this.residenceAddress.province= data.value
     },
     onChangeCity(data) {
-      this.registerForm.address.city = data.value
+      this.residenceAddress.city = data.value
     },
     onChangeArea(data){
-      this.registerForm.address.area= data.value
+      this.residenceAddress.area= data.value
     },
     // 是否显示密码
     showPwd () {
@@ -347,6 +398,23 @@ export default {
       } else {
         this.passwordType = 'password'
       }
+    },
+    getHotJobPosition(){
+      this.$axios.post('/selectHotJobPosition').then(
+        result => {
+          this.responseResult = JSON.stringify(result.data)
+          if (result.data.code === 200) {
+            this.hotJobPosition = result.data.data
+            console.log(result.data.data)
+          } else {
+            this.$message.error(result.data.message + '请刷新页面')
+          }
+        }
+      ).catch(function (error) {
+          alert(error + '，请刷新页面')
+          // this.loading = false
+        }
+      )
     },
     login () {
       this.$refs.loginForm.validate((valid) => {
@@ -368,9 +436,13 @@ export default {
             result => {
               this.responseResult = JSON.stringify(result.data)
               this.loading = false
-              console.log(this.responseResult)
+              // console.log("hhhhhh" + this.responseResult)
               if (result.data.code === 200) {
                 // 当验证成功后跳转到用户中心
+                localStorage.setItem('loginCandidatePhone',this.loginForm.phone)
+                //将登陆信息保存
+                localStorage.setItem('loginCandidate',JSON.stringify(result.data.data))
+
                 this.$router.replace({path: '/candidateCenter'})
                 this.$message.success('成功登录！！')
                 //通过vuex集中管理登录的求职者信息
@@ -379,15 +451,14 @@ export default {
                 //存在localStorage中
                 // window.localStorage.setItem("candidate",result.data.data)
 
-                this.$store.state.loginCandidate
-                console.log("这是已经登陆的求职者信息" + result.data.data)
+                // this.$store.state.loginCandidate
+                // console.log("这是已经登陆的求职者信息" + result.data.data)
               } else {
                 this.$message.error(result.data.message + '请重新输入')
               }
             }
           ).catch(function (error) {
-              console.log(error)
-              this.$message.error('登录失败，请重新登陆')
+              alert(error + '登录失败，请重新登陆')
               // this.loading = false
             }
           )
@@ -404,38 +475,40 @@ export default {
     //  注册
     register () {
       this.$refs.registerForm.validate((valid) => {
+        // console.log("验证" + valid)
         if (valid) {
-          console.log('请先阅读用户协议' + this.registerForm.checked)
+          // console.log('请先阅读用户协议' + this.registerForm.checked)
           if (!this.registerForm.checked) {
             this.$message.error('请先阅读用户协议')
           } else {
-console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.address.city+ this.registerForm.address.area,
-)
+// console.log("hhhhh" + this.residenceAddress.province+this.residenceAddress.city + this.residenceAddress.area)
 
             this.$axios.post('/registerCandidate',
               {
-                candidate: {
-                  phone: this.registerForm.rphone,
-                  cpassword: this.registerForm.rpassword,
-                  cusername: this.registerForm.cusername,
-                  ccreateTime: new Date().toLocaleDateString(),
-                  status: '注册，正在找工作'
+                  candidate:{
+                    phone: this.registerForm.rphone,
+                    cpassword: this.registerForm.rpassword,
+                    cusername: this.registerForm.cusername,
+                    ccreateTime: new Date().toLocaleDateString(),
+                    findJobTime: '',
+                    status: '注册，正在找工作'
                 },
                 candidateMessage: {
-                  birthday: this.registerForm.birthday.toLocaleDateString(),
-                  cname:  this.registerForm.cname,
-                  introduce:  this.registerForm.introduce,
-                  phone:  this.registerForm.rphone,
-                  sex:  this.registerForm.sex,
-                  address:  this.registerForm.address.province+ this.registerForm.address.city+ this.registerForm.address.area,
-                  hobby:  this.registerForm.hobby,
-                  email:  this.registerForm.email
+                    birthday: this.registerForm.birthday,
+                    crname:  this.registerForm.crname,
+                    introduce:  this.registerForm.introduce,
+                    phone:  this.registerForm.rphone,
+                    sex:  this.registerForm.sex,
+                    residenceAddress: this.residenceAddress.province+this.residenceAddress.city + this.residenceAddress.area ,
+                    nowAddress:  '',
+                    hobby:  this.registerForm.hobby,
+                    email:  this.registerForm.email
                 }
               }).then(
               result => {
                 this.responseResult = JSON.stringify(result.data)
                 this.loading = false
-                console.log(this.responseResult)
+                // console.log("1111"+this.responseResult)
                 if (result.data.code === 200) {
                   // 当验证成功后跳转到用户中心
                   this.centerDialogVisible = false
@@ -445,7 +518,7 @@ console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.add
                 }
               }
             ).catch(function (error) {
-                console.log(error)
+                // console.log(error)
                 this.$message.error('注册失败，请重新注册')
                 // this.loading = false
               }
@@ -454,8 +527,8 @@ console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.add
 
           }
         else {
-          alert('注册失败，请重新检查您输入的信息')
-          return false
+          // alert('注册失败，请重新检查您输入的信息')
+          this.$message.error('注册失败，请重新检查您输入的信息')
         }
       })
     },
@@ -495,6 +568,7 @@ console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.add
   .slider-box {
     float: left;
     width: 500px;
+    text-align: center;
     /*margin-left: 10rem;*/
   }
 
@@ -582,7 +656,7 @@ console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.add
   .sign-wrap {
     position: static;
     width: 410px;
-    margin: 0;
+    margin-top: 50px;
   }
 
   .sign-form {
@@ -673,5 +747,16 @@ console.log("hhhhh" +  this.registerForm.address.province+ this.registerForm.add
 
   .enterprise-row-margin {
     margin: 20px;
+  }
+  /*职位卡片的padding*/
+  .el-card__body {
+    padding: 5px!important;
+  }
+
+  .card-text{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 30px;
+    text-align: center;
   }
 </style>

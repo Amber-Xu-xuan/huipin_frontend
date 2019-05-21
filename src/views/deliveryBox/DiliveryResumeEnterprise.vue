@@ -3,11 +3,19 @@
   <div class="xxcenter-content">
     <el-row :gutter="5" class="enterprise-row-margin">
       <!--:offset="index > 0 ? 2 : 0"-->
-      <el-col :span="4" v-for="(enterprise, index) in enterpriseList" :key="enterprise.index">
+      <el-col :span="12" v-for="(jobPosition, index) in jobPositionList" :key="jobPosition.index">
         <el-card>
-          <img :src="enterprise.img" class="image">
-          <div style="padding: 1px;">
-            <span>{{enterprise.name}}</span>
+          <!--<img :src="jobPosition.img" class="image">-->
+          <div style="padding: 1px;" class="job-card">
+            <div slot="header" class="clearfix">
+            <div class="jName">{{jobPosition.jName}}</div>
+            <span style="color: #fc703e;">{{jobPosition.salary}}</span>
+            <span class="eName" style="text-decoration: none;color: #414a60;float: right">{{jobPosition.eName}}</span>
+            </div>
+            <div style="color: #9fa3b0; font-size: 12px;margin: 15px 5px;">
+              <span>{{jobPosition.jType}}</span>
+              <span style="float: right;">{{jobPosition.workAddress}}</span>
+            </div>
             <div class="bottom clearfix">
             </div>
           </div>
@@ -18,39 +26,54 @@
 </template>
 
 <script>
+//导入nprogress
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 export default {
   name: 'DiliveryResumeEnterprise',
+  mounted() {
+    this.getDiliveryResumeJobPosition()
+  },
   data(){
     return {
-      enterpriseList: [
-        {
-          name: '阿里巴巴',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/20180906/5fd9804307c9e266559d8c4c911d228fbe1bd4a3bd2a63f070bdbdada9aad826.png?x-oss-process=image/resize,w_120,limit_0'
-        }, {
-          name: '百度',
-          img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20190228/a83fc908c1bcb5510b35da79ebc74a9286b6a9e98aa8f150dd17e2f5328c5178.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '腾讯',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/109.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '京东数字科技',
-          img: 'https://img.bosszhipin.com/beijin/mcs/chatphoto/20181203/edd5783606744772f3d55fda265b5fc7cfcd208495d565ef66e7dff9f98764da.jpg?x-oss-process=image/resize,w_120,limit_0'
-        },
-        {
-          name: '小米',
-          img: 'https://img.bosszhipin.com/beijin/mcs/bar/brand/84270.jpg?x-oss-process=image/resize,w_120,limit_0'
-        }, {
-          name: 'OPPO',
-          img: 'https://img.bosszhipin.com/beijin/logo/0181f814e6ac2d0d826b403e8235c8f9be1bd4a3bd2a63f070bdbdada9aad826.jpg?x-oss-process=image/resize,w_120,limit_0'
-        }
+      jobPositionList: [
     ]
+    }
+  },
+  methods: {
+    getDiliveryResumeJobPosition(){
+      this.listLoading = true
+      // this.loginPhone =  this.$route.params.loginPhone
+      NProgress.start();
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+      this.$axios.post('candidate/getJobPositionByDiliveryResume',
+        {
+          phone: loginCandidatePhone
+        }
+      ).then((res) => {
+        if (res.data.code === 200) {
+          this.jobPositionList = res.data.data
+          this.listLoading = false
+        } else {
+          this.$message.error(res.data.message + '请重新登录')
+        }
+        NProgress.done();
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-
+.jName{
+  font-size: 16px;
+  color: #00c2b3;
+  font-weight: 400;
+  max-width: 170px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
 </style>

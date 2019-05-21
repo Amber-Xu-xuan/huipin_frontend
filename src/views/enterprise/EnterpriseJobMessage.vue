@@ -8,7 +8,8 @@
       <!--头像-->
       <div class="clearfix"></div>
       <div class="enterprise-message">
-        <img :src="this.enterpriseMessage.emheadImage" class="company-headImage"/>
+        <!--this.enterpriseMessage.emheadImage-->
+        <img :src="this.emheadImage" class="company-headImage"/>
         <span> <h1 class="emname">{{this.enterpriseMessage.emName}}</h1>
         <p>{{this.enterpriseMessage.emFinancing}}<em class="dolt"></em>{{this.enterpriseMessage.emScaleList}}
           <em class="dolt"></em>{{this.enterpriseMessage.businessScope}}</p>
@@ -67,7 +68,12 @@ export default {
       salaryFont: 'salary-font',
       eName:'',
       active: true,
-      enterpriseMessage: {}
+      emheadImage: '',
+      enterpriseMessage: {
+      //  前端测试，头像
+        emheadImage: '',
+        emName: ''
+      }
     }
   },
   methods: {
@@ -106,6 +112,7 @@ export default {
   mounted () {
     // this.getJobsList()
     this.getEnterpriseMessage()
+    this.emheadImage = '../static/enterprise.jpg'
   }
 }
 </script>

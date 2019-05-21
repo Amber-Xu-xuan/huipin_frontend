@@ -10,8 +10,9 @@
       <!--头部幻灯片-->
       <!--<section></section>   -->
       <div class="slide-container">
-        <el-carousel autoplay indicator-position="outside" :interval="5000" arrow="hover" class="slide-content" :height="imgHeight">
-          <el-carousel-item v-for="(item,index) in itemImg" :key="index" name="index"  ref="imgHeight">
+        <el-carousel autoplay indicator-position="outside" :interval="5000" arrow="hover" class="slide-content"
+                     :height="imgHeight">
+          <el-carousel-item v-for="(item,index) in itemImg" :key="index" name="index" ref="imgHeight">
             <el-row>
               <el-col :span="24">
                 <img :src="item.img" class="banner"/>
@@ -42,7 +43,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="filterExperience" filterable placeholder="工作经验"  class="filter">
+        <el-select v-model="filterExperience" filterable placeholder="工作经验" class="filter">
           <el-option
             v-for="(experience,index) in filterCondition.experienceList"
             :key="index"
@@ -50,7 +51,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="filterEducation" filterable placeholder="学历要求"  class="filter">
+        <el-select v-model="filterEducation" filterable placeholder="学历要求" class="filter">
           <el-option
             v-for="(education,index) in filterCondition.educationList"
             :key="index"
@@ -58,7 +59,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="filterFinancing" filterable placeholder="融资情况"  class="filter">
+        <el-select v-model="filterFinancing" filterable placeholder="融资情况" class="filter">
           <el-option
             v-for="(financing,index) in filterCondition.financingList"
             :key="index"
@@ -66,7 +67,7 @@
           </el-option>
         </el-select>
 
-        <el-select v-model="filterCompanyScale" filterable placeholder="公司规模"  class="filter">
+        <el-select v-model="filterCompanyScale" filterable placeholder="公司规模" class="filter">
           <el-option
             v-for="(companyScale,index) in filterCondition.companyScaleList"
             :key="index"
@@ -95,16 +96,24 @@
                       :to="{path:'enterprise/introduce',query:{eName:item.eName}}"
                     > {{item.eName}}</router-link>
                   </span>
-                  <el-button style="float: right; padding: 3px 0" type="text" @click="SendingResume(item.jName,item.eName)">投递简历</el-button>
+
+                  <!---->
+                  <el-button style="float: right; padding: 3px 0" type="text"
+                             @click="SendingResume(item.jName,item.eName)">投递简历
+                  </el-button>
+
                 </div>
                 <div class="card-text item">
                   {{item.workAddress.substring(0,2)}}<span class="space"></span>
                   |<span class="space"></span>{{item.education}}<span class="space"></span>
                   |<span class="space"></span>{{item.experienceDuration}}
-                  <span class="card-text-margin">{{item.enterpriseMessage.businessScope}}<span class="space"></span>
-                    |<span class="space"></span>{{item.enterpriseMessage.emFinancing}}<span class="space"></span>
+                  <span class="card-text-margin"><span class="space"></span>
+                    <span class="space"></span>{{item.enterpriseMessage.emFinancing}}<span class="space"></span>
                     |<span class="space"></span>{{item.enterpriseMessage.emScaleList}}</span>
                 </div>
+                <span @click="collectJob(item.jpId, item.jName, item.eName)" style="float: right;cursor: pointer;">
+                    <el-icon class="el-icon-star-off" style="color: #ffc107"></el-icon><span style="font-size: 10px;color: #5c5b61;">收藏</span>
+                  </span>
               </el-card>
             </div>
           </el-col>
@@ -122,26 +131,31 @@
 
 import './../assets/css/base.css'
 import NavHeader from '@/components/ZPHeader'
+//导入nprogress
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 export default {
   name: 'JobsList',
   data () {
     return {
       jobsList: [],
+      //是否收藏
+      isCollect: null,
       //幻灯片轮播图
       imgHeight: '480px',
       itemImg: [
         {
-          img:"../static/slides/slide-1.jpg"
+          img: '../static/slides/slide-1.jpg'
         },
         {
-          img:"../static/slides/slide-2.jpg"
+          img: '../static/slides/slide-2.jpg'
         },
         {
-          img:"../static/slides/slide-3.jpg"
+          img: '../static/slides/slide-3.jpg'
         },
         {
-          img:"../static/slides/slide-4.jpg"
+          img: '../static/slides/slide-4.jpg'
         }
       ],
       filterCondition:
@@ -162,8 +176,8 @@ export default {
             {
               salary: '>10k'
             }
-            ],
-          experienceList : [
+          ],
+          experienceList: [
             {
               experience: '应届生'
             },
@@ -183,7 +197,7 @@ export default {
               experience: '10年以上'
             }
           ],
-          educationList : [
+          educationList: [
             {
               education: '初中及以下'
             },
@@ -206,7 +220,7 @@ export default {
               education: '博士'
             }
           ],
-          financingList : [
+          financingList: [
             {
               financing: '未融资'
             },
@@ -287,7 +301,7 @@ export default {
           // 当验证成功后跳转到用户中心
           var res = result.data
           this.jobsList = res.data
-        }else{
+        } else {
           this.$message.error(result.data.message + '，请刷新页面')
         }
       })
@@ -296,8 +310,73 @@ export default {
           alert(error)
         })
     },
-    SendingResume(jName,eName){
-      console.log(jName,eName)
+    //收藏
+    collectJob (jpId, jName, eName) {
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+          this.$confirm('确认收藏该公司吗？', '提示', {}).then(() => {
+            NProgress.start()
+            this.$axios.post('/candidate/addCollection', {
+              cphone: loginCandidatePhone,
+              jpId: jpId,
+              jName: jName,
+              eName: eName,
+              collectTime: new Date().toLocaleDateString(),
+            }).then((res) => {
+              this.editLoading = false
+              NProgress.done()
+
+              if(res.data.code === 200){
+                this.$message({
+                  message: '收藏成功，请到您的收藏夹进行查看',
+                  type: 'success'
+                })
+              }else{
+                this.$message.error(res.data.message)
+              }
+            }).catch((error) =>{
+              alert(error)
+            })
+          })
+    },
+    SendingResume (jName, eName) {
+      console.log(jName, eName)
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+      var loginCandidate = JSON.parse(localStorage.getItem('loginCandidate'))
+      if (loginCandidatePhone === null || loginCandidatePhone === '') {
+        this.$message.error('请先登录您的个人账号')
+      } else {
+        console.log(loginCandidate)
+        this.$confirm('确认将您的简历投递到该公司吗？', '提示', {}).then(() => {
+          NProgress.start()
+
+          this.$axios.post('candidate/sendingResume', {
+
+            jName: jName,
+            eName: eName,
+            phone: loginCandidatePhone,
+            date: new Date().toLocaleDateString(),
+            status: '已投递'
+          })
+            .then((result) => {
+              NProgress.done()
+
+              this.responseResult = JSON.stringify(result.data)
+              this.loading = false
+              // console.log(this.responseResult)
+              if (result.data.code === 200) {
+                this.$message({
+                  message: '简历投递成功',
+                  type: 'success'
+                })
+              } else {
+                this.$message.error(result.data.message + '请重新投递')
+              }
+
+            })
+
+        })
+      }
+
     },
     showFilterPop () {
       this.filterBy = true
@@ -312,14 +391,14 @@ export default {
       this.closePop()
     },
     //通过筛选条件搜索岗位,从后端获取对应数据
-    searchByFilter() {
-      this.$axios.get("getJobListByFilterCondition",{
+    searchByFilter () {
+      this.$axios.get('getJobListByFilterCondition', {
         params: {
           filterSalary: this.filterSalary,
-          filterExperience:this.filterExperience,
-          filterEducation:this.filterEducation,
-          filterFinancing:this.filterFinancing ,// 融资情况
-          filterCompanyScale:this.filterCompanyScale // 公司规模
+          filterExperience: this.filterExperience,
+          filterEducation: this.filterEducation,
+          filterFinancing: this.filterFinancing,// 融资情况
+          filterCompanyScale: this.filterCompanyScale // 公司规模
         }
       }).then(result => {
           this.responseResult = JSON.stringify(result.data)
@@ -327,9 +406,9 @@ export default {
           // console.log( this.responseResult)
           if (result.data.code === 200) {
             // 筛选后返回的数据
-           this.jobsList = result.data.data
+            this.jobsList = result.data.data
             // console.log(this.jobsList)
-          }else{
+          } else {
             this.$message.error(result.data.message + '请重新选择筛选条件')
           }
         }
@@ -339,9 +418,9 @@ export default {
       })
     },
     // 跳转到详细的公司信息页面 Detail
-    EnterpriseDetailMessage(emname) {
+    EnterpriseDetailMessage (emname) {
       alert(emname)
-      this.$route.params.eName=emname
+      this.$route.params.eName = emname
       // 跳转到对应的公司详情页面
       this.$router.push({
         path: '/enterprise/jobmessage',
@@ -351,11 +430,11 @@ export default {
       })
     },
     // 全选
-    allIn(index){
+    allIn (index) {
 
     },
-  //  清空
-    removeFilter() {
+    //  清空
+    removeFilter () {
       this.filterSalary = null
       this.filterExperience = null
       this.filterEducation = null
@@ -368,6 +447,7 @@ export default {
   },
   mounted () {
     this.getJobsList()
+    this.jobsList.collectStar = true
   }
 }
 </script>
@@ -387,11 +467,10 @@ export default {
     display: block;
   }
 
-  .slide-content img{
+  .slide-content img {
     height-width: 100%;
     width: 80%;
   }
-
 
   .slide-container {
     margin: 20px 30px;
@@ -404,11 +483,13 @@ export default {
     margin: 10px 0;
     padding: 20px;
   }
-  .filter-container .filter-select{
+
+  .filter-container .filter-select {
     margin: 10px;
   }
+
   /*多选框*/
-  .filter{
+  .filter {
     width: 8rem;
   }
 
@@ -417,10 +498,12 @@ export default {
   .job-name {
     float: left;
   }
+
   /*筛选条件之间的margin等格式的调整*/
-  .el-select{
+  .el-select {
     margin-right: 10px;
   }
+
   /*筛选条件的content中的按钮的格式*/
   .el-button--primary.is-plain {
     margin-right: 5px;
@@ -440,7 +523,7 @@ export default {
     color: #ff2126;
   }
 
-  .space{
-    margin:0 0.2rem ;
+  .space {
+    margin: 0 0.2rem;
   }
 </style>

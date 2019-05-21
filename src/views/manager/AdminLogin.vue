@@ -1,4 +1,4 @@
-<template>
+<template style="background: #3a4256; display: block;">
   <div class="login-content">
     <el-row type="flex" justify="center">
       <el-col :span="24" :xs="16" :sm="12" :md="12" :lg="12" :xl="12">
@@ -38,7 +38,7 @@
           </el-form-item>
 
           <el-form-item class="login-btn">
-            <el-button style="width:100%;margin-bottom:30px;" :loading="loading" type="primary" @click.native.prevent="login" round>登录</el-button>
+            <el-button style="width:100%;margin-bottom:30px;background:#154f65;" :loading="loading" @click.native.prevent="login" round>登录</el-button>
             <!--<el-button @click="reset('loginInfoVo')" round type="primary">取消</el-button>-->
 
           </el-form-item>
@@ -64,7 +64,7 @@ export default {
         return callback(new Error('账号不能为空'))
       } else {
         const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
-        console.log(reg.test(value))
+        // console.log(reg.test(value))
         if (reg.test(value)) {
           callback()
         } else {
@@ -128,20 +128,19 @@ export default {
           //     // alert('正在提交...')
           this.loading = true
           this.$message.info('正在登录中...')
-              this.$axios.post('/manager/login',this.qs.stringify({
+              this.$axios.post('/manager/login',{
                 phone: this.loginInfoVo.phone,
-                password: this.loginInfoVo.cpassword
-              },{
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded'
-                }
-              }) ).then(
+                password: this.loginInfoVo.password
+              }).then(
                 successResponse => {
                   this.responseResult = JSON.stringify(successResponse.data)
                   this.loading = false
                   console.log( this.responseResult)
                   if (successResponse.data.code === 200) {
-                    // 当验证成功后跳转到用户中心
+                    // 当验证成功后跳转
+                    localStorage.setItem('loginAdminPhone',this.loginInfoVo.phone)
+                    //将登陆信息保存
+                    localStorage.setItem('loginAdmin',JSON.stringify(successResponse.data.data))
                     this.$router.replace({path: '/adminCenter'})
                     this.$message.success('成功登录！！')
                   }else{
@@ -188,13 +187,18 @@ export default {
     align-content: center;
     width: 100%;
     margin: 0 auto;
+  }
+  .login-content[data-v-5e7dea94] {
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/bg.jpg');
 
   }
 
   .login-form {
     /*display: block;*/
     padding: 50px 20px;
-    border-top: 10px solid #66b1ff;
+    border-top: 10px solid #154f65;
     background: #FFF;
     /*margin: 0 auto;*/
     margin-top: 50px;
@@ -202,7 +206,7 @@ export default {
     border-radius: 40px;
   }
   .register-link{
-    color: #999;
+    color: #ffffff;
     text-decoration: none;
     text-align: center;
     margin: 0 auto;
@@ -217,7 +221,7 @@ export default {
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: gray;
+    color: #ffffff;
     cursor: pointer;
     user-select: none;
   }

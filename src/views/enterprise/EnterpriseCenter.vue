@@ -18,7 +18,7 @@
                       <img :src="this.sysUserAvatar"/>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-dropdown-item @click.native="goToJobPage">返回首页</el-dropdown-item>
                 <el-dropdown-item>设置</el-dropdown-item>
                 <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
@@ -49,25 +49,25 @@
                 </template>
                 <el-menu-item-group>
                   <!--<span slot="title">我的简历</span>-->
-                  <el-menu-item index="editEnterpriseInfo">修改企业信息</el-menu-item>
-                  <el-menu-item index="uploadEnterpriseCertification">企业认证</el-menu-item>
+                  <el-menu-item index="/enterpriseCenter/editEnterpriseInfo">修改企业信息</el-menu-item>
+                  <el-menu-item index="/enterpriseCenter/uploadEnterpriseCertification">企业认证</el-menu-item>
                    </el-menu-item-group>
               </el-submenu>
 
-                <el-menu-item index="candidateManage">
+                <el-menu-item index="/enterpriseCenter/candidateManage">
                   <i class="el-icon-menu"></i>
                 <!--<span slot="title">求职者管理</span>-->
                   <span slot="title">求职者管理</span>
                 </el-menu-item>
 
-              <el-menu-item index="editPassword">
+              <el-menu-item index="/enterpriseCenter/editPassword">
                 <i class="el-icon-edit"></i>
                 <!--<span slot="title"><router-link to="/enterpriseCenter/editPassword">修改密码</router-link></span>-->
                 <span slot="title">修改密码</span>
               </el-menu-item>
               <!--disabled-->
 
-              <el-menu-item index="EnterpriseStatus">
+              <el-menu-item index="/enterpriseCenter/EnterpriseStatus">
                 <i class="el-icon-setting"></i>
                 <span slot="title">账号状态管理</span>
                 <!--<span slot="title"><router-link to="/enterpriseCenter/ensureStatus">状态确认</router-link></span>-->
@@ -130,6 +130,9 @@ export default {
     }
   },
   methods: {
+    goToJobPage () {
+      this.$router.push('/jobslist')
+    },
     onSubmit () {
       console.log('submit!')
     },

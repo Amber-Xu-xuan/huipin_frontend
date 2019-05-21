@@ -91,7 +91,6 @@ export default {
 
     //获取用户列表（分页）
     mock.onGet('/enterprise/job').reply(config => {
-      console.log('hshshshshs')
       let {page, name} = config.params;
       let mockUsers = _Users.filter(user => {
         if (name && user.name.indexOf(name) == -1) return false;

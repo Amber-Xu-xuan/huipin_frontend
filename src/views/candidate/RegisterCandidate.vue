@@ -58,8 +58,10 @@
 </template>
 
 <script>
+import VDistpicker from 'v-distpicker'
 export default {
   name: 'RegisterCandidate',
+  components: {VDistpicker},
   data () {
     // 自定义的校验规则
     var checkPhone = (rule, value, callback) => {

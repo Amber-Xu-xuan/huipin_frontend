@@ -13,7 +13,7 @@
           </ul>
         </div>
           <div class="user-nav">
-                <el-dropdown trigger="click">
+                <el-dropdown trigger="click" v-if="this.showLoginInfo === 1" >
                     <span class="el-dropdown-link header-login">
                       <!--显示头像-->
                       登录
@@ -23,6 +23,30 @@
                     <el-dropdown-item><a  href="/landing">求职者登录</a></el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
+            <!--个人用户登录-->
+            <el-dropdown trigger="click" v-else-if="this.showLoginInfo === 2">
+                    <span class="el-dropdown-link header-login label-text">
+                      <!--显示头像-->
+                      {{this.loginCandidate.cusername}} 欢迎您
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item><a  href="/CandidateCenter">个人中心</a></el-dropdown-item>
+                <el-dropdown-item><a  href="www.baidu.com">帮助</a></el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">注销</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <!--企业用户-->
+            <el-dropdown trigger="click" v-else>
+                    <span class="el-dropdown-link header-login label-text">
+                      <!--显示头像-->
+                      {{this.loginEnterprise.eName}} 欢迎贵公司
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item><a  href="/EnterpriseCenter">企业中心</a></el-dropdown-item>
+                <el-dropdown-item><a  href="www.baidu.com">帮助</a></el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">注销</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       <!--<span class="header-right">返回</span>-->
@@ -32,6 +56,50 @@
 <script>
 export default {
   name: 'ZPHeader',
+  data(){
+    return{
+      showLoginInfo: 1, // 1:未登录 2：个人用户已登录 3. 企业用户已登录
+      loginCandidate: { cusername: ''},
+      loginEnterprise: {}
+    }
+  },
+  methods: {
+    logout() {
+      var _this = this
+
+      this.$confirm('确认退出吗?', '提示', {
+        //type: 'warning'
+      }).then(() => {
+        // sessionStorage.removeItem('user')
+        localStorage.clear()
+        this.isLogin()
+      }).catch((error) => {
+        alert(error)
+      })
+    },
+  //  判断是否登录状态
+    isLogin() {
+      var loginCandidatePhone = localStorage.getItem('loginCandidatePhone')
+      var loginCandidate = JSON.parse(localStorage.getItem('loginCandidate'))
+
+      var loginEnterprisePhone = localStorage.getItem('loginEnterprisePhone')
+      var loginEnterprise = JSON.parse(localStorage.getItem('loginEnterprise'))
+
+      if (loginCandidate !== null && loginCandidate !== "") {
+        this.loginCandidate = loginCandidate
+        this.showLoginInfo = 2
+      }else if (loginEnterprise !== null && loginEnterprise !== "") {
+        this.loginEnterprise = loginEnterprise
+        this.showLoginInfo = 3
+
+      }else{
+        this.showLoginInfo = 1
+      }
+    }
+  },
+  mounted() {
+    this.isLogin()
+  }
 }
 </script>
 <style scoped>
@@ -124,5 +192,14 @@ li, ol, ul {
 .header-login {
   cursor: pointer;
   color: #fff;
+}
+  /*用户名字*/
+.label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  max-width: 130px;
+  font-size: 12px;
+  color: #8fbceb;
 }
 </style>

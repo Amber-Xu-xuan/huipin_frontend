@@ -30,12 +30,12 @@ npm test
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 ### 学习Vue的过程
 1. 熟悉Vue框架的语法、组件、API，多看[官方文档](https://cn.vuejs.org/v2/guide/instance.html#ad)
-
 ### 本项目使用的插件
 - vue-router
 - vue-resource
-- element-ui
-- vuex
+- [element-ui](https://element.eleme.cn/#/zh-CN/component/installation)
+- [vuex](https://vuex.vuejs.org/zh/guide/)
+- 百度地图：npm install vue-baidu-map --save
 
 ### 版本
 Vue：2.9.6
@@ -47,11 +47,12 @@ nodejs:v10.15.1
 ```
 ├── build                      // 构建相关  
 ├── config                     // 配置相关
-├── mock                       // 项目mock 模拟数据
+├── server                     // 服务器端
 ├── src                        // 源代码
 │   ├── api                    // 所有请求
 │   ├── assets                 // 主题 字体等静态资源
 │   ├── components             // 全局公用组件
+│   ├── mock                   // 项目mock 模拟数据
 │   ├── directive              // 全局指令
 │   ├── filtres                // 全局 filter
 │   ├── icons                  // 项目所有 svg icons
@@ -60,7 +61,6 @@ nodejs:v10.15.1
 │   ├── store                  // 全局 store管理
 │   ├── styles                 // 全局样式
 │   ├── utils                  // 全局公用方法
-│   ├── vendor                 // 公用vendor
 │   ├── views                   // view
 │   ├── App.vue                // 入口页面
 │   ├── main.js                // 入口 加载组件 初始化等
@@ -104,3 +104,9 @@ npm install mockjs --save-dev
 
 ### 使用nprogress
 $ npm install --save nprogress
+
+### 下拉加载vue-infinite-loading
+npm install vue-infinite-loading --save
+
+
+

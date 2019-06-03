@@ -108,5 +108,6 @@ $ npm install --save nprogress
 ### 下拉加载vue-infinite-loading
 npm install vue-infinite-loading --save
 
+### 添加百度地图
 
 
